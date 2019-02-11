@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">kith_andoid</string>
     <string name="kith">Знакомые</string>
+    <string name="our">НАС</string>
+    <string name="sign_in">ВОЙТИ</string>
+    <string name="registration">РЕГИСТРАЦИЯ</string>
 </resources>

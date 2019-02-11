@@ -1,4 +1,4 @@
-package CustomViews;
+package com.project.scratchstudio.kith_andoid.CustomViews;
 
 import android.content.Context;
 import android.graphics.Typeface;
