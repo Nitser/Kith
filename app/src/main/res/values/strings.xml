@@ -6,4 +6,11 @@
     <string name="registration">РЕГИСТРАЦИЯ</string>
     <string name="login">Логин</string>
     <string name="password">Пароль</string>
+    <string name="Name">Имя</string>
+    <string name="lastName">Фамилия</string>
+    <string name="email">Електронная почта</string>
+    <string name="phone">Телефон</string>
+    <string name="refCode">Реферальный код</string>
+    <string name="do_check_in">Зарегистрироваться</string>
+    <string name="term_of_use">Я согласен с пользовательским соглашением и политикой конфиденциальности</string>
 </resources>

@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void registrationButton(View view) {
-
+        Intent intent = new Intent(MainActivity.this, CheckInActivity.class);
+        startActivity(intent);
     }
 }
