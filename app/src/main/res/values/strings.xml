@@ -4,4 +4,6 @@
     <string name="our">НАС</string>
     <string name="sign_in">ВОЙТИ</string>
     <string name="registration">РЕГИСТРАЦИЯ</string>
+    <string name="login">Логин</string>
+    <string name="password">Пароль</string>
 </resources>
