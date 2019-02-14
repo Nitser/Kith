@@ -1,5 +1,6 @@
 package com.project.scratchstudio.kith_andoid.Activities;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -15,5 +16,7 @@ public class SignInActivity extends AppCompatActivity {
     }
 
     public void signInButton(View view) {
+        Intent intent = new Intent(SignInActivity.this, HomeActivity.class);
+        startActivity(intent);
     }
 }

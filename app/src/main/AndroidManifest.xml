@@ -23,6 +23,7 @@
         <activity android:name=".Activities.SignInActivity" />
         <activity android:name=".Activities.CheckInActivity" />
         <activity android:name=".Activities.AgreementActivity" />
+        <activity android:name=".Activities.HomeActivity"></activity>
     </application>
 
 </manifest>
