@@ -77,6 +77,7 @@ public class CheckInActivity extends AppCompatActivity {
         else{
             Intent intent = new Intent(CheckInActivity.this, SignInActivity.class);
             startActivity(intent);
+            finish();
         }
 
     }

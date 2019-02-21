@@ -5,6 +5,7 @@ import android.content.ClipboardManager;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,6 +24,7 @@ public class CodeActivity extends AppCompatActivity {
     public void onClickBackButton(View view) {
         Intent intent = new Intent(CodeActivity.this, HomeActivity.class);
         startActivity(intent);
+        finish();
     }
 
     public void copyButton(View view) {
@@ -31,5 +33,17 @@ public class CodeActivity extends AppCompatActivity {
         ClipData clip = ClipData.newPlainText("code", textView.getText().toString());
         clipboard.setPrimaryClip(clip);
         Toast.makeText(this, "Код сохранен", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)  {
+        if (keyCode == KeyEvent.KEYCODE_BACK ) {
+            Intent intent = new Intent(CodeActivity.this, HomeActivity.class);
+            startActivity(intent);
+            finish();
+            return true;
+        }
+
+        return super.onKeyDown(keyCode, event);
     }
 }

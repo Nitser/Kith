@@ -1,5 +1,6 @@
 package com.project.scratchstudio.kith_andoid.Service;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -64,6 +65,7 @@ public class TreeService {
 
                 Intent intent = new Intent(layout.getContext(), CodeActivity.class);
                 layout.getContext().startActivity(intent);
+                ((Activity)layout.getContext()).finish();
 
             });
         }
