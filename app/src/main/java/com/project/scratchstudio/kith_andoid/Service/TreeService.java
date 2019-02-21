@@ -1,6 +1,7 @@
 package com.project.scratchstudio.kith_andoid.Service;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
@@ -11,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import com.project.scratchstudio.kith_andoid.Activities.CodeActivity;
 import com.project.scratchstudio.kith_andoid.R;
 
 import java.util.ArrayList;
@@ -21,7 +23,7 @@ public class TreeService {
     private int[] buttonIndex ;
     private int[] imageIndex ;
 
-    private static List<Bitmap> bitmaps;
+    public static List<Bitmap> bitmaps = new ArrayList<>();
 
     private RelativeLayout addSmallTree(Context context){
        LayoutInflater inflater = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
@@ -60,11 +62,14 @@ public class TreeService {
                 Bitmap bitmap = bitmapDrawable .getBitmap();
                 bitmaps.add(bitmap);
 
+                Intent intent = new Intent(layout.getContext(), CodeActivity.class);
+                layout.getContext().startActivity(intent);
+
             });
         }
     }
 
-    public void setAttributes(LinearLayout parentLayout){
+    public void makeTree(LinearLayout parentLayout){
         if(bitmaps==null)
             bitmaps = new ArrayList<>();
 

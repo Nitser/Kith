@@ -15,7 +15,7 @@ public class CustomFontTextView extends android.support.v7.widget.AppCompatTextV
     static enum CustomFont {
         JURA("fonts/JuraBook.ttf"),
         INTRO("fonts/Intro-Book.otf"),
-        INTRO_REGULAR("fonts/Intro-Regular.otf");
+        INTRO_REGULAR("fonts/intro_regular.ttf");
 
         private final String fileName;
 

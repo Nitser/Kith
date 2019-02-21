@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="241dp"
     android:layout_height="252dp"
-    android:layout_marginBottom="20dp">
+    android:layout_marginTop="10dp">
 
     <ImageView
         android:id="@+id/imageView"
@@ -24,14 +24,14 @@
         android:layout_marginStart="38dp"
         android:layout_marginTop="14dp"
         android:visibility="invisible"
-        android:background="@drawable/ic_add" />
+        android:background="@drawable/button_plus_2" />
 
 
     <ImageView
-        android:layout_width="45dp"
-        android:layout_height="45dp"
-        android:layout_marginStart="91dp"
-        android:layout_marginTop="-5dp"/>
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="93dp"
+        android:layout_marginTop="-2dp"/>
 
     <Button
         android:id="@+id/button5"
@@ -40,14 +40,14 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:visibility="invisible"
-        android:background="@drawable/ic_add" />
+        android:background="@drawable/button_plus_2" />
 
 
     <ImageView
-        android:layout_width="45dp"
-        android:layout_height="45dp"
-        android:layout_marginStart="137dp"
-        android:layout_marginTop="-5dp"/>
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="139dp"
+        android:layout_marginTop="-2dp"/>
 
     <Button
         android:layout_marginTop="-3dp"
@@ -55,7 +55,7 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:visibility="invisible"
-        android:background="@drawable/ic_add" />
+        android:background="@drawable/button_plus_2" />
 
 
     <ImageView
@@ -70,14 +70,14 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:visibility="invisible"
-        android:background="@drawable/ic_add" />
+        android:background="@drawable/button_plus_2" />
 
 
     <ImageView
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_marginStart="180dp"
-        android:layout_marginTop="125dp"/>
+        android:layout_width="55dp"
+        android:layout_height="55dp"
+        android:layout_marginStart="183dp"
+        android:layout_marginTop="122dp"/>
 
     <Button
         android:layout_marginTop="125dp"
@@ -85,7 +85,7 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:visibility="invisible"
-        android:background="@drawable/ic_add" />
+        android:background="@drawable/button_plus_2" />
 
 
     <ImageView
@@ -100,7 +100,7 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:visibility="invisible"
-        android:background="@drawable/ic_add" />
+        android:background="@drawable/button_plus_2" />
 
 
     <ImageView
@@ -115,7 +115,7 @@
         android:layout_width="35dp"
         android:layout_height="35dp"
         android:visibility="invisible"
-        android:background="@drawable/ic_add" />
+        android:background="@drawable/button_plus_2" />
 
 
     <ImageView
@@ -130,15 +130,15 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:visibility="invisible"
-        android:background="@drawable/ic_add" />
+        android:background="@drawable/button_plus_2" />
 
 
     <ImageView
-        android:layout_width="42dp"
-        android:layout_height="42dp"
-        android:layout_marginTop="215dp"
+        android:layout_width="37dp"
+        android:layout_height="37dp"
+        android:layout_marginTop="218dp"
         android:layout_marginBottom="-10dp"
-        android:layout_marginStart="28dp"/>
+        android:layout_marginStart="32dp"/>
 
     <Button
         android:layout_marginTop="215dp"
@@ -147,7 +147,7 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:visibility="invisible"
-        android:background="@drawable/ic_add" />
+        android:background="@drawable/button_plus_2" />
 
 
 </RelativeLayout>

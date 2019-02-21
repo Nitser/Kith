@@ -1,9 +1,33 @@
-<vector xmlns:android="http://schemas.android.com/apk/res/android"
-        android:width="28dp"
-        android:height="28dp"
-        android:viewportWidth="24.0"
-        android:viewportHeight="24.0">
-    <path
-        android:fillColor="@color/colorAccent"
-        android:pathData="M15.41,7.41L14,6l-6,6 6,6 1.41,-1.41L10.83,12z"/>
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android" xmlns:aapt="http://schemas.android.com/aapt"
+    android:viewportWidth="13.789"
+    android:viewportHeight="24.75"
+    android:width="13.789dp"
+    android:height="24.75dp">
+    <group
+        android:translateX="-35.086"
+        android:translateY="-25.586">
+        <group
+            android:translateX="9"
+            android:translateY="7.5">
+            <group
+                android:translateX="27.5"
+                android:translateY="19.5">
+                <path
+                    android:pathData="M0 10.961L10.961 0"
+                    android:strokeColor="#FFFFFF"
+                    android:strokeWidth="2"
+                    android:strokeLineCap="round" />
+            </group>
+            <group
+                android:translateX="27.5"
+                android:translateY="30.461">
+                <path
+                    android:pathData="M0 0L10.961 10.961"
+                    android:strokeColor="#FFFFFF"
+                    android:strokeWidth="2"
+                    android:strokeLineCap="round" />
+            </group>
+        </group>
+    </group>
 </vector>

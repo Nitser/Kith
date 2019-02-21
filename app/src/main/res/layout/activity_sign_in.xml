@@ -50,7 +50,7 @@
         android:paddingRight="20dp"
         android:paddingTop="10dp"
         android:textColor="@color/colorPrimaryDark"
-        android:textColorHint="@color/colorPrimaryDark"
+        android:textColorHint="@color/colorHint"
         android:textSize="14sp"
         android:inputType="textPersonName|textEmailAddress"
         android:lines="1"
@@ -72,7 +72,7 @@
         android:paddingRight="20dp"
         android:paddingTop="10dp"
         android:textColor="@color/colorPrimaryDark"
-        android:textColorHint="@color/colorPrimaryDark"
+        android:textColorHint="@color/colorHint"
         android:textSize="14sp"
         android:inputType="textPassword"
         android:lines="1"
@@ -82,7 +82,7 @@
 
     <Button
         android:id="@+id/button2"
-        android:layout_width="167dp"
+        android:layout_width="265dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"

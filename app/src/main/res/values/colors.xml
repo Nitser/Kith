@@ -3,6 +3,10 @@
     <color name="colorPrimary">#0680C2</color>
     <color name="colorPrimaryDark">#075E8D</color>
     <color name="colorDark">#144B69</color>
+    <color name="colorPress">#21668B</color>
+    <color name="colorHint">#C2C2C2</color>
     <color name="colorGrey">#707070</color>
     <color name="colorAccent">#FFFFFF</color>
+    <color name="colorError">#F36262</color>
+    <color name="colorActive">#08A7FC</color>
 </resources>

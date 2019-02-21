@@ -27,25 +27,9 @@
                             <entry key="launcherLegacy">
                               <value>
                                 <PersistentState>
-                                  <option name="children">
-                                    <map>
-                                      <entry key="image">
-                                        <value>
-                                          <PersistentState>
-                                            <option name="values">
-                                              <map>
-                                                <entry key="paddingPercent" value="20" />
-                                              </map>
-                                            </option>
-                                          </PersistentState>
-                                        </value>
-                                      </entry>
-                                    </map>
-                                  </option>
                                   <option name="values">
                                     <map>
                                       <entry key="assetType" value="IMAGE" />
-                                      <entry key="cropped" value="true" />
                                       <entry key="iconShape" value="NONE" />
                                       <entry key="imageAsset" value="C:\Users\Admin\Desktop\projects\Знакомые\person.png" />
                                       <entry key="outputName" value="person" />
@@ -84,7 +68,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="jar:file:/D:/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/navigation/ic_chevron_left_black_24dp.xml" />
+                                      <entry key="url" value="jar:file:/D:/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/content/ic_content_copy_black_24dp.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -94,7 +78,8 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="outputName" value="ic_left" />
+                            <entry key="color" value="ffffff" />
+                            <entry key="outputName" value="ic_copy" />
                             <entry key="sourceFile" value="C:\Users\Admin" />
                           </map>
                         </option>

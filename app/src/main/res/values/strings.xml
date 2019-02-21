@@ -8,7 +8,7 @@
     <string name="password">Пароль</string>
     <string name="Name">Имя</string>
     <string name="lastName">Фамилия</string>
-    <string name="email">Електронная почта</string>
+    <string name="email">Электронная почта</string>
     <string name="phone">Телефон</string>
     <string name="refCode">Реферальный код</string>
     <string name="do_check_in">Зарегистрироваться</string>
@@ -34,4 +34,13 @@
 
         Администрация обязуется:
         - поддерживать работоспособность сайта за исключением случаев, когда это невозможно по независящим от Администрации причинам.</string>
+
+    <plurals name="people">
+        <item quantity="zero">%1$d человек</item>
+        <item quantity="one">%1$d человека</item>
+        <item quantity="two">%1d человека</item>
+        <item quantity="few">%1$d человека</item>
+        <item quantity="many">%1$d человек</item>
+        <item quantity="other">%1$d other</item>
+    </plurals>
 </resources>
