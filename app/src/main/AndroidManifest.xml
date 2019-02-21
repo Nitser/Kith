@@ -12,19 +12,34 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar">
-        <activity android:name=".Activities.SplashActivity">
+        <activity
+            android:name=".Activities.SplashActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activities.MainActivity" />
-        <activity android:name=".Activities.SignInActivity" />
-        <activity android:name=".Activities.CheckInActivity" />
-        <activity android:name=".Activities.AgreementActivity" />
-        <activity android:name=".Activities.HomeActivity" />
-        <activity android:name=".Activities.CodeActivity"></activity>
+        <activity
+            android:name=".Activities.MainActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activities.SignInActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activities.CheckInActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activities.AgreementActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activities.HomeActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activities.CodeActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".Activities.TermActivity"></activity>
     </application>
 
 </manifest>

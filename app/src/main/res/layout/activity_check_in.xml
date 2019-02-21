@@ -290,10 +290,10 @@
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
                         android:layout_toEndOf="@+id/checkbox"
-                        android:autoLink="web"
-                        android:text="@string/term_of_use"
                         android:textColor="@color/colorAccent"
+                        android:textColorLink="@color/colorAccent"
                         android:textSize="12sp"
+                        android:lineSpacingExtra="5dp"
                         customAttrs:customFont="intro_regular" />
 
                 </RelativeLayout>

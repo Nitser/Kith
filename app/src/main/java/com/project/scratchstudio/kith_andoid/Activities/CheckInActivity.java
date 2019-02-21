@@ -3,17 +3,22 @@ package com.project.scratchstudio.kith_andoid.Activities;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.SpannableStringBuilder;
 import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ScrollView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView;
@@ -39,7 +44,6 @@ public class CheckInActivity extends AppCompatActivity {
 //
 //        ImageView image = findViewById(R.id.portfolio);
 //        image.setImageBitmap(photoService.decodingPhoto(getResources(), getResources().getIdentifier("person", "mipmap", getPackageName()), 210, 210));
-
         editTextListener(R.id.editText5);
         editTextListener(R.id.editText);
         editTextListener(R.id.editText4);
@@ -48,13 +52,34 @@ public class CheckInActivity extends AppCompatActivity {
         editTextListener(R.id.editText8);
         editTextListener(R.id.editText9);
 
-        CustomFontTextView t2 = findViewById(R.id.agree);
-        t2.setMovementMethod(LinkMovementMethod.getInstance());
-        t2.setOnClickListener(view -> {
-            Intent intent = new Intent(CheckInActivity.this, AgreementActivity.class);
-            startActivityForResult(intent, 1);
-        });
+        CustomFontTextView agreement = findViewById(R.id.agree);
+        customTextView(agreement);
 
+    }
+
+    private void customTextView(CustomFontTextView view) {
+        SpannableStringBuilder spanTxt = new SpannableStringBuilder(
+                "Я согласен с ");
+        spanTxt.append("пользовательским соглашением");
+        spanTxt.setSpan(new ClickableSpan() {
+            @Override
+            public void onClick(View widget) {
+                Intent intent = new Intent(CheckInActivity.this, AgreementActivity.class);
+                startActivityForResult(intent, 1);
+            }
+        }, spanTxt.length() - "пользовательским соглашением".length(), spanTxt.length(), 0);
+        spanTxt.append(" и ");
+//        spanTxt.setSpan(new ForegroundColorSpan(Color.WHITE), 32, spanTxt.length(), 0);
+        spanTxt.append("политикой конфиденциальности");
+        spanTxt.setSpan(new ClickableSpan() {
+            @Override
+            public void onClick(View widget) {
+                Intent intent = new Intent(CheckInActivity.this, TermActivity.class);
+                startActivityForResult(intent, 2);
+            }
+        }, spanTxt.length() - "политикой конфиденциальности".length(), spanTxt.length(), 0);
+        view.setMovementMethod(LinkMovementMethod.getInstance());
+        view.setText(spanTxt, TextView.BufferType.SPANNABLE);
     }
 
     private void editTextListener(int id){

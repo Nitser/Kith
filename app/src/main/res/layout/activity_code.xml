@@ -36,6 +36,7 @@
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_marginEnd="20dp"
+            android:onClick="shareButton"
             android:background="@drawable/ic_send" />
     </RelativeLayout>
 
