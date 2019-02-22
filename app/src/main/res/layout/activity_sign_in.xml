@@ -36,7 +36,8 @@
         app:layout_constraintTop_toBottomOf="@+id/view2"
         customAttrs:customFont="jura" />
 
-    <EditText
+    <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontEditText
+        customAttrs:customFont="intro_regular"
         android:id="@+id/editText2"
         android:layout_width="260dp"
         android:layout_height="wrap_content"
@@ -58,8 +59,9 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/customFontTextView" />
 
-    <EditText
+    <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontEditText
         android:id="@+id/editText3"
+        customAttrs:customFont="intro_regular"
         android:layout_width="260dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
