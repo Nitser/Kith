@@ -8,7 +8,9 @@ import java.util.Locale;
 enum CustomFont {
     JURA("fonts/JuraBook.ttf"),
     INTRO("fonts/Intro-Book.otf"),
-    INTRO_REGULAR("fonts/intro_regular.ttf");
+    INTRO_REGULAR("fonts/intro_regular.ttf"),
+    HATTEN("fonts/HATTEN.TTF"),
+    ITCEDSCR("fonts/ITCEDSCR.TTF");
 
     private final String fileName;
 

@@ -1,11 +1,12 @@
 package com.project.scratchstudio.kith_andoid.Activities;
 
-import android.content.Intent;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import com.project.scratchstudio.kith_andoid.GetInternalData.GetCountData;
+import com.project.scratchstudio.kith_andoid.GetInternalData.GetUserIdAndToken;
 import com.project.scratchstudio.kith_andoid.R;
+import com.project.scratchstudio.kith_andoid.Service.InternalStorageService;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -14,10 +15,13 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        new Handler().postDelayed(() -> {
-            Intent intent = new Intent(SplashActivity.this, MainActivity.class);
-            startActivity(intent);
-            finish();
-        }, 2*1000);
+        InternalStorageService getCount = new InternalStorageService(this);
+        getCount.setiGetInternalData(new GetCountData());
+        getCount.execute();
+
+        InternalStorageService getUser = new InternalStorageService(this);
+        getUser.setiGetInternalData(new GetUserIdAndToken());
+        getUser.execute();
+
     }
 }

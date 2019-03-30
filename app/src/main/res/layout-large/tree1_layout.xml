@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="200dp"
+    android:paddingTop="40dp"
+    android:layout_height="238dp">
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:rotation="25"
+        android:layout_width="200dp"
+        android:layout_height="238dp"
+        app:srcCompat="@drawable/tree_1" />
+
+    <ImageView
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_marginStart="120dp"
+        android:layout_marginTop="12dp"/>
+
+    <Button
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="120dp"
+        android:layout_marginTop="14dp"
+        android:visibility="invisible"
+        android:background="@drawable/button_plus_2" />
+
+
+    <ImageView
+        android:layout_width="46dp"
+        android:layout_height="46dp"
+        android:layout_marginStart="139dp"
+        android:layout_marginTop="94dp"/>
+
+    <Button
+        android:id="@+id/button5"
+        android:layout_marginTop="95dp"
+        android:layout_marginStart="140dp"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:visibility="invisible"
+        android:background="@drawable/button_plus_2" />
+
+    <ImageView
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_marginStart="80dp"
+        android:layout_marginTop="185dp"/>
+
+    <Button
+        android:id="@+id/button4"
+        android:layout_marginTop="188dp"
+        android:layout_marginStart="80dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:visibility="invisible"
+        android:background="@drawable/button_plus_2" />
+
+</RelativeLayout>

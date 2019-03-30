@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.project.scratchstudio.kith_andoid">
 
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
@@ -9,11 +11,12 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/ic_app_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AppCompat.NoActionBar">
+        android:theme="@style/Theme.AppCompat.NoActionBar"
+        android:usesCleartextTraffic="true">
         <activity
-            android:name=".Activities.SplashActivity"
+            android:name="$Activities.SplashActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,6 +32,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".Activities.CheckInActivity"
+            android:windowSoftInputMode="adjustPan"
             android:screenOrientation="portrait" />
         <activity
             android:name=".Activities.AgreementActivity"
@@ -39,7 +43,12 @@
         <activity
             android:name=".Activities.CodeActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".Activities.TermActivity"></activity>
+        <activity
+            android:name=".Activities.TermActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".Activities.SmsActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

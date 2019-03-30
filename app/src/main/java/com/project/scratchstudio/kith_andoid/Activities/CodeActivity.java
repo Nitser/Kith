@@ -6,29 +6,31 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.ShareActionProvider;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.project.scratchstudio.kith_andoid.R;
+import com.project.scratchstudio.kith_andoid.Service.HttpService;
 
 public class CodeActivity extends AppCompatActivity {
 
-    private ShareActionProvider shareActionProvider;
+    private ImageButton share;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_code);
 
+        HttpService httpService = new HttpService();
+        httpService.getReferral(this);
+
     }
 
     public void onClickBackButton(View view) {
-        Intent intent = new Intent(CodeActivity.this, HomeActivity.class);
-        startActivity(intent);
+        view.setEnabled(false);
         finish();
     }
 
@@ -43,8 +45,6 @@ public class CodeActivity extends AppCompatActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event)  {
         if (keyCode == KeyEvent.KEYCODE_BACK ) {
-            Intent intent = new Intent(CodeActivity.this, HomeActivity.class);
-            startActivity(intent);
             finish();
             return true;
         }
@@ -54,11 +54,20 @@ public class CodeActivity extends AppCompatActivity {
 
 
     public void shareButton(View view) {
+        view.setEnabled(false);
+        share = (ImageButton) view;
         TextView code = findViewById(R.id.customFontTextView6);
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
         sendIntent.putExtra(Intent.EXTRA_TEXT, code.getText().toString());
         sendIntent.setType("text/plain");
-        startActivity(sendIntent);
+        startActivityForResult(sendIntent, 0);
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        if(requestCode == 0 && resultCode == RESULT_OK && intent != null && intent.getData() != null)
+            share.setEnabled(true);
+    }
+
 }

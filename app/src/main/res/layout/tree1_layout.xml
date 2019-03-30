@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="130dp"
     android:layout_height="180dp">
 
@@ -8,7 +9,7 @@
         android:rotation="25"
         android:layout_width="130dp"
         android:layout_height="180dp"
-        android:src="@drawable/tree_1" />
+        app:srcCompat="@drawable/tree_1" />
 
     <ImageView
         android:layout_width="44dp"

@@ -1,29 +1,73 @@
 package com.project.scratchstudio.kith_andoid.Service;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.Uri;
-import android.os.AsyncTask;
-import android.os.Environment;
+import android.os.Build;
+import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.util.Base64;
 import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 public class PhotoService  {
 
-    private Context context;
+    private Activity context;
 
-    public PhotoService(Context context){ this.context = context; }
+    public PhotoService(Activity context){ this.context = context; }
+
+    public String base64Photo(Bitmap photo) throws UnsupportedEncodingException {
+        if(photo == null)
+            return null;
+
+        ByteArrayOutputStream byteArrayOS = new ByteArrayOutputStream();
+        photo.compress(Bitmap.CompressFormat.JPEG, 30, byteArrayOS);
+        byte[] result = Base64.encode(byteArrayOS.toByteArray(), Base64.NO_WRAP );
+        return new String(result, "UTF-8");
+    }
+
+    public Bitmap decodeBase64Image(String encodedImage) throws UnsupportedEncodingException {
+        byte[] decodedString = Base64.decode(encodedImage.getBytes("UTF-8"), Base64.DEFAULT);
+        return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+    }
+
+    public Bitmap getBitmapFromURL(String src) {
+        try {
+            URL url = new URL(src);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            Bitmap myBitmap = BitmapFactory.decodeStream(input);
+            return myBitmap;
+        } catch (IOException e) {
+            // Log exception
+            return null;
+        }
+    }
+
+    public Uri getImageUri(Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(context.getContentResolver(), inImage, "Title", null);
+        return Uri.parse(path);
+    }
 
     public Bitmap decodingPhoto(Resources res, int id, int width, int height){
         BitmapFactory.Options options = new BitmapFactory.Options();
@@ -32,16 +76,8 @@ public class PhotoService  {
         options.inSampleSize = calculateInSampleSize(options, width, height);
         options.inJustDecodeBounds = false;
         Bitmap resultBitmap = BitmapFactory.decodeResource(res, id, options);
-
-//        resultBitmap = changeOrientation( resultBitmap, getExifAngle(path) );
         return resultBitmap;
     }
-
-    public Bitmap decodingPhoto(Bitmap bitmap, Uri uri){
-        bitmap = changeOrientation( bitmap, getExifAngle(uri.getPath()) );
-        return bitmap;
-    }
-
 
     public Bitmap compressPhoto(Bitmap bitmap, String path) {
 
@@ -74,25 +110,47 @@ public class PhotoService  {
         return inSampleSize;
     }
 
-    Bitmap changeOrientation(Bitmap bitmap, int angle){
+    public Bitmap changePhoto(Bitmap bitmap, Uri uri){
+        int angel=-1;
+        String path = getRealPathFromURI(uri);
+        try {
+            angel = getExifAngle(path);
+        } catch (Exception e){
+//            Log.i("ERROR IN ANGEL:", e.getMessage());
+        }
+//        Log.i("ANGEL: ", String.valueOf(angel));
+
+        bitmap = changeOrientation( bitmap, angel );
+        return bitmap;
+    }
+
+    private Bitmap changeOrientation(Bitmap bitmap, int angle){
         Matrix matrix = new Matrix();
         matrix.postRotate(angle);
         return Bitmap.createBitmap(bitmap,0,0,bitmap.getWidth(),bitmap.getHeight(),matrix,true);
     }
 
-    private static int getExifAngle(String path) {
+    private int getExifAngle(String path) {
         int angle = 0;
+        int orientation=-1;
         try {
+            if (Build.VERSION.SDK_INT >= 23) {
+                int permissionCheck = ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE);
+                if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(context, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+                }
+            }
             ExifInterface ei = new ExifInterface(path);
-            int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
+            orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
+
             switch(orientation) {
-                case ExifInterface.ORIENTATION_ROTATE_90:
+                case 6:
                     angle = 90;
                     break;
-                case ExifInterface.ORIENTATION_ROTATE_180:
+                case 3:
                     angle = 180;
                     break;
-                case ExifInterface.ORIENTATION_ROTATE_270:
+                case 8:
                     angle = 270;
                     break;
 
@@ -100,9 +158,25 @@ public class PhotoService  {
                     break;
             }
         } catch (Exception e) {
-            Log.d("!!!!!!_ANGLE", e.toString());
+//            Log.d("ANGLE ERROR", e.toString());
         }
+//        Log.i("ANGEL ORIENTATION: ", String.valueOf(orientation));
         return angle;
+    }
+
+    private String getRealPathFromURI(Uri contentURI) {
+
+        String result;
+        Cursor cursor = context.getContentResolver().query(contentURI, null, null, null, null);
+        if (cursor == null) { // Source is Dropbox or other similar local file path
+            result = contentURI.getPath();
+        } else {
+            cursor.moveToFirst();
+            int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+            result = cursor.getString(idx);
+            cursor.close();
+        }
+        return result;
     }
 
 }

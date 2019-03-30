@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    xmlns:customAttrs="http://schemas.android.com/apk/res-auto"
+    tools:context=".Activities.CheckInActivity">
+
+    <ScrollView android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/scroll"
+        xmlns:android="http://schemas.android.com/apk/res/android" />
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true">
+
+        <ImageButton
+            android:id="@+id/back"
+            android:layout_width="17dp"
+            android:layout_height="27dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="48dp"
+            android:layout_marginTop="48dp"
+            android:background="@drawable/ic_left"
+            android:onClick="onClickBack"
+            app:layout_constraintEnd_toStartOf="@+id/imageView2"
+            app:layout_constraintHorizontal_bias="0.081"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="48dp"
+            android:src="@drawable/ic_logo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/constraintLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/relativeLayout2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.501"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView2"
+            app:layout_constraintVertical_bias="0.255">
+
+
+            <RelativeLayout
+                android:id="@+id/relativeLayout3"
+                android:layout_width="100dp"
+                android:layout_height="115dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="20dp"
+                app:layout_constraintBottom_toTopOf="@+id/editText7"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/customFontTextView4"
+                app:layout_constraintVertical_bias="0.157">
+
+                <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/portfolio"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:src="@mipmap/person"
+                    app:civ_border_color="@color/colorPrimaryDark"
+                    app:civ_border_width="2dp"
+                    app:civ_circle_background_color="@color/colorAccent" />
+
+
+                <ImageButton
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_alignBottom="@+id/portfolio"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="-15dp"
+                    android:background="@drawable/button_plus"
+                    android:onClick="chooseImageButton"
+                    android:tint="@color/colorAccent"
+                    app:srcCompat="@drawable/ic_add" />
+
+            </RelativeLayout>
+
+            <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+                android:id="@+id/customFontTextView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="40dp"
+                android:layout_marginStart="40dp"
+                android:text="@string/registration"
+                android:textColor="@color/colorAccent"
+                android:textSize="33sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.514"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                customAttrs:customFont="intro_regular" />
+
+            <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontEditText
+                android:id="@+id/editText5"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/entry_field_check_in"
+                android:hint="@string/Name"
+                android:inputType="textFilter|textNoSuggestions|textVisiblePassword"
+                android:lines="1"
+                android:paddingBottom="15dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingTop="10dp"
+                android:textColor="@color/colorPrimaryDark"
+                android:textColorHint="@color/colorHint"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toEndOf="@+id/relativeLayout3"
+                app:layout_constraintTop_toBottomOf="@+id/editText"
+                customAttrs:customFont="intro_regular" />
+
+            <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontEditText
+                android:id="@+id/editText6"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/entry_field_check_in"
+                android:hint="Отчество"
+                android:inputType="textFilter|textNoSuggestions|textVisiblePassword"
+                android:lines="1"
+                android:paddingBottom="15dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingTop="10dp"
+                android:textColor="@color/colorPrimaryDark"
+                android:textColorHint="@color/colorHint"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/relativeLayout3"
+                app:layout_constraintTop_toBottomOf="@+id/editText5"
+                customAttrs:customFont="intro_regular" />
+
+            <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontEditText
+                android:id="@+id/editText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/entry_field_check_in"
+                android:hint="@string/lastName"
+                android:inputType="textFilter|textNoSuggestions|textVisiblePassword"
+                android:lines="1"
+                android:paddingBottom="15dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingTop="10dp"
+                android:textColor="@color/colorPrimaryDark"
+                android:textColorHint="@color/colorHint"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toEndOf="@+id/relativeLayout3"
+                app:layout_constraintTop_toBottomOf="@+id/customFontTextView4"
+                customAttrs:customFont="intro_regular" />
+
+            <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontEditText
+                android:id="@+id/editText7"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/entry_field_check_in"
+                android:hint="@string/login"
+                android:inputType="textPersonName"
+                android:lines="1"
+                android:paddingBottom="15dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingTop="10dp"
+                android:textColor="@color/colorPrimaryDark"
+                android:textColorHint="@color/colorHint"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editText6"
+                customAttrs:customFont="intro_regular" />
+
+            <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontEditText
+                android:id="@+id/editText8"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/entry_field_check_in"
+                android:hint="@string/password"
+                android:inputType="textPassword"
+                android:lines="1"
+                android:paddingBottom="15dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingTop="10dp"
+                android:textColor="@color/colorPrimaryDark"
+                android:textColorHint="@color/colorHint"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editText7"
+                customAttrs:customFont="intro_regular" />
+
+            <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontEditText
+                android:id="@+id/editText4"
+                android:layout_width="230dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/entry_field_check_in"
+                android:hint="@string/phone"
+                android:inputType="phone"
+                android:lines="1"
+                android:maxLength="15"
+                android:paddingBottom="15dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingTop="10dp"
+                android:textColor="@color/colorPrimaryDark"
+                android:textColorHint="@color/colorHint"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editText8"
+                customAttrs:customFont="intro_regular" />
+
+            <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontEditText
+                android:id="@+id/editText1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/entry_field_check_in"
+                android:hint="@string/position"
+                android:inputType="text"
+                android:lines="1"
+                android:maxLength="45"
+                android:paddingBottom="15dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingTop="10dp"
+                android:textColor="@color/colorPrimaryDark"
+                android:textColorHint="@color/colorHint"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editText4"
+                customAttrs:customFont="intro_regular" />
+
+            <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontEditText
+                android:id="@+id/editText9"
+                android:layout_width="186dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/entry_field_check_in"
+                android:hint="@string/refCode"
+                android:inputType="text"
+                android:lines="1"
+                android:paddingBottom="15dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingTop="10dp"
+                android:textColor="@color/colorPrimaryDark"
+                android:textColorHint="@color/colorHint"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editText1"
+                customAttrs:customFont="intro_regular" />
+
+            <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontEditText
+                android:id="@+id/editText2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/entry_field_check_in"
+                android:hint="@string/description"
+                android:inputType="text"
+                android:lines="3"
+                android:maxLength="100"
+                android:paddingBottom="15dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingTop="10dp"
+                android:textColor="@color/colorPrimaryDark"
+                android:textColorHint="@color/colorHint"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editText9"
+                customAttrs:customFont="intro_regular" />
+
+        </android.support.constraint.ConstraintLayout>
+
+        <RelativeLayout
+            android:id="@+id/relativeLayout2"
+            android:layout_width="350dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="88dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:paddingBottom="18dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <CheckBox
+                android:id="@+id/checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="20dp"
+                android:buttonTint="@color/colorDark" />
+
+            <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+                android:id="@+id/agree"
+                android:layout_width="325dp"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_toEndOf="@+id/checkbox"
+                android:lineSpacingExtra="5dp"
+                android:textColor="@color/colorAccent"
+                android:textColorLink="@color/colorAccent"
+                android:textSize="12sp"
+                customAttrs:customFont="intro_regular" />
+
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/button3"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/button_check_in"
+            android:onClick="onClickCheckInButton"
+            android:text="@string/do_check_in"
+            android:textAllCaps="false"
+            android:textColor="@color/colorAccent"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/relativeLayout2"
+            app:layout_constraintVertical_bias="1.0"
+            tools:layout_editor_absoluteX="0dp" />
+
+    </android.support.constraint.ConstraintLayout>
+
+
+
+
+</RelativeLayout>

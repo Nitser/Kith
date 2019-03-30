@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="241dp"
     android:layout_height="252dp"
+    android:paddingTop="10dp"
+    android:paddingBottom="5dp"
+    android:layout_marginBottom="20dp"
     android:layout_marginTop="10dp">
 
     <ImageView
@@ -9,7 +13,7 @@
         android:layout_width="241dp"
         android:layout_height="252dp"
         android:layout_marginStart="-5dp"
-        android:src="@drawable/tree_2" />
+        app:srcCompat="@drawable/tree_2" />
 
 
     <ImageView
@@ -28,10 +32,9 @@
 
 
     <ImageView
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="93dp"
-        android:layout_marginTop="-2dp"/>
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="97dp"/>
 
     <Button
         android:id="@+id/button5"
@@ -44,10 +47,9 @@
 
 
     <ImageView
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="139dp"
-        android:layout_marginTop="-2dp"/>
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="143dp"/>
 
     <Button
         android:layout_marginTop="-3dp"
@@ -134,10 +136,9 @@
 
 
     <ImageView
-        android:layout_width="37dp"
-        android:layout_height="37dp"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
         android:layout_marginTop="218dp"
-        android:layout_marginBottom="-10dp"
         android:layout_marginStart="32dp"/>
 
     <Button
