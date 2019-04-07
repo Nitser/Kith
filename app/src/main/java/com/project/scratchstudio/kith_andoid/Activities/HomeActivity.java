@@ -106,7 +106,6 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void myUpdateOperation(){
-//        Log.i("REFRESH: ", "onRefresh called from SwipeRefreshLayout");
         Activity activity = this;
 
         if(isNetworkConnected()){

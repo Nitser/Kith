@@ -208,7 +208,9 @@ public class CheckInActivity extends AppCompatActivity {
            image.setImageBitmap(currentBitmap);
            photoButton.setEnabled(true);
         }
-
+        else if( requestCode == 0 ){
+           photoButton.setEnabled(true);
+       }
     }
 
     @Override

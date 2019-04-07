@@ -47,7 +47,7 @@ public class InternalStorageService extends AsyncTask<String, Void, Integer> {
     @Override
     protected Integer doInBackground(String... strings) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        if(!sp.contains("all_users"))
+        if(!sp.contains("count_users"))
             inizializingStorage(sp);
         if (iGetInternalData != null)
             return iGetInternalData.get(sp);
@@ -66,9 +66,9 @@ public class InternalStorageService extends AsyncTask<String, Void, Integer> {
     private void inizializingStorage(SharedPreferences sp){
         SharedPreferences.Editor ed;
         ed = sp.edit();
-        ed.putInt("all_users", 0);
-        ed.putInt("user_id", -1 );
-        ed.putString("user_token", "");
+        ed.putInt("count_users", 0);
+        ed.putInt("cur_user_id", -1 );
+        ed.putString("cur_user_token", "");
         ed.apply();
 
         Cache.setAllUsers(0);

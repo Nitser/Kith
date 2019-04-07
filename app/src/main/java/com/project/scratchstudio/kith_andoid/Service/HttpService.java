@@ -15,12 +15,14 @@ import android.widget.Toast;
 
 import com.project.scratchstudio.kith_andoid.Activities.CheckInActivity;
 import com.project.scratchstudio.kith_andoid.Activities.HomeActivity;
+import com.project.scratchstudio.kith_andoid.Activities.MainActivity;
 import com.project.scratchstudio.kith_andoid.Activities.SmsActivity;
 import com.project.scratchstudio.kith_andoid.CustomViews.CustomFontEditText;
 import com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView;
 import com.project.scratchstudio.kith_andoid.Model.Cache;
 import com.project.scratchstudio.kith_andoid.Model.User;
 import com.project.scratchstudio.kith_andoid.R;
+import com.project.scratchstudio.kith_andoid.SetInternalData.ClearUserIdAndToken;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -181,11 +183,20 @@ public class HttpService {
                         String userName = HomeActivity.getMainUser().getFirstName() + " " + HomeActivity.getMainUser().getLastName();
                         name.setText(userName);
                     }
-                    else
+                    else {
                         Toast.makeText(context, getErrorMessage(code), Toast.LENGTH_SHORT).show();
+                        HomeActivity.cleanMainUser();
+                        InternalStorageService internalStorageService = new InternalStorageService(context);
+                        internalStorageService.setiSetInternalData(new ClearUserIdAndToken());
+                        internalStorageService.execute();
+                        Intent intent = new Intent(context, MainActivity.class);
+                        context.startActivity(intent);
+                        context.finish();
+                    }
                 } catch (JSONException e) {
                     Toast.makeText(context, getErrorMessage(code), Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
+//
                 }
             }
             else

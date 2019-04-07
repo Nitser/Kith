@@ -8,10 +8,10 @@ public class ClearUserIdAndToken implements ISetInternalData {
     public int set(SharedPreferences sp) {
         SharedPreferences.Editor ed;
         ed = sp.edit();
-        ed.putInt("user_id", -1);
-        ed.putString("user_token", "");
+        ed.putInt("cur_user_id", -1);
+        ed.putString("cur_user_token", "");
         ed.apply();
-        String str = String.valueOf(sp.getInt("user_id", -1));
+        String str = String.valueOf(sp.getInt("cur_user_id", -1));
         return 0;
     }
 

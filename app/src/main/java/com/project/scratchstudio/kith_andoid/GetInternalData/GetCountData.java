@@ -8,7 +8,7 @@ public class GetCountData implements IGetInternalData {
 
     @Override
     public int get( SharedPreferences sp) {
-        Cache.setAllUsers(sp.getInt("all_users", 0));
+        Cache.setAllUsers(sp.getInt("count_users", 0));
         return 0;
     }
 

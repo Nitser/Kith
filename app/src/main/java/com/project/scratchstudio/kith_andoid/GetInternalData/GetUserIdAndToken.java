@@ -9,13 +9,13 @@ public class GetUserIdAndToken implements IGetInternalData {
 
     @Override
     public int get(SharedPreferences sp) {
-        if( sp.getInt("user_id", -1) == -1 ){
+        if( sp.getInt("cur_user_id", -1) == -1 ){
             return 1;
         }
         else {
             HomeActivity.createMainUser();
-            HomeActivity.getMainUser().setId(sp.getInt("user_id", -1));
-            HomeActivity.getMainUser().setToken(sp.getString("user_token", ""));
+            HomeActivity.getMainUser().setId(sp.getInt("cur_user_id", -1));
+            HomeActivity.getMainUser().setToken(sp.getString("cur_user_token", ""));
             return 2;
         }
     }
