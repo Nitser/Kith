@@ -15,9 +15,11 @@ public class User implements Serializable{
     private String login;
     private String password;
     private String phone;
+    private String email;
     private String position;
     private String description;
     private String url;
+    private int usersCount;
 
     public String getToken() {
         return token;
@@ -113,5 +115,21 @@ public class User implements Serializable{
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public int getUsersCount() {
+        return usersCount;
+    }
+
+    public void setUsersCount(int usersCount) {
+        this.usersCount = usersCount;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

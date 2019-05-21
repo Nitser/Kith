@@ -2,6 +2,7 @@ package com.project.scratchstudio.kith_andoid.Service;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.SystemClock;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,9 +13,13 @@ import android.widget.RelativeLayout;
 
 import com.project.scratchstudio.kith_andoid.Activities.CodeActivity;
 import com.project.scratchstudio.kith_andoid.Activities.HomeActivity;
+import com.project.scratchstudio.kith_andoid.Fragments.TreeFragment;
 import com.project.scratchstudio.kith_andoid.Model.User;
 import com.project.scratchstudio.kith_andoid.R;
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class TreeService {
 
@@ -66,12 +71,12 @@ public class TreeService {
         }
     }
 
-    public void makeOwnTree(LinearLayout parentLayout){
-        HomeActivity homeActivity = (HomeActivity)(parentLayout.getContext());
+    public void makeTree(LinearLayout parentLayout, List<User> list, boolean owner){
+        HomeActivity homeActivity = (HomeActivity) parentLayout.getContext();
         int bitmapIndex=0;
         int id = 0;
         int treeIndex = 4;
-        int treeCount = (homeActivity.getInvitedUsers().size()-3)/9 + 8;
+        int treeCount = (list.size()-3)/9 + 8;
 
         while (treeIndex < treeCount){
             RelativeLayout newLayout;
@@ -85,8 +90,8 @@ public class TreeService {
 
             for(int index : imageIndex){
                 ImageView imageView = (ImageView) newLayout.getChildAt(index);
-                if(bitmapIndex < homeActivity.getInvitedUsers().size()){
-                    Picasso.with(parentLayout.getContext()).load(homeActivity.getInvitedUsers().get(bitmapIndex).getUrl())
+                if(bitmapIndex < list.size()){
+                    Picasso.with(parentLayout.getContext()).load(list.get(bitmapIndex).getUrl())
                             .placeholder(R.mipmap.person)
                             .error(R.mipmap.person)
                             .transform(new PicassoCircleTransformation())
@@ -100,72 +105,27 @@ public class TreeService {
                         buttonCount = SystemClock.elapsedRealtime();
                             view.setEnabled(false);
                             Count count = (Count) view.getTag();
-                            User user = homeActivity.getInvitedUsers().get(count.getIndex());
-                            Intent intent = new Intent(newLayout.getContext(), HomeActivity.class);
-                            intent.putExtra("another_user", true);
-                            intent.putExtra("user", user);
-                            newLayout.getContext().startActivity(intent);
-                            view.setEnabled(true);
+                            User user = list.get(count.getIndex());
 
+                            Bundle bundle = new Bundle();
+                            bundle.putBoolean("another_user", true);
+                            bundle.putSerializable("user", user);
+                            HomeActivity.getStackBundles().add(bundle);
+                            homeActivity.loadFragment(TreeFragment.newInstance(bundle));
+                            view.setEnabled(true);
                     });
                     id++;
                     bitmapIndex++;
-                } else {
+                } else if (owner){
                     newLayout.getChildAt(index + 1).setVisibility(View.VISIBLE);
                     return ;
-                }
-            }
-            treeIndex++;
-        }
-
-    }
-
-    public void makeAlienTree(LinearLayout parentLayout){
-        HomeActivity homeActivity = (HomeActivity)(parentLayout.getContext());
-        int bitmapIndex=0;
-        int id = 0;
-        int treeIndex = 4;
-        int treeCount = (homeActivity.getInvitedUsers().size()-3)/9 + 8;
-
-        while (treeIndex < treeCount){
-            RelativeLayout newLayout;
-            if(treeIndex == 4)
-                newLayout = addSmallTree(parentLayout.getContext());
-            else if(treeIndex == 5)
-                newLayout = addMediumTree(parentLayout.getContext());
-            else
-                newLayout = addBigTree(parentLayout.getContext());
-            parentLayout.addView(newLayout);
-
-            for(int index : imageIndex){
-                ImageView imageView = (ImageView) newLayout.getChildAt(index);
-                if(bitmapIndex < homeActivity.getInvitedUsers().size()){
-//                    imageView.setImageBitmap(homeActivity.getInvitedUsers().get(bitmapIndex).getImage());
-                    Picasso.with(parentLayout.getContext()).load(homeActivity.getInvitedUsers().get(bitmapIndex).getUrl())
-                            .placeholder(R.mipmap.person)
-                            .error(R.mipmap.person)
-                            .transform(new PicassoCircleTransformation())
-                            .into(imageView);
-                    imageView.setTag(new Count(id));
-
-                    imageView.setOnClickListener(view -> {
-                        view.setEnabled(false);
-                        Count count = (Count) view.getTag();
-                        User user = homeActivity.getInvitedUsers().get(count.getIndex());
-                        Intent intent = new Intent(newLayout.getContext(), HomeActivity.class);
-                        intent.putExtra("another_user", true);
-                        intent.putExtra("user", user);
-                        newLayout.getContext().startActivity(intent);
-                        view.setEnabled(true);
-                    });
-                    id++;
-                    bitmapIndex++;
                 } else {
                     return;
                 }
             }
             treeIndex++;
         }
+
     }
 
     private class Count{

@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
         if(isNetworkConnected()){
             HttpService httpService = new HttpService();
             httpService.count(this, counts);
+
         } else {
             counts.setText(String.valueOf(Cache.getAllUsers()));
             Toast.makeText(this, "Нет подключения к интернету", Toast.LENGTH_SHORT).show();

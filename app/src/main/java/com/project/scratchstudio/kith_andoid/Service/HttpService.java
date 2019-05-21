@@ -2,27 +2,35 @@ package com.project.scratchstudio.kith_andoid.Service;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.preference.PreferenceManager;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.project.scratchstudio.kith_andoid.Activities.ChangePasswordActivity;
 import com.project.scratchstudio.kith_andoid.Activities.CheckInActivity;
 import com.project.scratchstudio.kith_andoid.Activities.HomeActivity;
 import com.project.scratchstudio.kith_andoid.Activities.MainActivity;
+import com.project.scratchstudio.kith_andoid.Activities.SignInActivity;
 import com.project.scratchstudio.kith_andoid.Activities.SmsActivity;
+import com.project.scratchstudio.kith_andoid.Adapters.SearchAdapter;
 import com.project.scratchstudio.kith_andoid.CustomViews.CustomFontEditText;
 import com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView;
+import com.project.scratchstudio.kith_andoid.Fragments.AnnouncementFragment;
+import com.project.scratchstudio.kith_andoid.Fragments.NewAnnouncementFragment;
+import com.project.scratchstudio.kith_andoid.Fragments.SearchFragment;
+import com.project.scratchstudio.kith_andoid.Model.AnnouncementInfo;
 import com.project.scratchstudio.kith_andoid.Model.Cache;
+import com.project.scratchstudio.kith_andoid.Model.SearchInfo;
 import com.project.scratchstudio.kith_andoid.Model.User;
 import com.project.scratchstudio.kith_andoid.R;
 import com.project.scratchstudio.kith_andoid.SetInternalData.ClearUserIdAndToken;
+import com.project.scratchstudio.kith_andoid.SetInternalData.SetCountData;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -36,48 +44,51 @@ import java.util.Map;
 
 public class HttpService {
 
+    private static final String SERVER = "dev.kith.ml";
+
     public void count(Activity activity, CustomFontTextView textView) {
         String key = "users_count";
 
-        HttpGetRequest httpGetRequest = new HttpGetRequest((output, resultJSON, code) -> {
+        HttpGetRequest httpGetRequest = new HttpGetRequest(activity, (output, resultJSON, code) -> {
             if(output && resultJSON!=null){
                 JSONObject response;
                 try {
                     response = new JSONObject(resultJSON);
                     textView.setText(response.get(key).toString());
-                    SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(activity);;
-                    SharedPreferences.Editor editor = sp.edit();
-                    editor.putInt("all_users", response.getInt(key));
-                    editor.commit();
+                    Cache.setAllUsers(response.getInt(key));
+                    InternalStorageService getCount = new InternalStorageService(activity);
+                    getCount.setiSetInternalData(new SetCountData());
+                    getCount.execute();
                 } catch (JSONException e) {
                     if(code != 200)
                         Toast.makeText(activity, getErrorMessage(code), Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
-                }
+                } catch (NullPointerException ignored){}
             }
             else {
                 textView.setText(Cache.getAllUsers());
-                Toast.makeText(activity, getErrorMessage(code), Toast.LENGTH_SHORT).show();
+                if (activity != null)
+                    Toast.makeText(activity, getErrorMessage(code), Toast.LENGTH_SHORT).show();
             }
         });
-        httpGetRequest.execute("http://kith.ml/api/users/count");
+        httpGetRequest.execute("http://" + SERVER + "/api/users/count");
 
     }
 
     public void singin(View view, String login, String password){
-        String[] result_keys = {"status", "user_id", "user_token"};
+        String[] result_keys = {"status", "user_id", "access_token", "token_type"};
         String[] input_keys = {"login", "password"};
         String[] data = { login, password };
-
-        HttpPostRequest httpPostRequest = new HttpPostRequest(input_keys, data, (output, resultJSON, code) -> {
+        SignInActivity activity = (SignInActivity) view.getContext();
+        HttpPostRequest httpPostRequest = new HttpPostRequest(activity, input_keys, data, (output, resultJSON, code) -> {
             if( output && resultJSON != null ){
                 try {
                     JSONObject response = new JSONObject(resultJSON);
-                    if(response.getBoolean(result_keys[0])){
+                    if(response.has(result_keys[1])){
                         HomeActivity.createMainUser();
                         HomeActivity.getMainUser().setId(response.getInt(result_keys[1]));
-                        HomeActivity.getMainUser().setToken(response.getString(result_keys[2]));
-
+                        HomeActivity.getMainUser().setToken(response.getString(result_keys[3]) + " " + response.getString(result_keys[2]));
+                        HomeActivity.getMainUser().setPassword(password);
                         Intent intent = new Intent(view.getContext(), HomeActivity.class);
                         intent.putExtra("another_user", false);
                         view.getContext().startActivity(intent);
@@ -86,7 +97,6 @@ public class HttpService {
                         response = new JSONObject(resultJSON);
                         HomeActivity.createMainUser();
                         HomeActivity.getMainUser().setId(response.getInt(result_keys[1]));
-//                        Log.i("We set id: ", response.getString(result_keys[1]));
                         Intent intent = new Intent(view.getContext(), SmsActivity.class);
                         view.getContext().startActivity(intent);
                     } else{
@@ -97,19 +107,19 @@ public class HttpService {
                     Toast.makeText(view.getContext(), getErrorMessage(code), Toast.LENGTH_SHORT).show();
                     view.setEnabled(true);
                     e.printStackTrace();
-                }
+                } catch (NullPointerException ignored) {}
             }
-            else{
+            else if(view.getContext() != null){
                 Toast.makeText(view.getContext(), getErrorMessage(code), Toast.LENGTH_SHORT).show();
                 view.setEnabled(true);
 
             }
         });
-        httpPostRequest.execute("http://kith.ml/api/singin");
+        httpPostRequest.execute("http://" + SERVER + "/api/singin");
     }
 
     public void singup(Activity activity, Button button, Bitmap photo, String parent_id, Map<String, CustomFontEditText> fields) throws UnsupportedEncodingException {
-        String[] result_keys = {"status", "user_id", "user_token"};
+        String[] result_keys = {"status", "user_id", "access_token", "token_type"};
         String[] body_keys = {"user_firstname", "user_lastname", "user_middlename", "user_phone", "user_login", "user_password", "invitation_user_id", "user_position", "user_description"};
         String[] body_data  = { fields.get(body_keys[0]).getText().toString().trim(), fields.get(body_keys[1]).getText().toString().trim(), fields.get(body_keys[2]).getText().toString().trim(),
                 fields.get(body_keys[3]).getText().toString().trim(), fields.get(body_keys[4]).getText().toString().trim(), fields.get(body_keys[5]).getText().toString().trim(),
@@ -118,15 +128,16 @@ public class HttpService {
         PhotoService photoService = new PhotoService(activity);
         String res = photoService.base64Photo(photo);
 
-        HttpPostRequest httpPostRequest = new HttpPostRequest(body_keys, body_data, res, (output, resultJSON, code) -> {
+        HttpPostRequest httpPostRequest = new HttpPostRequest(activity, body_keys, body_data, res, (output, resultJSON, code) -> {
             if( output && resultJSON!= null){
                 try {
                     JSONObject response = new JSONObject(resultJSON);
                     if(response.getBoolean(result_keys[0])){
                         HomeActivity.createMainUser();
                         HomeActivity.getMainUser().setId(response.getInt(result_keys[1]));
-                        HomeActivity.getMainUser().setToken(response.getString(result_keys[2]));
+                        HomeActivity.getMainUser().setToken(response.getString(result_keys[3]) + " " + response.getString(result_keys[2]));
                         HomeActivity.getMainUser().setImage(photo);
+                        HomeActivity.getMainUser().setPassword(fields.get(body_keys[5]).getText().toString().trim());
                         Intent intent = new Intent(activity, SmsActivity.class);
                         activity.startActivity(intent);
                         activity.finish();
@@ -138,20 +149,20 @@ public class HttpService {
                     Toast.makeText(activity, getErrorMessage(code), Toast.LENGTH_SHORT).show();
                     button.setEnabled(true);
                     e.printStackTrace();
-                }
+                } catch (NullPointerException ignored) {}
             }
-            else {
+            else if(activity != null) {
                 Toast.makeText(activity, getErrorMessage(code), Toast.LENGTH_SHORT).show();
                 button.setEnabled(true);
             }
         });
-        httpPostRequest.execute("http://kith.ml/api/singup");
+        httpPostRequest.execute("http://" + SERVER + "/api/singup");
     }
 
     public void getUser(Activity context){
-        String[] input_keys = {"user-token"};
+        String[] input_keys = {"Authorization"};
 
-        HttpGetRequest httpGetRequest = new HttpGetRequest(input_keys, (output, resultJSON, code) -> {
+        HttpGetRequest httpGetRequest = new HttpGetRequest(context, input_keys, (output, resultJSON, code) -> {
             if(output && resultJSON != null){
                 JSONObject response;
                 try {
@@ -180,8 +191,10 @@ public class HttpService {
                                 .into(photo);
 
                         CustomFontTextView name = context.findViewById(R.id.name);
+                        CustomFontTextView position = context.findViewById(R.id.position);
                         String userName = HomeActivity.getMainUser().getFirstName() + " " + HomeActivity.getMainUser().getLastName();
                         name.setText(userName);
+                        position.setText(HomeActivity.getMainUser().getPosition());
                     }
                     else {
                         Toast.makeText(context, getErrorMessage(code), Toast.LENGTH_SHORT).show();
@@ -196,37 +209,38 @@ public class HttpService {
                 } catch (JSONException e) {
                     Toast.makeText(context, getErrorMessage(code), Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
-//
-                }
+                } catch (NullPointerException ignored) {}
             }
-            else
+            else if(context != null)
                 Toast.makeText(context, getErrorMessage(code), Toast.LENGTH_SHORT).show();
         });
-        httpGetRequest.execute("http://kith.ml/api/users/" + HomeActivity.getMainUser().getId());
+        httpGetRequest.execute("http://" + SERVER + "/api/users/" + HomeActivity.getMainUser().getId());
     }
 
-    public void referralCount(Activity activity, Boolean onlyMine, int id){
+    public void referralCount(Activity activity, User user, Boolean onlyMine){
         String[] result_keys = {"referral_count"};
-        String[] header_keys = {"user-token"};
+        String[] header_keys = {"Authorization"};
         String[] header_data = { HomeActivity.getMainUser().getToken() };
         String[] body_keys;
         String[] body_data;
 
         if(onlyMine){
             body_keys = new String[]{"user_id", "only_mine"};
-            body_data = new String[]{String.valueOf(id), "1"};
+            body_data = new String[]{String.valueOf(user.getId()), "1"};
         } else {
             body_keys = new String[]{"user_id"};
-            body_data = new String[]{String.valueOf(id)};
+            body_data = new String[]{String.valueOf(user.getId())};
         }
 
-        HttpPostRequest httpPostRequest = new HttpPostRequest(header_keys, body_keys, header_data, body_data, ((output, resultJSON, code) -> {
+        HttpPostRequest httpPostRequest = new HttpPostRequest(activity, header_keys, body_keys, header_data, body_data, ((output, resultJSON, code) -> {
             if(output && resultJSON != null){
                 try {
                     JSONObject response = new JSONObject(resultJSON);
                     if(!response.has("status")){
                         if(onlyMine){
-                            Cache.setMyUsers(response.getInt(result_keys[0]));
+                            user.setUsersCount(response.getInt(result_keys[0]));
+                            if(HomeActivity.getMainUser().getId() == user.getId())
+                                Cache.setMyUsers(response.getInt(result_keys[0]));
                         } else {
                             CustomFontTextView textView = activity.findViewById(R.id.yourPeople);
                             textView.setText(activity.getResources().getQuantityString(R.plurals.people, response.getInt(result_keys[0]), response.getInt(result_keys[0])));
@@ -237,24 +251,24 @@ public class HttpService {
                 } catch (JSONException e) {
                     Toast.makeText(activity, getErrorMessage(code), Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
-                }
+                } catch (NullPointerException ignored) {}
             }
-            else
+            else if(activity != null)
                 Toast.makeText(activity, getErrorMessage(code), Toast.LENGTH_SHORT).show();
         }));
 
-        httpPostRequest.execute("http://kith.ml/api/users/referral_count");
+        httpPostRequest.execute("http://" + SERVER + "/api/users/referral_count");
 
     }
 
     public void getReferral(Activity activity){
         String[] result_keys = {"user_referral"};
-        String[] header_keys = {"user-token"};
+        String[] header_keys = {"Authorization"};
         String[] body_keys = {"user_id"};
         String[] header_data = { HomeActivity.getMainUser().getToken() };
         String[] body_data = { String.valueOf(HomeActivity.getMainUser().getId()) };
 
-        HttpPostRequest httpPostRequest = new HttpPostRequest(header_keys, body_keys, header_data, body_data, ((output, resultJSON, code) -> {
+        HttpPostRequest httpPostRequest = new HttpPostRequest(activity, header_keys, body_keys, header_data, body_data, ((output, resultJSON, code) -> {
             if( output && resultJSON != null){
                 try {
                     JSONObject response = new JSONObject(resultJSON);
@@ -267,22 +281,23 @@ public class HttpService {
                 } catch (JSONException e) {
                     Toast.makeText(activity, getErrorMessage(code), Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
-                }
-            } else {
+                } catch (NullPointerException ignored) {}
+            } else if(activity != null) {
                 Toast.makeText(activity, getErrorMessage(code), Toast.LENGTH_SHORT).show();
             }
         }));
-        httpPostRequest.execute("http://kith.ml/api/users/referral");
+        httpPostRequest.execute("http://" + SERVER + "/api/users/referral");
     }
 
-    public void getInvitedUsers(Activity activity, int id, boolean owner){
-        String[] result_keys = {"status", "user_id", "user_firstname", "user_lastname", "photo"};
-        String[] header_keys = {"user-token"};
+    public void getInvitedUsers(Activity activity, User user, boolean owner){
+
+        String[] result_keys = {"status", "user_id", "user_firstname", "user_lastname", "photo", "user_middlename", "user_position", "user_description"};
+        String[] header_keys = {"Authorization"};
         String[] body_keys = {"user_id", "page", "size"};
         String[] header_data = { HomeActivity.getMainUser().getToken() };
-        String[] body_data = { String.valueOf(id) , "0", "50" };
+        String[] body_data = { String.valueOf(user.getId()) , "0", "50" };
 
-        HttpPostRequest httpPostRequest = new HttpPostRequest(header_keys, body_keys, header_data, body_data, ((output, resultJSON, code) -> {
+        HttpPostRequest httpPostRequest = new HttpPostRequest(activity, header_keys, body_keys, header_data, body_data, ((output, resultJSON, code) -> {
             if( output && resultJSON != null){
                 try {
                     JSONArray response = new JSONArray(resultJSON);
@@ -290,33 +305,40 @@ public class HttpService {
                     if(response.length()!= 0 && !response.getJSONObject(0).has(result_keys[0])){
                         for(int i=0; i<response.length(); i++){
                             JSONObject obj = response.getJSONObject(i);
-                            User user = new User();
-                            user.setId(obj.getInt(result_keys[1]));
-                            user.setFirstName(obj.getString(result_keys[2]));
-                            user.setLastName(obj.getString(result_keys[3]));
-                            user.setUrl(obj.getString(result_keys[4]));
+                            User invitedUser = new User();
+                            invitedUser.setId(obj.getInt(result_keys[1]));
+                            invitedUser.setFirstName(obj.getString(result_keys[2]));
+                            invitedUser.setLastName(obj.getString(result_keys[3]));
+                            invitedUser.setMiddleName(obj.getString(result_keys[5]));
+                            invitedUser.setUrl(obj.getString(result_keys[4]));
+                            invitedUser.setPosition(obj.getString(result_keys[6]));
+                            invitedUser.setDescription(obj.getString(result_keys[7]));
 
-                            list.add(user);
+                            list.add(invitedUser);
                         }
-                        HomeActivity homeActivity = (HomeActivity)activity;
-                        homeActivity.setMainUser(list);
-
                     }
-                    LinearLayout parent = activity.findViewById(R.id.paper);
-                    TreeService treeService = new TreeService();
-                    if (owner)
-                        treeService.makeOwnTree(parent);
-                    else
-                        treeService.makeAlienTree(parent);
+
+                    try {
+                        if(user.getId() == HomeActivity.getMainUser().getId()){
+                            HomeActivity homeActivity = (HomeActivity)activity;
+                            homeActivity.setInvitedUsers(list);
+                        }
+
+                        LinearLayout parent = activity.findViewById(R.id.paper);
+                        TreeService treeService = new TreeService();
+                        treeService.makeTree(parent, list, owner);
+                    } catch (NullPointerException ignored){}
+
                 } catch (JSONException e) {
-                    Toast.makeText(activity, getErrorMessage(code), Toast.LENGTH_SHORT).show();
+                    if(activity != null)
+                        Toast.makeText(activity, getErrorMessage(code), Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
                 }
-            } else {
+            } else if(activity != null){
                 Toast.makeText(activity, getErrorMessage(code), Toast.LENGTH_SHORT).show();
             }
         }));
-        httpPostRequest.execute("http://kith.ml/api/users/referral_users");
+        httpPostRequest.execute("http://" + SERVER +"/api/users/referral_users");
     }
 
     public void checkReferral(CheckInActivity activity, String referralCode, View view){
@@ -324,7 +346,7 @@ public class HttpService {
         String[] body_keys = {"user_referral"};
         String[] body_data = { referralCode };
 
-        HttpPostRequest httpPostRequest = new HttpPostRequest(body_keys, body_data, ((output, resultJSON, code) -> {
+        HttpPostRequest httpPostRequest = new HttpPostRequest(activity, body_keys, body_data, ((output, resultJSON, code) -> {
             if( output && resultJSON != null){
                 try {
                     JSONObject response = new JSONObject(resultJSON);
@@ -349,8 +371,8 @@ public class HttpService {
                     e.printStackTrace();
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
-                }
-            } else {
+                } catch (NullPointerException ignored) {}
+            } else if(activity != null){
                 activity.checkFields();
                 CustomFontEditText referralEditText = activity.findViewById(R.id.editText9);
                 referralEditText.setBackgroundResource(R.drawable.entri_field_error_check_in);
@@ -358,7 +380,7 @@ public class HttpService {
                 view.setEnabled(true);
             }
         }));
-        httpPostRequest.execute("http://kith.ml/api/check_referral");
+        httpPostRequest.execute("http://" + SERVER + "/api/check_referral");
     }
 
     public void sendSms(Activity activity, int id){
@@ -366,23 +388,22 @@ public class HttpService {
         String[] body_keys = {"user_id"};
         String[] body_data = { String.valueOf(id) };
 
-        HttpPostRequest httpPostRequest = new HttpPostRequest(body_keys, body_data, ((output, resultJSON, code) -> {
+        HttpPostRequest httpPostRequest = new HttpPostRequest(activity, body_keys, body_data, ((output, resultJSON, code) -> {
             if( output && resultJSON != null){
                 try {
                     JSONObject response = new JSONObject(resultJSON);
-//                    Log.i("Data from sms: ", response.toString());
                     if(!response.getBoolean(result_keys[0])) {
                         Toast.makeText(activity, getErrorMessage(code), Toast.LENGTH_SHORT).show();
                     }
                 } catch (JSONException e) {
                     Toast.makeText(activity, getErrorMessage(code), Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
-                }
-            } else {
+                } catch (NullPointerException ignored) {}
+            } else if(activity != null){
                 Toast.makeText(activity, getErrorMessage(code), Toast.LENGTH_SHORT).show();
             }
         }));
-        httpPostRequest.execute("http://kith.ml/api/users/confirm");
+        httpPostRequest.execute("http://" + SERVER + "/api/users/confirm");
     }
 
     public void checkSms(Activity activity, View view, int id, String smsCode){
@@ -390,7 +411,7 @@ public class HttpService {
         String[] body_keys = {"user_id", "sms_code"};
         String[] body_data = { String.valueOf(id), smsCode };
 
-        HttpPostRequest httpPostRequest = new HttpPostRequest(body_keys, body_data, ((output, resultJSON, code) -> {
+        HttpPostRequest httpPostRequest = new HttpPostRequest(activity, body_keys, body_data, ((output, resultJSON, code) -> {
             if( output && resultJSON != null){
                 try {
                     JSONObject response = new JSONObject(resultJSON);
@@ -408,23 +429,23 @@ public class HttpService {
                     Toast.makeText(activity, getErrorMessage(code), Toast.LENGTH_SHORT).show();
                     view.setEnabled(true);
                     e.printStackTrace();
-                }
-            } else {
+                } catch (NullPointerException ignored) {}
+            } else if(activity != null){
                 Toast.makeText(activity, getErrorMessage(code), Toast.LENGTH_SHORT).show();
                 view.setEnabled(true);
             }
         }));
-        httpPostRequest.execute("http://kith.ml/api/users/checkcode");
+        httpPostRequest.execute("http://" + SERVER + "/api/users/checkcode");
     }
 
     public void refreshInvitedUsers(Activity activity, int id, boolean owner, SwipeRefreshLayout refreshLayout){
-        String[] result_keys = {"status", "user_id", "user_firstname", "user_lastname"};
-        String[] header_keys = {"user-token"};
+        String[] result_keys = {"status", "user_id", "user_firstname", "user_lastname", "photo", "user_middlename", "user_position", "user_phone", "user_description"};
+        String[] header_keys = {"Authorization"};
         String[] body_keys = {"user_id", "page", "size"};
         String[] header_data = { HomeActivity.getMainUser().getToken() };
         String[] body_data = { String.valueOf(id) , "0", "50" };
 
-        HttpPostRequest httpPostRequest = new HttpPostRequest(header_keys, body_keys, header_data, body_data, ((output, resultJSON, code) -> {
+        HttpPostRequest httpPostRequest = new HttpPostRequest(activity, header_keys, body_keys, header_data, body_data, ((output, resultJSON, code) -> {
             if( output && resultJSON != null){
                 try {
                     JSONArray response = new JSONArray(resultJSON);
@@ -436,15 +457,16 @@ public class HttpService {
                             user.setId(obj.getInt(result_keys[1]));
                             user.setFirstName(obj.getString(result_keys[2]));
                             user.setLastName(obj.getString(result_keys[3]));
-
-                            BitmapDrawable bitmapDrawable = ((BitmapDrawable) activity.getResources().getDrawable(R.mipmap.person));
-                            Bitmap bitmap = bitmapDrawable.getBitmap();
-                            user.setImage(bitmap);
+                            user.setUrl(obj.getString(result_keys[4]));
+                            user.setMiddleName(obj.getString(result_keys[5]));
+                            user.setPosition(obj.getString(result_keys[6]));
+                            user.setPhone(obj.getString(result_keys[7]));
+                            user.setDescription(obj.getString(result_keys[8]));
 
                             list.add(user);
                         }
                         HomeActivity homeActivity = (HomeActivity)activity;
-                        homeActivity.setMainUser(list);
+                        homeActivity.setInvitedUsers(list);
 
                     }
                     LinearLayout parent = activity.findViewById(R.id.paper);
@@ -453,20 +475,249 @@ public class HttpService {
                     } catch (Exception e){ }
 
                     TreeService treeService = new TreeService();
-                    if (owner)
-                        treeService.makeOwnTree(parent);
-                    else
-                        treeService.makeAlienTree(parent);
+                    treeService.makeTree(parent, list, owner);
+
                     refreshLayout.setRefreshing(false);
                 } catch (JSONException e) {
                     Toast.makeText(activity, getErrorMessage(code), Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
-                }
-            } else {
+                } catch (NullPointerException ignored) {}
+            } else if(activity != null) {
                 Toast.makeText(activity, getErrorMessage(code), Toast.LENGTH_SHORT).show();
             }
         }));
-        httpPostRequest.execute("http://kith.ml/api/users/referral_users");
+        httpPostRequest.execute("http://" + SERVER + "/api/users/referral_users");
+    }
+
+    public void refreshUser(Activity activity, User user, Bitmap photo) throws UnsupportedEncodingException {
+        PhotoService photoService = new PhotoService(activity);
+        String res = photoService.base64Photo(photo);
+
+        String[] result_keys = {"status"};
+        String[] header_keys = {"Authorization"};
+        String[] body_keys = {"user_id", "user_firstname", "user_lastname", "user_middlename", "user_phone", "user_email", "user_position", "user_description", "user_photo"};
+        String[] header_data = { user.getToken() };
+        String[] body_data = { String.valueOf(user.getId()) , user.getFirstName(), user.getLastName(), user.getMiddleName(), user.getPhone(), user.getEmail(), user.getPosition(), user.getDescription(), res};
+
+        HttpPostRequest httpPostRequest = new HttpPostRequest(activity, header_keys, body_keys, header_data, body_data, ((output, resultJSON, code) -> {
+            if(output && resultJSON!=null){
+                JSONObject response;
+                try {
+                    response = new JSONObject(resultJSON);
+                    if(response.getBoolean(result_keys[0])){
+                        Toast.makeText(activity, "Данные обновлены", Toast.LENGTH_SHORT).show();
+                        User mainUser = HomeActivity.getMainUser();
+                        mainUser.setFirstName(user.getFirstName());
+                        mainUser.setLastName(user.getLastName());
+                        mainUser.setMiddleName(user.getMiddleName());
+                        mainUser.setPhone(user.getPhone());
+                        mainUser.setEmail(user.getEmail());
+                        mainUser.setPosition(user.getPosition());
+                        mainUser.setDescription(user.getDescription());
+                        if(user.getUrl() != null && !user.getUrl().equals("null"))
+                            mainUser.setUrl(user.getUrl());
+                    } else {
+                        Toast.makeText(activity, getErrorMessage(code), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    if(code != 200 && activity != null)
+                        Toast.makeText(activity, getErrorMessage(code), Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                } catch (NullPointerException ignored){}
+            }
+            else if (activity != null)
+                Toast.makeText(activity, getErrorMessage(code), Toast.LENGTH_SHORT).show();
+            if(activity != null){
+                Button button = activity.findViewById(R.id.button3);
+                button.setEnabled(true);
+            }
+        }));
+        httpPostRequest.execute("http://" + SERVER + "/api/users/edit");
+    }
+
+    public void searchUsers(Activity activity, User user, SearchFragment searchFragment) {
+        String[] result_keys = {"status", "user_id", "user_firstname", "user_lastname", "user_photo", "user_middlename", "user_position", "user_description"};
+        String[] header_keys = {"Authorization"};
+        String[] body_keys = {"user_id", "search", "page", "size"};
+        String[] header_data = { user.getToken() };
+        String[] body_data = { String.valueOf(user.getId()) ,"",  "0", "50" };
+
+        HttpPostRequest httpPostRequest = new HttpPostRequest(activity, header_keys, body_keys, header_data, body_data, ((output, resultJSON, code) -> {
+            if(output && resultJSON!=null){
+                try {
+                    JSONObject json = new JSONObject(resultJSON);
+                    JSONArray response = json.getJSONArray("users");
+                    List<SearchInfo> list = new ArrayList<>();
+                    if(response.length()!= 0 && !response.getJSONObject(0).has(result_keys[0])){
+                        for(int i=0; i<response.length(); i++){
+                            JSONObject obj = response.getJSONObject(i);
+                            SearchInfo newInfo = new SearchInfo();
+                            newInfo.id = obj.getInt(result_keys[1]);
+                            newInfo.firstName = obj.getString(result_keys[2]);
+                            newInfo.lastName = obj.getString(result_keys[3]);
+                            newInfo.photo = obj.getString(result_keys[4]);
+                            newInfo.position = obj.getString(result_keys[6]);
+
+                            list.add(newInfo);
+//                            Log.i("LIST", newInfo.firstName);
+                        }
+                        SearchFragment.setListPersons(list);
+                        searchFragment.setAdapter();
+
+                    }
+                } catch (JSONException e) {
+                    if(activity != null)
+                        Toast.makeText(activity, getErrorMessage(code), Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                }
+            } else if(activity != null){
+                Toast.makeText(activity, getErrorMessage(code), Toast.LENGTH_SHORT).show();
+            }
+        }));
+        httpPostRequest.execute("http://" + SERVER + "/api/users/search");
+    }
+
+    public void changePassword(Activity activity, User user, String newPassword){
+        String[] result_keys = {"status"};
+        String[] header_keys = {"Authorization"};
+        String[] body_keys = {"user_id", "user_new_password", "user_old_password"};
+        String[] header_data = { user.getToken() };
+        String[] body_data = { String.valueOf(user.getId()) , newPassword, user.getPassword()};
+
+        HttpPostRequest httpPostRequest = new HttpPostRequest(activity, header_keys, body_keys, header_data, body_data, ((output, resultJSON, code) -> {
+            if(output && resultJSON!=null){
+                JSONObject response;
+                try {
+                    response = new JSONObject(resultJSON);
+                    if(response.getBoolean(result_keys[0])){
+                        Toast.makeText(activity, "Пароль изменен", Toast.LENGTH_SHORT).show();
+                        ChangePasswordActivity passwordActivity = (ChangePasswordActivity) activity;
+                        passwordActivity.saveNewPassword(newPassword);
+
+                    } else {
+                        Toast.makeText(activity, getErrorMessage(code), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    if(code != 200 && activity != null)
+                        Toast.makeText(activity, getErrorMessage(code), Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                } catch (NullPointerException ignored){}
+            }
+            else if (activity != null)
+                Toast.makeText(activity, getErrorMessage(code), Toast.LENGTH_SHORT).show();
+//            if(activity != null){
+//                Button button = activity.findViewById(R.id.button3);
+//                button.setEnabled(true);
+//            }
+        }));
+        httpPostRequest.execute("http://" + SERVER + "/api/users/edit/password");
+    }
+
+    public void getAnnouncements(Activity activity, User user, AnnouncementFragment fragment){
+        String[] result_keys = {"status", "user_id", "user_firstname", "user_lastname", "user_photo", "user_middlename", "user_position", "user_description"};
+        String[] header_keys = {"Authorization"};
+        String[] body_keys = {"user_id"};
+        String[] header_data = { user.getToken() };
+        String[] body_data = { String.valueOf(user.getId()) };
+
+        HttpPostRequest httpPostRequest = new HttpPostRequest(activity, header_keys, body_keys, header_data, body_data, ((output, resultJSON, code) -> {
+            if(output && resultJSON!=null){
+                try {
+                    JSONObject json = new JSONObject(resultJSON);
+                    JSONArray response = json.getJSONArray("boards");
+                    List<AnnouncementInfo> list = new ArrayList<>();
+                    if(response.length()!= 0 && json.getBoolean(result_keys[0]) ){
+                        for(int i=0; i<response.length(); i++){
+                            JSONObject obj = response.getJSONObject(i);
+                            AnnouncementInfo newInfo = new AnnouncementInfo();
+
+                            newInfo.id = obj.getInt("board_id");
+                            newInfo.title = obj.getString("board_title");
+                            newInfo.enabled = obj.getInt("board_enabled");
+                            newInfo.organizerName = obj.getString("owner_firstname") + " " + obj.getString("owner_lastname");
+                            newInfo.url = obj.getString("user_photo");
+                            newInfo.description = obj.getString("board_description");
+                            newInfo.startDate = obj.getString("board_date_created");
+                            newInfo.endDate = obj.getString("board_date_end");
+                            newInfo.needParticipants = obj.getString("board_needs_subscriptions");
+                            newInfo.participants = obj.getString("board_current_subscriptions");
+                            newInfo.organizerId = obj.getInt("board_user_id");
+
+                            list.add(newInfo);
+                            Log.i("New AnInf", newInfo.title);
+                        }
+                        Log.i("GET ANN", "done");
+                        AnnouncementFragment.setListAnn(list);
+                        fragment.setAdapter();
+
+                    }
+                } catch (JSONException e) {
+                    if(activity != null)
+                        Toast.makeText(activity, getErrorMessage(code), Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                }
+            } else if(activity != null){
+                Toast.makeText(activity, getErrorMessage(code), Toast.LENGTH_SHORT).show();
+            }
+        }));
+        httpPostRequest.execute("http://" + SERVER + "/api/boards/list");
+    }
+
+    public void joinAnnouncement(Activity activity, User user, int boardId){
+        String[] result_keys = {"status"};
+        String[] header_keys = {"Authorization"};
+        String[] body_keys = {"subscription_user_id", "subscription_board_id"};
+        String[] header_data = { user.getToken() };
+        String[] body_data = { String.valueOf(user.getId()), String.valueOf(boardId) };
+
+        HttpPostRequest httpPostRequest = new HttpPostRequest(activity, header_keys, body_keys, header_data, body_data, ((output, resultJSON, code) -> {
+            if(output && resultJSON!=null){
+                try {
+                    JSONObject json = new JSONObject(resultJSON);
+                    if( json.getBoolean(result_keys[0]) ){
+                       Toast.makeText(activity, "Вы подписаны", Toast.LENGTH_SHORT).show();
+                       CustomFontTextView have = activity.findViewById(R.id.have);
+                       String result = have.getText().toString();
+                       int res = Integer.parseInt(result) + 1;
+                       have.setText(String.valueOf(res));
+                    }
+                } catch (JSONException e) {
+                    if(activity != null)
+                        Toast.makeText(activity, getErrorMessage(code), Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                }
+            } else if(activity != null){
+                Toast.makeText(activity, getErrorMessage(code), Toast.LENGTH_SHORT).show();
+            }
+        }));
+        httpPostRequest.execute("http://" + SERVER + "/api/boards/subscribe");
+    }
+
+    public void addAnnouncement(Activity activity, User user, NewAnnouncementFragment nFragment, AnnouncementInfo info){
+        String[] result_keys = {"status"};
+        String[] header_keys = {"Authorization"};
+        String[] body_keys = {"board_user_id", "board_title", "board_description", "board_photo", "board_subscriptions", "board_date_end", "board_enabled", "board_needs_subscriptions"};
+        String[] header_data = { user.getToken() };
+        String[] body_data = { String.valueOf(user.getId()), info.title, info.description, info.url, String.valueOf(0), info.endDate, String.valueOf(1), info.needParticipants};
+
+        HttpPostRequest httpPostRequest = new HttpPostRequest(activity, header_keys, body_keys, header_data, body_data, ((output, resultJSON, code) -> {
+            if(output && resultJSON!=null){
+                try {
+                    JSONObject json = new JSONObject(resultJSON);
+                    if( json.getBoolean(result_keys[0]) ){
+                        Toast.makeText(activity, "Объявление создано", Toast.LENGTH_SHORT).show();
+                        nFragment.close();
+                    }
+                } catch (JSONException e) {
+                    if(activity != null)
+                        Toast.makeText(activity, getErrorMessage(code), Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                }
+            } else if(activity != null){
+                Toast.makeText(activity, getErrorMessage(code), Toast.LENGTH_SHORT).show();
+            }
+        }));
+        httpPostRequest.execute("http://" + SERVER + "/api/boards/create");
     }
 
     private String getErrorMessage(int code){

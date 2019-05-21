@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:mask="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/f_tree"
+    xmlns:customAttrs="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/colorPrimary"
+    tools:context="com.project.scratchstudio.kith_andoid.Fragments.TreeFragment">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="10dp">
+
+                <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+                    android:id="@+id/cancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentStart="true"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="17sp"
+                    customAttrs:customFont="intro_regular"
+                    android:text="@string/button_cancel"/>
+
+                <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true"
+                    android:text="@string/label_announcements"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="17sp"
+                    customAttrs:customFont="intro_regular"/>
+
+                <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+                    android:id="@+id/done"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="17sp"
+                    customAttrs:customFont="intro_regular"
+                    android:text="@string/button_done"/>
+
+            </RelativeLayout>
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/photo"
+                android:layout_width="match_parent"
+                android:layout_height="242dp"
+                android:scaleType="center"
+                android:background="@color/colorPrimaryDark"
+                android:src="@drawable/newspaper"/>
+
+            <Button
+                android:id="@+id/loadPhoto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="Загрузить фото"
+                android:background="@drawable/button_basic"
+                android:padding="10dp"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/colorAccent"
+                android:textSize="14sp"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp">
+
+                <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+                    android:id="@+id/title"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Заголовок:"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="15sp"
+                    customAttrs:customFont="intro_regular"/>
+
+            <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontEditText
+                android:id="@+id/title_text"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@+id/title"
+                android:background="@drawable/entry_field_check_in"
+                android:inputType="text"
+                android:lines="1"
+                android:maxLength="35"
+                android:paddingBottom="15dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingTop="10dp"
+                android:textColor="@color/colorPrimaryDark"
+                android:textColorHint="@color/colorHint"
+                android:textSize="14sp"
+                customAttrs:customFont="intro_regular" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp">
+
+                <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+                    android:id="@+id/date"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Дата завершения:"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="15sp"
+                    customAttrs:customFont="intro_regular"/>
+
+                <br.com.sapereaude.maskedEditText.MaskedEditText
+                    android:id="@+id/date_text"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@+id/date"
+                    android:background="@drawable/entry_field_check_in"
+                    android:inputType="date"
+                    android:lines="1"
+                    android:maxLength="11"
+                    android:paddingBottom="15dp"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:paddingTop="10dp"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textColorHint="@color/colorHint"
+                    android:textSize="14sp"
+                    android:typeface="monospace"
+                    mask:allowed_chars="1234567890"
+                    mask:mask="####-##-##"
+                    android:hint="ГГГГММДД"
+                    />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp">
+
+                <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+                    android:id="@+id/need"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Необходимо участников:"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="15sp"
+                    customAttrs:customFont="intro_regular"/>
+
+                <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontEditText
+                    android:id="@+id/need_text"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@+id/need"
+                    android:background="@drawable/entry_field_check_in"
+                    android:inputType="text"
+                    android:lines="1"
+                    android:maxLength="35"
+                    android:paddingBottom="15dp"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:paddingTop="10dp"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textColorHint="@color/colorHint"
+                    android:textSize="14sp"
+                    customAttrs:customFont="intro_regular" />
+
+            </RelativeLayout>
+
+            <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorAccent"
+                android:textSize="15sp"
+                android:text="Описание:"
+                customAttrs:customFont="intro_regular" />
+
+            <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontEditText
+                android:id="@+id/description"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/entry_field_check_in"
+                android:maxLines="5"
+                android:minLines="1"
+                android:inputType="textMultiLine"
+                android:paddingBottom="15dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingTop="10dp"
+                android:textColor="@color/colorPrimaryDark"
+                android:textColorHint="@color/colorHint"
+                android:textSize="14sp"
+                customAttrs:customFont="intro_regular" />
+
+            </LinearLayout>
+
+            </ScrollView>
+
+        </LinearLayout>
+
+</LinearLayout>

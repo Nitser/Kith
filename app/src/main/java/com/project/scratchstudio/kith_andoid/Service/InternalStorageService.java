@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import com.project.scratchstudio.kith_andoid.Activities.HomeActivity;
 import com.project.scratchstudio.kith_andoid.Activities.MainActivity;
@@ -47,10 +48,12 @@ public class InternalStorageService extends AsyncTask<String, Void, Integer> {
     @Override
     protected Integer doInBackground(String... strings) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        if(!sp.contains("count_users"))
+        if(!sp.contains("count_users")) {
             inizializingStorage(sp);
-        if (iGetInternalData != null)
+        }
+        if (iGetInternalData != null) {
             return iGetInternalData.get(sp);
+        }
         else
             return iSetInternalData.set(sp);
     }

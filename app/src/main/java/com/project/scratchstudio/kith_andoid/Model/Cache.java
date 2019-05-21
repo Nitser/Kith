@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 public class Cache {
 
-    private static int allUsers;
-    private static int myUsers;
+    private static int allUsers ;
+    private static int myUsers = 0;
 
     public static int getAllUsers() {
         return allUsers;

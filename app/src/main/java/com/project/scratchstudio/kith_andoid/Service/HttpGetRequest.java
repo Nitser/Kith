@@ -1,5 +1,6 @@
 package com.project.scratchstudio.kith_andoid.Service;
 
+import android.app.Activity;
 import android.os.AsyncTask;
 
 import com.project.scratchstudio.kith_andoid.Activities.HomeActivity;
@@ -7,6 +8,7 @@ import com.project.scratchstudio.kith_andoid.Activities.HomeActivity;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -18,19 +20,28 @@ public class HttpGetRequest extends AsyncTask<String, Void, String> {
     private static final int CONNECTION_TIMEOUT = 15000;
     private String[] input_keys;
     private HttpGetRequest.AsynResponse asynResponse;
+    private WeakReference<Activity> weakActivity;
 
     public interface AsynResponse {
         void processFinish(Boolean output, String resultJSON, int code);
     }
 
-    HttpGetRequest(AsynResponse asynResponse){
+    HttpGetRequest(Activity activity, AsynResponse asynResponse){
+        weakActivity = new WeakReference<Activity>(activity);
         this.asynResponse = asynResponse;
     }
 
-    HttpGetRequest(String[] input_keys, AsynResponse asynResponse){
+    HttpGetRequest(Activity activity, String[] input_keys, AsynResponse asynResponse){
+        weakActivity = new WeakReference<Activity>(activity);
         this.input_keys = input_keys;
         this.asynResponse = asynResponse;
     }
+
+//    HttpGetRequest(Activity activity, String[] input_keys, AsynResponse asynResponse){
+//        weakActivity = new WeakReference<Activity>(activity);
+//        this.input_keys = input_keys;
+//        this.asynResponse = asynResponse;
+//    }
 
     @Override
     protected String doInBackground(String... strings) {
@@ -71,7 +82,6 @@ public class HttpGetRequest extends AsyncTask<String, Void, String> {
 
         } catch (IOException e) {
             e.printStackTrace();
-//            Log.i("ERROR", e.getMessage());
             resultJSON = null;
         }
 
@@ -81,7 +91,14 @@ public class HttpGetRequest extends AsyncTask<String, Void, String> {
     @Override
     protected void onPostExecute(String s) {
         super.onPostExecute(s);
-        asynResponse.processFinish(true, s, code);
+        if(weakActivity != null && canContinue()) {
+            asynResponse.processFinish(true, s, code);
+        }
+    }
+
+    private boolean canContinue() {
+        Activity activity = weakActivity.get();
+        return activity != null && !activity.isFinishing() ;
     }
 
 }

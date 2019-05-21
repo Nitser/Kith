@@ -1,51 +1,67 @@
 package com.project.scratchstudio.kith_andoid.Activities;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.os.Handler;
-import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.Toast;
+import android.util.Log;
+import android.view.KeyEvent;
 
-import com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView;
+import com.project.scratchstudio.kith_andoid.Fragments.AnnouncementFragment;
+import com.project.scratchstudio.kith_andoid.Fragments.MessagesFragment;
+import com.project.scratchstudio.kith_andoid.Fragments.TreeFragment;
 import com.project.scratchstudio.kith_andoid.Model.User;
 import com.project.scratchstudio.kith_andoid.R;
-import com.project.scratchstudio.kith_andoid.Service.HttpService;
 import com.project.scratchstudio.kith_andoid.Service.InternalStorageService;
-import com.project.scratchstudio.kith_andoid.Service.PicassoCircleTransformation;
-import com.project.scratchstudio.kith_andoid.SetInternalData.ClearUserIdAndToken;
 import com.project.scratchstudio.kith_andoid.SetInternalData.SetUserIdAndToken;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class HomeActivity extends AppCompatActivity {
 
+    private Bundle bundle;
     private static User mainUser;
-    private  Bundle bundle;
-    private HttpService httpService;
-    private SwipeRefreshLayout mySwipeRefreshLayout;
-    private  List<User> invitedUsers = new ArrayList<>();
+    private static List<User> invitedUsers = new ArrayList<>();
+    private static List<Bundle> stackBundles = new ArrayList<>();
 
     public static User getMainUser() {
         return mainUser;
     }
-    public void setMainUser(List <User> list) { invitedUsers = list; }
-    public List<User> getInvitedUsers() {
-        return invitedUsers;
+
+    public static List<Bundle> getStackBundles() {
+        return stackBundles;
     }
+
+    public void setInvitedUsers(List <User> list) { invitedUsers = list; }
     public static void cleanMainUser() {
         mainUser = null;
     }
     public static void createMainUser(){ mainUser = new User(); }
-    public void createInvitedUsers() { invitedUsers = new ArrayList<>(); }
+    public static void createInvitedUsers() { invitedUsers = new ArrayList<>(); }
+
+    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener = item -> {
+                switch (item.getItemId()) {
+                    case R.id.navigation_tree:
+                        bundle = stackBundles.get(stackBundles.size()-1);
+                        loadFragment(TreeFragment.newInstance(bundle));
+                        return true;
+                    case R.id.navigation_announcements:
+                        loadFragment(AnnouncementFragment.newInstance(bundle));
+                        return true;
+                    case R.id.navigation_messages:
+                        loadFragment(MessagesFragment.newInstance(bundle));
+                        return true;
+                }
+                return false;
+            };
+
+    public void loadFragment(Fragment fragment) {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.container, fragment);
+        ft.commit();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,96 +72,31 @@ public class HomeActivity extends AppCompatActivity {
         internalStorageService.setiSetInternalData(new SetUserIdAndToken());
         internalStorageService.execute();
 
-        httpService = new HttpService();
+        bundle = getIntent().getExtras();
+        stackBundles.add(bundle);
+        loadFragment(TreeFragment.newInstance(bundle));
 
-       bundle = getIntent().getExtras();
-        if(bundle!= null && bundle.containsKey("another_user") && !bundle.getBoolean("another_user")){
-            if(mainUser.getFirstName() == null){
-                //get all data about user
-                httpService.getUser(this);
-            } else {
-                CustomFontTextView name = findViewById(R.id.name);
-                String userName = mainUser.getFirstName() + " " + mainUser.getLastName();
-                name.setText(userName);
-            }
-
-            httpService.referralCount(this, false, mainUser.getId());
-            httpService.referralCount(this, true, mainUser.getId());
-
-            createInvitedUsers();
-            httpService.getInvitedUsers(this, mainUser.getId(), true);
-        } else if(bundle != null && bundle.containsKey("user")){
-            User user = (User)bundle.getSerializable("user");
-            CustomFontTextView name = findViewById(R.id.name);
-
-            ImageButton back = findViewById(R.id.back);
-            back.setVisibility(View.VISIBLE);
-
-            ImageView photo = findViewById(R.id.photo);
-            if(user.getUrl() != null)
-            Picasso.with(this).load(user.getUrl().replaceAll("@[0-9]*", ""))
-                    .placeholder(R.mipmap.person)
-                    .error(R.mipmap.person)
-                    .transform(new PicassoCircleTransformation())
-                    .into(photo);
-
-            httpService.referralCount(this, true, user.getId());
-
-            String userName = user.getFirstName() + " " + user.getLastName();
-            name.setText(userName);
-
-            httpService.referralCount(this, false, user.getId());
-            httpService.getInvitedUsers(this, user.getId(), false);
-
-        }
-
-        mySwipeRefreshLayout = findViewById(R.id.swiperefresh);
-        mySwipeRefreshLayout.setOnRefreshListener(this::myUpdateOperation
-        );
+        BottomNavigationView navigation = findViewById(R.id.navigation);
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
     }
 
-    private void myUpdateOperation(){
-        Activity activity = this;
+    @Override
+    public void onBackPressed() {
+        List<Fragment> fragmentList = getSupportFragmentManager().getFragments();
 
-        if(isNetworkConnected()){
-            new Handler().post(() -> {
-                if( bundle!= null && bundle.containsKey("another_user") && !bundle.getBoolean("another_user")){
-                    httpService.referralCount(activity, false, mainUser.getId());
-                    httpService.referralCount(activity, true, mainUser.getId());
-
-                    httpService.refreshInvitedUsers(activity, mainUser.getId(), true, mySwipeRefreshLayout);
-                } else {
-                    User user = (User)bundle.getSerializable("user");
-                    httpService.referralCount(this, false, user.getId());
-                    httpService.refreshInvitedUsers(activity, user.getId(), false, mySwipeRefreshLayout);
+        boolean handled = false;
+        for(Fragment f : fragmentList) {
+            if(f instanceof TreeFragment) {
+                handled = ((TreeFragment)f).onBackPressed();
+                if(handled) {
+                    break;
                 }
-
-            });
-        } else {
-            Toast.makeText(activity, "Нет подключения к интернету", Toast.LENGTH_SHORT).show();
-            mySwipeRefreshLayout.setRefreshing(false);
+            }
         }
-
-
+        if(!handled) {
+            super.onBackPressed();
+        }
     }
 
-    private boolean isNetworkConnected() {
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        return (cm != null && cm.getActiveNetworkInfo() != null) ;
-    }
-
-    public void onClickBackButton(View view) {
-        cleanMainUser();
-        InternalStorageService internalStorageService = new InternalStorageService(this);
-        internalStorageService.setiSetInternalData(new ClearUserIdAndToken());
-        internalStorageService.execute();
-        Intent intent = new Intent(HomeActivity.this, MainActivity.class);
-        startActivity(intent);
-        finish();
-    }
-
-    public void onClickBack(View view) {
-        finish();
-    }
 }

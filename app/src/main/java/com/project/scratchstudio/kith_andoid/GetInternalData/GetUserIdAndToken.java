@@ -16,6 +16,7 @@ public class GetUserIdAndToken implements IGetInternalData {
             HomeActivity.createMainUser();
             HomeActivity.getMainUser().setId(sp.getInt("cur_user_id", -1));
             HomeActivity.getMainUser().setToken(sp.getString("cur_user_token", ""));
+            HomeActivity.getMainUser().setPassword(sp.getString("cur_user_password", ""));
             return 2;
         }
     }

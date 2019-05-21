@@ -2,6 +2,7 @@ package com.project.scratchstudio.kith_andoid.Activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.project.scratchstudio.kith_andoid.GetInternalData.GetCountData;
 import com.project.scratchstudio.kith_andoid.GetInternalData.GetUserIdAndToken;
@@ -18,6 +19,7 @@ public class SplashActivity extends AppCompatActivity {
         InternalStorageService getCount = new InternalStorageService(this);
         getCount.setiGetInternalData(new GetCountData());
         getCount.execute();
+
 
         InternalStorageService getUser = new InternalStorageService(this);
         getUser.setiGetInternalData(new GetUserIdAndToken());

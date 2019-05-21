@@ -1,6 +1,8 @@
 package com.project.scratchstudio.kith_andoid.Service;
 
+import android.app.Activity;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import org.json.JSONObject;
 
@@ -9,6 +11,7 @@ import java.io.BufferedWriter;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -28,25 +31,29 @@ public class HttpPostRequest extends AsyncTask<String, Void, String> {
     private String[] header_data;
     private String[] body_data;
     private AsynResponse asynResponse;
+    private WeakReference<Activity> weakActivity;
 
     public interface AsynResponse {
         void processFinish(Boolean output, String resultJSON, int code);
     }
 
-    HttpPostRequest(String[] body_keys, String[] body_data, AsynResponse asynResponse){
+    HttpPostRequest(Activity activity, String[] body_keys, String[] body_data, AsynResponse asynResponse){
+        weakActivity = new WeakReference<Activity>(activity);
         this.body_keys = body_keys;
         this.body_data = body_data;
         this.asynResponse = asynResponse;
     }
 
-    HttpPostRequest(String[] body_keys, String[] body_data, String photo, AsynResponse asynResponse){
+    HttpPostRequest(Activity activity, String[] body_keys, String[] body_data, String photo, AsynResponse asynResponse){
+        weakActivity = new WeakReference<Activity>(activity);
         this.photo = photo;
         this.body_keys = body_keys;
         this.body_data = body_data;
         this.asynResponse = asynResponse;
     }
 
-    HttpPostRequest(String[] header_keys, String[] body_keys, String[] header_data, String[] body_data, AsynResponse asynResponse){
+    HttpPostRequest(Activity activity, String[] header_keys, String[] body_keys, String[] header_data, String[] body_data, AsynResponse asynResponse){
+        weakActivity = new WeakReference<Activity>(activity);
         this.header_keys = header_keys;
         this.body_keys = body_keys;
         this.header_data = header_data;
@@ -89,7 +96,6 @@ public class HttpPostRequest extends AsyncTask<String, Void, String> {
             try{
                 connection.connect();
             } catch (Exception e){
-//                Log.i("CONNECTION ERROR: ", e.getMessage());
                 code = connection.getResponseCode();
                 return null;
             }
@@ -105,6 +111,7 @@ public class HttpPostRequest extends AsyncTask<String, Void, String> {
             code = connection.getResponseCode();
 
             if (connection.getResponseCode() == HttpsURLConnection.HTTP_OK ) {
+                Log.i("HTTP con", "ok");
 
                 BufferedReader in = new BufferedReader( new InputStreamReader( connection.getInputStream()));
                 StringBuffer sb = new StringBuffer("");
@@ -132,7 +139,17 @@ public class HttpPostRequest extends AsyncTask<String, Void, String> {
                 return sb.toString();
             }
             else{
-//                Log.i("SERVER ERROR:", "No JSON. Bad connection code");
+                BufferedReader in = new BufferedReader( new InputStreamReader( connection.getErrorStream()));
+                StringBuffer sb = new StringBuffer("");
+                String line;
+
+                while((line = in.readLine()) != null) {
+                    sb.append(line);
+                    Log.i("CErr: ", line);
+                    break;
+                }
+
+                in.close();
                 return null;
             }
 
@@ -146,7 +163,14 @@ public class HttpPostRequest extends AsyncTask<String, Void, String> {
     @Override
     protected void onPostExecute(String s) {
         super.onPostExecute(s);
-        asynResponse.processFinish(true, s, code);
+        if(weakActivity != null && canContinue()) {
+            asynResponse.processFinish(true, s, code);
+        }
+    }
+
+    private boolean canContinue() {
+        Activity activity = weakActivity.get();
+        return activity != null && !activity.isFinishing() ;
     }
 
     private String getPostDataString(JSONObject params) throws Exception {

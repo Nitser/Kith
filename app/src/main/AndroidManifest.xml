@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.project.scratchstudio.kith_andoid">
 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -15,6 +19,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar"
         android:usesCleartextTraffic="true">
+        <activity android:name=".Activities.ChangePasswordActivity"></activity>
+        <activity android:name=".Activities.ProfileActivity" />
         <activity
             android:name=".Activities.SplashActivity"
             android:screenOrientation="portrait">
@@ -32,8 +38,8 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".Activities.CheckInActivity"
-            android:windowSoftInputMode="adjustPan"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".Activities.AgreementActivity"
             android:screenOrientation="portrait" />
@@ -45,10 +51,13 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".Activities.TermActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Activities.SmsActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activities.EditActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

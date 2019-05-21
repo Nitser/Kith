@@ -8,41 +8,23 @@
     <string name="password">Пароль</string>
     <string name="Name">Имя</string>
     <string name="lastName">Фамилия</string>
-    <string name="email">Электронная почта</string>
+    <string name="email">Эл. почта</string>
     <string name="phone">Телефон</string>
     <string name="refCode">Реферальный код</string>
     <string name="do_check_in">Зарегистрироваться</string>
     <string name="term_of_use">Я согласен с пользовательским соглашением и политикой конфиденциальности</string>
     <string name="agreement">ПОЛЬЗОВАТЕЛЬСКОЕ СОГЛАШЕНИЕ</string>
-    <string name="agreement_test">
-
-        Настоящее Пользовательское Соглашение (Далее Соглашение) регулирует отношения между владельцем kith.ru (
-        далее Знакомые или Администрация) с одной стороны и пользователем сайта с другой.\n
-        Сайт Знакомые не является средством массовой информации.\n\n
-
-        Используя сайт, Вы соглашаетесь с условиями данного соглашения.\n
-        Если Вы не согласны с условиями данного соглашения, не используйте сайт Знакомые!\n\n
-
-        <big>Права и обязанности сторон</big>\n\n
-        Пользователь имеет право:\n
-        - осуществлять поиск информации на сайте\n
-        - получать информацию на сайте\n
-        - использовать информацию сайта в личных некоммерческих целях\n\n
-
-        Администрация имеет право:\n
-        - по своему усмотрению и необходимости создавать, изменять, отменять правила\n
-        - ограничивать доступ к любой информации на сайте\n\n
-
-        Пользователь обязуется:\n
-        - не нарушать работоспособность сайта\n
-        - не использовать скрипты (программы) для автоматизированного сбора информации и/или взаимодействия с Сайтом и его Сервисами\n\n
-
-        Администрация обязуется:\n
-        - поддерживать работоспособность сайта за исключением случаев, когда это невозможно по независящим от Администрации причинам.\n
-    </string>
     <string name="term">ПОЛИТИКА КОНФИДЕНЦИАЛЬНОСТИ</string>
     <string name="position">Должность</string>
     <string name="description">Описание</string>
+    <string name="label_main">Главная</string>
+    <string name="button_exit">Выход</string>
+    <string name="button_done">Готово</string>
+    <string name="label_profile">Профиль</string>
+    <string name="label_announcements">Объявления</string>
+    <string name="label_messages">Сообщения</string>
+    <string name="label_new_password">Новый пароль</string>
+    <string name="edit">Редактировать</string>
 
     <plurals name="people">
         <item quantity="zero">%1$d человек</item>
@@ -52,4 +34,11 @@
         <item quantity="many">%1$d человек</item>
         <item quantity="other">%1$d человека</item>
     </plurals>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="button_cancel">Отмена</string>
+    <string name="button_back">Назад</string>
+    <string name="label_edit">Редактирование</string>
+    <string name="button_ready">Готово</string>
 </resources>

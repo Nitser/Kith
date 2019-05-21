@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/f_tree"
+    xmlns:customAttrs="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/colorPrimary"
+    tools:context="com.project.scratchstudio.kith_andoid.Fragments.TreeFragment">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="10dp">
+
+            <ImageButton
+                android:id="@+id/back"
+                android:layout_width="15dp"
+                android:layout_height="25dp"
+                android:layout_marginStart="10dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true"
+                android:background="@drawable/ic_left"
+                android:visibility="visible" />
+
+            <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:text="@string/label_announcements"
+                android:textColor="@color/colorAccent"
+                android:textSize="17sp"
+                customAttrs:customFont="intro_regular"/>
+
+            <!--<ImageButton-->
+                <!--android:id="@+id/plus"-->
+                <!--android:layout_width="30dp"-->
+                <!--android:layout_height="30dp"-->
+                <!--android:layout_marginEnd="10dp"-->
+                <!--android:layout_alignParentEnd="true"-->
+                <!--android:layout_centerVertical="true"-->
+                <!--android:background="@drawable/ic_edit"/>-->
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="242dp">
+
+            <ImageView
+                android:id="@+id/photo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="center"
+                android:background="@color/colorPrimaryDark"
+                android:src="@drawable/newspaper"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_alignParentBottom="true"
+                android:layout_height="80dp">
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#BF144B69"/>
+
+                <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+                    android:id="@+id/title"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="20sp"
+                    android:text="Контрольная закупка у оптовика"
+                    customAttrs:customFont="intro_regular"/>
+
+                <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+                    android:id="@+id/textView"
+                    android:layout_alignParentBottom="true"
+                    android:layout_toStartOf="@id/date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="14sp"
+                    android:layout_marginBottom="5dp"
+                    android:text="Дата завершения:"
+                    customAttrs:customFont="intro_regular"/>
+
+                <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+                    android:id="@+id/date"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="14sp"
+                    android:text="20.12.2019"
+                    customAttrs:customFont="intro_regular"/>
+            </RelativeLayout>
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
+            <Button
+                android:id="@+id/join"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Присоединиться"
+                android:background="@drawable/button_basic"
+                android:padding="10dp"
+                android:layout_marginStart="10dp"
+                android:textColor="@color/colorAccent"
+                android:textSize="16sp"/>
+
+            <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toStartOf="@id/have"
+                android:layout_below="@id/need"
+                android:text="Участников"
+                android:textColor="@color/colorAccent"
+                android:textSize="17sp"
+                customAttrs:customFont="intro_regular"/>
+
+            <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+                android:id="@+id/have"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="10dp"
+                android:layout_below="@id/need"
+                android:text="123"
+                android:textColor="@color/colorAccent"
+                android:textSize="17sp"
+                customAttrs:customFont="intro_regular"/>
+
+            <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toStartOf="@id/need"
+                android:text="Необходимо"
+                android:textColor="@color/colorAccent"
+                android:textSize="17sp"
+                customAttrs:customFont="intro_regular"/>
+
+            <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+                android:id="@+id/need"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="500"
+                android:textColor="@color/colorAccent"
+                android:textSize="17sp"
+                customAttrs:customFont="intro_regular"/>
+        </RelativeLayout>
+
+        <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Описание"
+            android:textColor="@color/colorAccent"
+            android:textSize="17sp"
+            customAttrs:customFont="intro_regular"/>
+
+        <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+            android:id="@+id/description"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Тут будет описание"
+            android:textColor="@color/colorAccent"
+            android:textSize="17sp"
+            customAttrs:customFont="intro_regular"/>
+
+    </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

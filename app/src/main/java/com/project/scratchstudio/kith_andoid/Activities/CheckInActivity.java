@@ -113,10 +113,10 @@ public class CheckInActivity extends AppCompatActivity {
         editTextListener("ref_code", R.id.editText9);// Code
         requiredFields.put("user_description", (CustomFontEditText) findViewById(R.id.editText2));// Description
 
-        CustomFontEditText phone = findViewById(R.id.editText4);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            phone.addTextChangedListener(new PhoneNumberFormattingTextWatcher("RU"));
-        }
+//        CustomFontEditText phone = findViewById(R.id.editText4);
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//            phone.addTextChangedListener(new PhoneNumberFormattingTextWatcher("RU"));
+//        }
     }
 
     private void editTextListener(String key, int id){
