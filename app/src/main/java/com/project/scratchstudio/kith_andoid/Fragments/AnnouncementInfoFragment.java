@@ -27,6 +27,13 @@ public class AnnouncementInfoFragment extends Fragment {
     private static long buttonCount = 0;
     private Bundle bundle;
     private AnnouncementInfo info;
+    private boolean is_join = false;
+
+    public void setIsJoin(boolean bol, String str){
+        is_join = bol;
+        Button button = getActivity().findViewById(R.id.join);
+        button.setText(str);
+    }
 
     public static AnnouncementInfoFragment newInstance(Bundle bundle) {
         AnnouncementInfoFragment fragment = new AnnouncementInfoFragment();
@@ -61,11 +68,20 @@ public class AnnouncementInfoFragment extends Fragment {
         need.setText(info.needParticipants);
         have.setText(info.participants);
         description.setText(info.description);
-        Log.i("URL", info.url);
-        if(info.url != null && !info.url.equals("null") && info.url.equals("")) {
+        if(info.url != null && !info.url.equals("null") && !info.url.equals("")) {
             Picasso.with(getActivity()).load(info.url.replaceAll("@[0-9]*", ""))
                     .into(photo);
             photo.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        }
+
+        if(info.organizerId == HomeActivity.getMainUser().getId()) {
+            ImageButton button = getActivity().findViewById(R.id.edit);
+            button.setVisibility(View.VISIBLE);
+            button.setOnClickListener(this::onClickEdit);
+        }
+
+        if(info.subscriptionOnBoard == 1){
+            setIsJoin(true, "Покинуть");
         }
     }
 
@@ -76,6 +92,13 @@ public class AnnouncementInfoFragment extends Fragment {
         join.setOnClickListener(this::onClickJoin);
     }
 
+    public void onClickEdit(View view){
+        HomeActivity homeActivity = (HomeActivity) getActivity();
+        bundle.putBoolean("is_edit", true);
+        bundle.putSerializable("board", info);
+        homeActivity.loadFragment(NewAnnouncementFragment.newInstance(bundle));
+    }
+
     public void onClickBack(View view) {
         HomeActivity homeActivity = (HomeActivity) getActivity();
         homeActivity.loadFragment(AnnouncementFragment.newInstance(bundle));
@@ -83,7 +106,10 @@ public class AnnouncementInfoFragment extends Fragment {
 
     public void onClickJoin(View view){
         HttpService httpService = new HttpService();
-        httpService.joinAnnouncement(getActivity(), HomeActivity.getMainUser(), info.id);
+        if(!is_join)
+            httpService.joinAnnouncement(getActivity(), HomeActivity.getMainUser(), info.id, this);
+        else
+            httpService.unsubscribeAnnouncement(getActivity(), HomeActivity.getMainUser(), info.id, this);
     }
 
     private boolean isNetworkConnected() {

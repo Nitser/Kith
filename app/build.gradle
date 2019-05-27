@@ -1,15 +1,24 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        release {
+            storeFile file('C:\\Users\\225056\\Desktop\\keystore.jks')
+            storePassword 'nTvst5520'
+            keyAlias = 'key3'
+            keyPassword 'nTvst5520'
+        }
+    }
     compileSdkVersion 28
     defaultConfig {
-        applicationId "com.project.scratchstudio.kith_andoid"
+        applicationId 'com.project.scratchstudio.kith'
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 8
+        versionCode 9
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
+        signingConfig signingConfigs.release
     }
     buildTypes {
         release {
@@ -20,6 +29,12 @@ android {
     compileOptions {
         targetCompatibility 1.8
         sourceCompatibility 1.8
+    }
+}
+
+allprojects {
+    repositories {
+        maven { url 'https://jitpack.io' }
     }
 }
 
@@ -35,6 +50,7 @@ dependencies {
     implementation 'jp.wasabeef:blurry:2.1.1'
     implementation 'com.android.support:support-v4:28.0.0'
     implementation 'ru.egslava:MaskedEditText:1.0.5'
+    implementation 'com.github.MrBin99:LaravelEchoAndroid:1.0.2'
     androidTestImplementation 'junit:junit:4.12'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'

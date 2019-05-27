@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -41,7 +42,6 @@ public class AnnouncementFragment extends Fragment {
 
     public static void setListAnn( List<AnnouncementInfo> list ) {
         listAnn = list;
-        Log.i("SET LIST ANN", "set");
     }
 
     public AnnouncementFragment() {}
@@ -73,7 +73,6 @@ public class AnnouncementFragment extends Fragment {
     }
 
     public void setAdapter(){
-        Log.i("ADAPTER", "HI");
         adapter = new AnnouncementAdapter(getActivity(), listAnn, item -> {
             Bundle newBundle = new Bundle();
             newBundle.putSerializable("info", item);
@@ -85,17 +84,35 @@ public class AnnouncementFragment extends Fragment {
     private void setButtonsListener(){
         ImageButton back = getActivity().findViewById(R.id.plus);
         back.setOnClickListener(this::onClickAdd);
+
+        Button all = getActivity().findViewById(R.id.all);
+        Button sub = getActivity().findViewById(R.id.sub);
+        Button my = getActivity().findViewById(R.id.my);
+
+        all.setOnClickListener(this::onClickAll);
+        sub.setOnClickListener(this::onClickSub);
+        my.setOnClickListener(this::onClickMy);
+    }
+
+    public void onClickAll(View view){
+        HttpService httpService = new HttpService();
+        httpService.getAnnouncements(getActivity(), HomeActivity.getMainUser(), this);
+    }
+
+    public void onClickSub(View view){
+        HttpService httpService = new HttpService();
+        httpService.getSubscribedAnnouncement(getActivity(), HomeActivity.getMainUser(), this, false);
+    }
+
+    public void onClickMy(View view){
+        HttpService httpService = new HttpService();
+        httpService.getMyAnnouncement(getActivity(), HomeActivity.getMainUser(), this);
     }
 
     public void onClickAdd(View view){
         HomeActivity homeActivity = (HomeActivity) getActivity();
         homeActivity.loadFragment(NewAnnouncementFragment.newInstance(bundle));
     }
-
-//    public void onClickBack(View view) {
-//        HomeActivity homeActivity = (HomeActivity) getActivity();
-//        homeActivity.loadFragment(TreeFragment.newInstance(bundle));
-//    }
 
     private boolean isNetworkConnected() {
         ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);

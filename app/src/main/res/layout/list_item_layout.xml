@@ -7,7 +7,9 @@
     card_view:cardBackgroundColor = "@color/colorPrimary"
     card_view:cardElevation="0dp"
     android:layout_margin="5dp">
+
     <LinearLayout
+        android:layout_margin="5dp"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">

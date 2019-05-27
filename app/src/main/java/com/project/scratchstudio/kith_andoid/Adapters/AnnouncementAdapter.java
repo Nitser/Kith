@@ -45,8 +45,9 @@ public class AnnouncementAdapter extends RecyclerView.Adapter<AnnouncementHolder
         holder.title.setText(annInfo.title);
         holder.date.setText(annInfo.endDate.replaceAll("\\s.*$", ""));
 
-        if(annInfo.url != null && !annInfo.url.equals("null") && annInfo.url.equals("")) {
-            Picasso.with(activity).load(annInfo.url.replaceAll("@[0-9]*", ""))
+        if(annInfo.url != null && !annInfo.url.equals("null") && !annInfo.url.equals("")) {
+//            .replaceAll("@[0-9]*", "")
+            Picasso.with(activity).load(annInfo.url)
                     .into(holder.image);
             holder.image.setScaleType(ImageView.ScaleType.CENTER_CROP);
         }

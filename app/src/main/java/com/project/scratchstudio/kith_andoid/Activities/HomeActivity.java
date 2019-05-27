@@ -11,6 +11,7 @@ import android.view.KeyEvent;
 import com.project.scratchstudio.kith_andoid.Fragments.AnnouncementFragment;
 import com.project.scratchstudio.kith_andoid.Fragments.MessagesFragment;
 import com.project.scratchstudio.kith_andoid.Fragments.TreeFragment;
+import com.project.scratchstudio.kith_andoid.Model.AnnouncementInfo;
 import com.project.scratchstudio.kith_andoid.Model.User;
 import com.project.scratchstudio.kith_andoid.R;
 import com.project.scratchstudio.kith_andoid.Service.InternalStorageService;
@@ -25,6 +26,7 @@ public class HomeActivity extends AppCompatActivity {
     private static User mainUser;
     private static List<User> invitedUsers = new ArrayList<>();
     private static List<Bundle> stackBundles = new ArrayList<>();
+    private static List<AnnouncementInfo> boardsList = new ArrayList<>();
 
     public static User getMainUser() {
         return mainUser;
@@ -33,6 +35,9 @@ public class HomeActivity extends AppCompatActivity {
     public static List<Bundle> getStackBundles() {
         return stackBundles;
     }
+
+    public static List<AnnouncementInfo> getBoardsList() { return  boardsList; }
+    public static void setBoardsList( List<AnnouncementInfo> list ) { boardsList = list; }
 
     public void setInvitedUsers(List <User> list) { invitedUsers = list; }
     public static void cleanMainUser() {

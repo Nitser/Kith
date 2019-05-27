@@ -1,84 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
-<vector xmlns:android="http://schemas.android.com/apk/res/android" xmlns:aapt="http://schemas.android.com/aapt"
-    android:viewportWidth="17.51"
-    android:viewportHeight="24.334"
-    android:width="17.51dp"
-    android:height="24.334dp">
-    <group
-        android:translateX="-297.5"
-        android:translateY="-28.066">
-        <group
-            android:translateX="298.5"
-            android:translateY="39.461">
-            <path
-                android:pathData="M0 -3.011V11.939"
-                android:strokeColor="#FFFFFF"
-                android:strokeWidth="2" />
-        </group>
-        <group
-            android:translateX="298.5"
-            android:translateY="51.4">
-            <path
-                android:pathData="M15.51 0L0 0"
-                android:strokeColor="#FFFFFF"
-                android:strokeWidth="2"
-                android:strokeLineCap="round" />
-        </group>
-        <group
-            android:translateX="314.01"
-            android:translateY="36.5">
-            <path
-                android:pathData="M0 0L0 14.9"
-                android:strokeColor="#FFFFFF"
-                android:strokeWidth="2" />
-        </group>
-        <group
-            android:translateX="310.896"
-            android:translateY="36.536">
-            <path
-                android:pathData="M3.114 0L0 0"
-                android:strokeColor="#FFFFFF"
-                android:strokeWidth="2"
-                android:strokeLineCap="round" />
-        </group>
-        <group
-            android:translateX="298.5"
-            android:translateY="36.536">
-            <path
-                android:pathData="M3.114 0L0 0"
-                android:strokeColor="#FFFFFF"
-                android:strokeWidth="2"
-                android:strokeLineCap="round" />
-        </group>
-        <group
-            android:translateX="302.877"
-            android:translateY="29.48">
-            <group
-                android:translateX="3.374"
-                android:translateY="0.477">
-                <path
-                    android:pathData="M0 0L0 15.543"
-                    android:strokeColor="#FFFFFF"
-                    android:strokeWidth="2"
-                    android:strokeLineCap="round" />
-            </group>
-            <group
-                android:rotation="90"
-                android:translateX="6.732">
-                <path
-                    android:pathData="M0 3.366L3.366 0"
-                    android:strokeColor="#FFFFFF"
-                    android:strokeWidth="2"
-                    android:strokeLineCap="round" />
-                <group
-                    android:translateY="3.366">
-                    <path
-                        android:pathData="M0 0L3.366 3.366"
-                        android:strokeColor="#FFFFFF"
-                        android:strokeWidth="2"
-                        android:strokeLineCap="round" />
-                </group>
-            </group>
-        </group>
-    </group>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+  <path
+      android:fillColor="#FFFFFF"
+      android:pathData="M2.01,21L23,12 2.01,3 2,10l15,2 -15,2z"/>
 </vector>

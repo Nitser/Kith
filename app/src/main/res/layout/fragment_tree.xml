@@ -3,15 +3,10 @@
     android:layout_height="match_parent"
     android:id="@+id/f_tree"
     xmlns:customAttrs="http://schemas.android.com/apk/res-auto"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/colorPrimary"
     tools:context="com.project.scratchstudio.kith_andoid.Fragments.TreeFragment">
-
-    <LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -59,111 +54,113 @@
 
         </RelativeLayout>
 
-    <android.support.v4.widget.SwipeRefreshLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/swiperefresh"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+        <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swiperefresh"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <ScrollView
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-    <LinearLayout
-    android:orientation="vertical"
-    android:id="@+id/paper"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:paddingBottom="20dp">
+            <LinearLayout
+                android:orientation="vertical"
+                android:id="@+id/paper"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
+                <android.support.constraint.ConstraintLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center">
 
-    <android.support.constraint.ConstraintLayout
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center">
+                    <ImageView
+                        android:id="@+id/photo"
+                        android:layout_width="135dp"
+                        android:layout_height="135dp"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="10dp"
+                        android:scaleType="centerCrop"
+                        android:src="@mipmap/person"
+                        customAttrs:layout_constraintBottom_toBottomOf="@+id/buttonProfile"
+                        customAttrs:layout_constraintEnd_toEndOf="parent"
+                        customAttrs:layout_constraintHorizontal_bias="0.0"
+                        customAttrs:layout_constraintStart_toStartOf="parent"
+                        customAttrs:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-    android:id="@+id/photo"
-    android:layout_width="135dp"
-    android:layout_height="135dp"
-    android:layout_gravity="center"
-    android:layout_marginStart="8dp"
-    android:layout_marginTop="8dp"
-    android:layout_marginEnd="8dp"
-    android:layout_marginBottom="10dp"
-    android:scaleType="centerCrop"
-    android:src="@mipmap/person"
-    customAttrs:layout_constraintBottom_toBottomOf="@+id/buttonProfile"
-    customAttrs:layout_constraintEnd_toEndOf="parent"
-    customAttrs:layout_constraintHorizontal_bias="0.0"
-    customAttrs:layout_constraintStart_toStartOf="parent"
-    customAttrs:layout_constraintTop_toTopOf="parent" />
+                    <ImageButton
+                        android:id="@+id/buttonProfile"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="4dp"
+                        android:background="@drawable/button_plus"
+                        android:src="@drawable/ic_more"
+                        android:tint="@color/colorAccent"
+                        customAttrs:layout_constraintBottom_toBottomOf="@+id/photo"
+                        customAttrs:layout_constraintEnd_toEndOf="parent"
+                        customAttrs:layout_constraintHorizontal_bias="0.915"
+                        customAttrs:layout_constraintStart_toStartOf="parent" />
 
-    <ImageButton
-    android:id="@+id/buttonProfile"
-    android:layout_width="40dp"
-    android:layout_height="40dp"
-    android:layout_marginStart="8dp"
-    android:layout_marginEnd="8dp"
-    android:layout_marginBottom="4dp"
-    android:background="@drawable/button_plus"
-    android:src="@drawable/ic_more"
-    android:tint="@color/colorAccent"
-    customAttrs:layout_constraintBottom_toBottomOf="@+id/photo"
-    customAttrs:layout_constraintEnd_toEndOf="parent"
-    customAttrs:layout_constraintHorizontal_bias="0.915"
-    customAttrs:layout_constraintStart_toStartOf="parent" />
-    </android.support.constraint.ConstraintLayout>
+                </android.support.constraint.ConstraintLayout>
 
-    <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
-    android:id="@+id/name"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="-"
-    android:textSize="24sp"
-    android:textColor="@color/colorAccent"
-    android:layout_gravity="center"
-    customAttrs:customFont="intro_regular"
-    android:layout_marginTop="10dp"/>
+                <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+                    android:id="@+id/name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="-"
+                    android:textSize="24sp"
+                    android:textColor="@color/colorAccent"
+                    android:layout_gravity="center"
+                    customAttrs:customFont="intro_regular"
+                    android:layout_marginTop="10dp"/>
 
-    <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
-    android:id="@+id/position"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="-"
-    android:textSize="18sp"
-    android:textColor="@color/colorAccent"
-    android:layout_gravity="center"
-    customAttrs:customFont="intro_regular"
-    android:layout_marginTop="10dp"/>
+                <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+                    android:id="@+id/position"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="-"
+                    android:textSize="18sp"
+                    android:textColor="@color/colorAccent"
+                    android:layout_gravity="center"
+                    customAttrs:customFont="intro_regular"
+                    android:layout_marginTop="10dp"/>
 
-    <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="Вы и ваши знакомые пригласили:"
-    android:textSize="17sp"
-    android:textColor="@color/colorAccent"
-    android:layout_gravity="center"
-    customAttrs:customFont="intro_regular"
-    android:layout_marginTop="30dp"/>
+                <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Вы и ваши знакомые пригласили:"
+                    android:textSize="17sp"
+                    android:textColor="@color/colorAccent"
+                    android:layout_gravity="center"
+                    customAttrs:customFont="intro_regular"
+                    android:layout_marginTop="30dp"/>
 
-    <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:id="@+id/yourPeople"
-    android:text = "-"
-    android:textSize="34sp"
-    android:textColor="@color/colorAccent"
-    android:layout_gravity="center"
-    customAttrs:customFont="intro_regular"
-    android:layout_marginBottom="50dp"/>
+                <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/yourPeople"
+                    android:text = "-"
+                    android:textSize="34sp"
+                    android:textColor="@color/colorAccent"
+                    android:layout_gravity="center"
+                    customAttrs:customFont="intro_regular"
+                    android:layout_marginBottom="50dp"/>
 
-    </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/list_view"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
 
-    </ScrollView>
+            </LinearLayout>
+
+            </ScrollView>
 
     </android.support.v4.widget.SwipeRefreshLayout>
-
-    </LinearLayout>
 
 </LinearLayout>

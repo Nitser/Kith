@@ -10,9 +10,13 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 import com.project.scratchstudio.kith_andoid.Activities.HomeActivity;
 import com.project.scratchstudio.kith_andoid.Adapters.MessageDialogAdapter;
@@ -21,6 +25,7 @@ import com.project.scratchstudio.kith_andoid.Model.MessageDialogInfo;
 import com.project.scratchstudio.kith_andoid.Model.SearchInfo;
 import com.project.scratchstudio.kith_andoid.Model.User;
 import com.project.scratchstudio.kith_andoid.R;
+import com.project.scratchstudio.kith_andoid.Service.HttpService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +37,7 @@ public class MessagesFragment extends Fragment {
     private RecyclerView listView;
     private MessageDialogAdapter adapter;
 
-    private static List<MessageDialogInfo> listMessages  = new ArrayList<>();
+//    private static List<MessageDialogInfo> listMessages  = new ArrayList<>();
 
     public MessagesFragment() {}
 
@@ -50,16 +55,40 @@ public class MessagesFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        setButtonsListener();
         listView = getActivity().findViewById(R.id.listMessages);
         LinearLayoutManager llm = new LinearLayoutManager(getContext());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         listView.setLayoutManager(llm);
 
+        if(HomeActivity.getBoardsList().size() == 0) {
+            HttpService httpService = new HttpService();
+            httpService.getSubscribedAnnouncement(getActivity(), HomeActivity.getMainUser(), this, true);
+        } else
+            setAdapter();
+
+        setButtonsListener();
+
+        EditText filter = getActivity().findViewById(R.id.filter);
+        filter.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                (MessagesFragment.this).adapter.getFilter().filter(s);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
     }
 
     public void setAdapter(){
-        adapter = new MessageDialogAdapter(getActivity(), listMessages, item -> {
+        adapter = new MessageDialogAdapter(getActivity(), HomeActivity.getBoardsList(), item -> {
             if (SystemClock.elapsedRealtime() - buttonCount < 1000){
                 return;
             }
@@ -67,6 +96,13 @@ public class MessagesFragment extends Fragment {
 //            view.setEnabled(false);
 
             //открытие диалога
+            Bundle bundle = new Bundle();
+            bundle.putInt("board_id", item.id);
+            bundle.putString("board_title", item.title);
+//            HomeActivity.getStackBundles().add(bundle);
+            HomeActivity homeActivity = (HomeActivity) getActivity();
+            homeActivity.loadFragment(DialogFragment.newInstance(bundle));
+
 //            view.setEnabled(true);
         });
         listView.setAdapter(adapter);

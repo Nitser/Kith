@@ -7,30 +7,31 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.project.scratchstudio.kith_andoid.Adapters.MessageDialogAdapter;
+import com.project.scratchstudio.kith_andoid.Adapters.TreeAdapter;
 import com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView;
-import com.project.scratchstudio.kith_andoid.Model.AnnouncementInfo;
+import com.project.scratchstudio.kith_andoid.Model.User;
 import com.project.scratchstudio.kith_andoid.R;
 
-public class MessageDialogHolder  extends RecyclerView.ViewHolder {
+public class TreeHolder extends RecyclerView.ViewHolder  {
 
-    public CustomFontTextView nTitle;
-    public CustomFontTextView nMessage;
-    public ImageView nPhoto;
+    public ImageView image;
+    public CustomFontTextView name;
+    public CustomFontTextView position;
     private CardView cardView;
 
-    public MessageDialogHolder(@NonNull View itemView) {
+    public TreeHolder(@NonNull View itemView){
         super(itemView);
-        nTitle = itemView.findViewById(R.id.title);
-        nMessage = itemView.findViewById(R.id.message);
-        nPhoto = itemView.findViewById(R.id.photo);
+        image = itemView.findViewById(R.id.photo);
+        name = itemView.findViewById(R.id.name);
+        position = itemView.findViewById(R.id.position);
 
         cardView = itemView.findViewById(R.id.card_view);
         cardView.setCardBackgroundColor(Color.TRANSPARENT);
         cardView.setCardElevation(0);
+
     }
 
-    public void bind(final AnnouncementInfo item, final MessageDialogAdapter.OnItemClickListener listener) {
+    public void bind(final User item, final TreeAdapter.OnItemClickListener listener) {
         itemView.setOnClickListener(v -> listener.onItemClick(item));
     }
 }

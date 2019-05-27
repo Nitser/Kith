@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.View;
@@ -22,10 +23,15 @@ import com.project.scratchstudio.kith_andoid.Adapters.SearchAdapter;
 import com.project.scratchstudio.kith_andoid.CustomViews.CustomFontEditText;
 import com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView;
 import com.project.scratchstudio.kith_andoid.Fragments.AnnouncementFragment;
+import com.project.scratchstudio.kith_andoid.Fragments.AnnouncementInfoFragment;
+import com.project.scratchstudio.kith_andoid.Fragments.DialogFragment;
+import com.project.scratchstudio.kith_andoid.Fragments.MessagesFragment;
 import com.project.scratchstudio.kith_andoid.Fragments.NewAnnouncementFragment;
 import com.project.scratchstudio.kith_andoid.Fragments.SearchFragment;
+import com.project.scratchstudio.kith_andoid.Fragments.TreeFragment;
 import com.project.scratchstudio.kith_andoid.Model.AnnouncementInfo;
 import com.project.scratchstudio.kith_andoid.Model.Cache;
+import com.project.scratchstudio.kith_andoid.Model.DialogInfo;
 import com.project.scratchstudio.kith_andoid.Model.SearchInfo;
 import com.project.scratchstudio.kith_andoid.Model.User;
 import com.project.scratchstudio.kith_andoid.R;
@@ -161,8 +167,9 @@ public class HttpService {
 
     public void getUser(Activity context){
         String[] input_keys = {"Authorization"};
+        String[] input_data = {HomeActivity.getMainUser().getToken()};
 
-        HttpGetRequest httpGetRequest = new HttpGetRequest(context, input_keys, (output, resultJSON, code) -> {
+        HttpGetRequest httpGetRequest = new HttpGetRequest(context, input_keys, input_data, (output, resultJSON, code) -> {
             if(output && resultJSON != null){
                 JSONObject response;
                 try {
@@ -178,7 +185,7 @@ public class HttpService {
                         HomeActivity.getMainUser().setPosition(user.getString("user_position"));
 
                             try {
-                                HomeActivity.getMainUser().setUrl(user.getString("photo"));
+                                HomeActivity.getMainUser().setUrl(user.getString("photo").replaceAll("\\/", "/"));
                             } catch (Exception e){
 //                                Log.i("DECODE ERR: ", e.getMessage());
                             }
@@ -289,7 +296,7 @@ public class HttpService {
         httpPostRequest.execute("http://" + SERVER + "/api/users/referral");
     }
 
-    public void getInvitedUsers(Activity activity, User user, boolean owner){
+    public void getInvitedUsers(Activity activity, User user, TreeFragment fragment){
 
         String[] result_keys = {"status", "user_id", "user_firstname", "user_lastname", "photo", "user_middlename", "user_position", "user_description"};
         String[] header_keys = {"Authorization"};
@@ -310,7 +317,7 @@ public class HttpService {
                             invitedUser.setFirstName(obj.getString(result_keys[2]));
                             invitedUser.setLastName(obj.getString(result_keys[3]));
                             invitedUser.setMiddleName(obj.getString(result_keys[5]));
-                            invitedUser.setUrl(obj.getString(result_keys[4]));
+                            invitedUser.setUrl(obj.getString(result_keys[4]).replaceAll("\\/", "/"));
                             invitedUser.setPosition(obj.getString(result_keys[6]));
                             invitedUser.setDescription(obj.getString(result_keys[7]));
 
@@ -324,9 +331,7 @@ public class HttpService {
                             homeActivity.setInvitedUsers(list);
                         }
 
-                        LinearLayout parent = activity.findViewById(R.id.paper);
-                        TreeService treeService = new TreeService();
-                        treeService.makeTree(parent, list, owner);
+                        fragment.setInvitedUsersList(list);
                     } catch (NullPointerException ignored){}
 
                 } catch (JSONException e) {
@@ -438,7 +443,7 @@ public class HttpService {
         httpPostRequest.execute("http://" + SERVER + "/api/users/checkcode");
     }
 
-    public void refreshInvitedUsers(Activity activity, int id, boolean owner, SwipeRefreshLayout refreshLayout){
+    public void refreshInvitedUsers(Activity activity, int id, boolean owner, SwipeRefreshLayout refreshLayout, TreeFragment fragment){
         String[] result_keys = {"status", "user_id", "user_firstname", "user_lastname", "photo", "user_middlename", "user_position", "user_phone", "user_description"};
         String[] header_keys = {"Authorization"};
         String[] body_keys = {"user_id", "page", "size"};
@@ -457,7 +462,7 @@ public class HttpService {
                             user.setId(obj.getInt(result_keys[1]));
                             user.setFirstName(obj.getString(result_keys[2]));
                             user.setLastName(obj.getString(result_keys[3]));
-                            user.setUrl(obj.getString(result_keys[4]));
+                            user.setUrl(obj.getString(result_keys[4]).replaceAll("\\/", "/"));
                             user.setMiddleName(obj.getString(result_keys[5]));
                             user.setPosition(obj.getString(result_keys[6]));
                             user.setPhone(obj.getString(result_keys[7]));
@@ -469,13 +474,7 @@ public class HttpService {
                         homeActivity.setInvitedUsers(list);
 
                     }
-                    LinearLayout parent = activity.findViewById(R.id.paper);
-                    try{
-                        parent.removeViews(5, parent.getChildCount()-5);
-                    } catch (Exception e){ }
-
-                    TreeService treeService = new TreeService();
-                    treeService.makeTree(parent, list, owner);
+                    fragment.setInvitedUsersList(list);
 
                     refreshLayout.setRefreshing(false);
                 } catch (JSONException e) {
@@ -515,7 +514,7 @@ public class HttpService {
                         mainUser.setPosition(user.getPosition());
                         mainUser.setDescription(user.getDescription());
                         if(user.getUrl() != null && !user.getUrl().equals("null"))
-                            mainUser.setUrl(user.getUrl());
+                            mainUser.setUrl(user.getUrl().replaceAll("\\/", "/"));
                     } else {
                         Toast.makeText(activity, getErrorMessage(code), Toast.LENGTH_SHORT).show();
                     }
@@ -555,7 +554,7 @@ public class HttpService {
                             newInfo.id = obj.getInt(result_keys[1]);
                             newInfo.firstName = obj.getString(result_keys[2]);
                             newInfo.lastName = obj.getString(result_keys[3]);
-                            newInfo.photo = obj.getString(result_keys[4]);
+                            newInfo.photo = obj.getString(result_keys[4]).replaceAll("\\/", "/");
                             newInfo.position = obj.getString(result_keys[6]);
 
                             list.add(newInfo);
@@ -614,7 +613,7 @@ public class HttpService {
     }
 
     public void getAnnouncements(Activity activity, User user, AnnouncementFragment fragment){
-        String[] result_keys = {"status", "user_id", "user_firstname", "user_lastname", "user_photo", "user_middlename", "user_position", "user_description"};
+        String[] result_keys = {"status", "user_id", "user_firstname", "user_lastname", "user_photo", "user_middlename", "user_position", "user_description", "subscription_on_board"};
         String[] header_keys = {"Authorization"};
         String[] body_keys = {"user_id"};
         String[] header_data = { user.getToken() };
@@ -635,13 +634,14 @@ public class HttpService {
                             newInfo.title = obj.getString("board_title");
                             newInfo.enabled = obj.getInt("board_enabled");
                             newInfo.organizerName = obj.getString("owner_firstname") + " " + obj.getString("owner_lastname");
-                            newInfo.url = obj.getString("user_photo");
+                            newInfo.url = obj.getString("board_photo").replaceAll("\\/", "/");
                             newInfo.description = obj.getString("board_description");
                             newInfo.startDate = obj.getString("board_date_created");
                             newInfo.endDate = obj.getString("board_date_end");
                             newInfo.needParticipants = obj.getString("board_needs_subscriptions");
                             newInfo.participants = obj.getString("board_current_subscriptions");
                             newInfo.organizerId = obj.getInt("board_user_id");
+                            newInfo.subscriptionOnBoard = obj.getInt("subscription_on_board");
 
                             list.add(newInfo);
                             Log.i("New AnInf", newInfo.title);
@@ -663,7 +663,7 @@ public class HttpService {
         httpPostRequest.execute("http://" + SERVER + "/api/boards/list");
     }
 
-    public void joinAnnouncement(Activity activity, User user, int boardId){
+    public void joinAnnouncement(Activity activity, User user, int boardId, AnnouncementInfoFragment fragment){
         String[] result_keys = {"status"};
         String[] header_keys = {"Authorization"};
         String[] body_keys = {"subscription_user_id", "subscription_board_id"};
@@ -680,6 +680,7 @@ public class HttpService {
                        String result = have.getText().toString();
                        int res = Integer.parseInt(result) + 1;
                        have.setText(String.valueOf(res));
+                       fragment.setIsJoin(true, "Покинуть");
                     }
                 } catch (JSONException e) {
                     if(activity != null)
@@ -691,6 +692,37 @@ public class HttpService {
             }
         }));
         httpPostRequest.execute("http://" + SERVER + "/api/boards/subscribe");
+    }
+
+    public void unsubscribeAnnouncement(Activity activity, User user, int boardId, AnnouncementInfoFragment fragment){
+        String[] result_keys = {"status"};
+        String[] header_keys = {"Authorization"};
+        String[] body_keys = {"subscription_user_id", "subscription_board_id"};
+        String[] header_data = { user.getToken() };
+        String[] body_data = { String.valueOf(user.getId()), String.valueOf(boardId) };
+
+        HttpPostRequest httpPostRequest = new HttpPostRequest(activity, header_keys, body_keys, header_data, body_data, ((output, resultJSON, code) -> {
+            if(output && resultJSON!=null){
+                try {
+                    JSONObject json = new JSONObject(resultJSON);
+                    if( json.getBoolean(result_keys[0]) ){
+                        Toast.makeText(activity, "Вы отписаны", Toast.LENGTH_SHORT).show();
+                        CustomFontTextView have = activity.findViewById(R.id.have);
+                        String result = have.getText().toString();
+                        int res = Integer.parseInt(result) - 1;
+                        have.setText(String.valueOf(res));
+                        fragment.setIsJoin(false, "Присоединиться");
+                    }
+                } catch (JSONException e) {
+                    if(activity != null)
+                        Toast.makeText(activity, getErrorMessage(code), Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                }
+            } else if(activity != null){
+                Toast.makeText(activity, getErrorMessage(code), Toast.LENGTH_SHORT).show();
+            }
+        }));
+        httpPostRequest.execute("http://" + SERVER + "/api/boards/unsubscribe");
     }
 
     public void addAnnouncement(Activity activity, User user, NewAnnouncementFragment nFragment, AnnouncementInfo info){
@@ -720,6 +752,229 @@ public class HttpService {
         httpPostRequest.execute("http://" + SERVER + "/api/boards/create");
     }
 
+    public void getSubscribedAnnouncement(Activity activity, User user, Fragment fragment, boolean msgFrgm){
+        String[] header_keys = {"Authorization"};
+        String[] header_data = {user.getToken() };
+        String[] result_keys = {"status", "boards"};
+
+        String[] board_keys = {"board_id", "board_title", "board_date_created", "board_date_end",
+                "board_enabled", "board_description", "board_user_id", "board_subscriptions",
+                "board_needs_subscriptions", "owner_lastname", "owner_firstname", "owner_middlename",
+                "owner_login", "subscription_on_board", "board_current_subscriptions", "board_photo"};
+
+        HttpGetRequest httpGetRequest = new HttpGetRequest(activity, header_keys, header_data, ((output, resultJSON, code) -> {
+            if( output && resultJSON != null){
+                try {
+                    JSONObject object = new JSONObject(resultJSON);
+                    if(object.has(result_keys[0]) && object.getBoolean(result_keys[0])) {
+                        JSONArray response = object.getJSONArray(result_keys[1]);
+                        List<AnnouncementInfo> list = new ArrayList<>();
+                        if (response.length() != 0 && !response.getJSONObject(0).has(result_keys[0])) {
+                            for (int i = 0; i < response.length(); i++) {
+                                JSONObject obj = response.getJSONObject(i);
+                                AnnouncementInfo board = new AnnouncementInfo();
+                                board.id = obj.getInt(board_keys[0]);
+                                board.title = obj.getString(board_keys[1]);
+                                board.startDate = obj.getString(board_keys[2]);
+                                board.endDate = obj.getString(board_keys[3]);
+                                board.enabled = obj.getInt(board_keys[4]);
+                                board.description = obj.getString(board_keys[5]);
+                                board.organizerId = obj.getInt(board_keys[6]);
+                                board.boardSubscription = obj.getInt(board_keys[7]);
+                                board.needParticipants = obj.getString(board_keys[8]);
+                                board.organizerLastName = obj.getString(board_keys[9]);
+                                board.organizerName = obj.getString(board_keys[10]);
+                                board.organizerMiddleName = obj.getString(board_keys[11]);
+                                board.organizerLogin = obj.getString(board_keys[12]);
+                                board.subscriptionOnBoard = obj.getInt(board_keys[13]);
+                                board.participants = obj.getString(board_keys[14]);
+                                board.organizerPhoto = obj.getString(board_keys[15]).replaceAll("\\/", "/");
+                                board.url = obj.getString("board_photo").replaceAll("\\/", "/");
+
+                                list.add(board);
+                            }
+
+                            HomeActivity.setBoardsList(list);
+                            MessagesFragment frgm;
+                            AnnouncementFragment frgmAn;
+                            if(msgFrgm) {
+                                frgm = (MessagesFragment) fragment;
+                                frgm.setAdapter();
+                            } else {
+                                frgmAn = (AnnouncementFragment) fragment;
+                                AnnouncementFragment.setListAnn(list);
+                                frgmAn.setAdapter();
+                            }
+
+                        }
+                    }
+                } catch (JSONException e) {
+                    if(activity != null)
+                        Toast.makeText(activity, getErrorMessage(code), Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                }
+            } else if(activity != null){
+                Toast.makeText(activity, getErrorMessage(code), Toast.LENGTH_SHORT).show();
+            }
+        }));
+        httpGetRequest.execute("http://" + SERVER +"/api/boards/getsubscribes/" + user.getId());
+    }
+
+    public void getMyAnnouncement(Activity activity, User user, AnnouncementFragment fragment){
+        String[] header_keys = {"Authorization"};
+        String[] header_data = {user.getToken() };
+        String[] result_keys = {"status", "boards"};
+
+        String[] board_keys = {"board_id", "board_title", "board_date_created", "board_date_end",
+                "board_enabled", "board_description", "board_user_id", "board_subscriptions",
+                "board_needs_subscriptions", "owner_lastname", "owner_firstname", "owner_middlename",
+                "owner_login", "subscription_on_board", "board_current_subscriptions", "board_photo"};
+
+        HttpGetRequest httpGetRequest = new HttpGetRequest(activity, header_keys, header_data, ((output, resultJSON, code) -> {
+            if( output && resultJSON != null){
+                try {
+                    JSONObject object = new JSONObject(resultJSON);
+                    if(object.has(result_keys[0]) && object.getBoolean(result_keys[0])) {
+                        JSONArray response = object.getJSONArray(result_keys[1]);
+                        List<AnnouncementInfo> list = new ArrayList<>();
+                        if (response.length() != 0 && !response.getJSONObject(0).has(result_keys[0])) {
+                            for (int i = 0; i < response.length(); i++) {
+                                JSONObject obj = response.getJSONObject(i);
+                                AnnouncementInfo board = new AnnouncementInfo();
+                                board.id = obj.getInt(board_keys[0]);
+                                board.title = obj.getString(board_keys[1]);
+                                board.startDate = obj.getString(board_keys[2]);
+                                board.endDate = obj.getString(board_keys[3]);
+                                board.enabled = obj.getInt(board_keys[4]);
+                                board.description = obj.getString(board_keys[5]);
+                                board.organizerId = obj.getInt(board_keys[6]);
+                                board.boardSubscription = obj.getInt(board_keys[7]);
+                                board.needParticipants = obj.getString(board_keys[8]);
+                                board.organizerLastName = obj.getString(board_keys[9]);
+                                board.organizerName = obj.getString(board_keys[10]);
+                                board.organizerMiddleName = obj.getString(board_keys[11]);
+                                board.organizerLogin = obj.getString(board_keys[12]);
+                                board.subscriptionOnBoard = obj.getInt(board_keys[13]);
+                                board.participants = obj.getString(board_keys[14]);
+                                board.organizerPhoto = obj.getString(board_keys[15]).replaceAll("\\/", "/");
+                                board.url = obj.getString("board_photo").replaceAll("\\/", "/");
+
+                                list.add(board);
+                            }
+
+                            AnnouncementFragment.setListAnn(list);
+                            fragment.setAdapter();
+
+                        }
+                    }
+                } catch (JSONException e) {
+                    if(activity != null)
+                        Toast.makeText(activity, getErrorMessage(code), Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                }
+            } else if(activity != null){
+                Toast.makeText(activity, getErrorMessage(code), Toast.LENGTH_SHORT).show();
+            }
+        }));
+        httpGetRequest.execute("http://" + SERVER +"/api/boards/getuserboards/" + user.getId());
+    }
+
+    public void getComments(Activity activity, User user, DialogFragment fragment, int boardId){
+        String[] result_keys = {"message", "timestamp", "user", "user_id", "photo", "user_firstname", "user_lastname", "user_photo", "user_middlename", "user_position", "user_description"};
+        String[] header_keys = {"Authorization"};
+        String[] body_keys = {"page", "size", "before"};
+        String[] header_data = { user.getToken() };
+        String[] body_data = { "0", "50", "2019-06-22 22:22:22" };
+
+        HttpPostRequest httpPostRequest = new HttpPostRequest(activity, header_keys, body_keys, header_data, body_data, ((output, resultJSON, code) -> {
+            if(output && resultJSON!=null){
+                try {
+                    JSONObject json = new JSONObject(resultJSON);
+                    JSONArray response = json.getJSONArray("comments");
+                    List<DialogInfo> list = new ArrayList<>();
+                    if(response.length()!= 0 && json.getInt("total")>0 ){
+                        for(int i=0; i<response.length(); i++){
+                            DialogInfo newInfo = new DialogInfo();
+
+                            JSONObject obj = response.getJSONObject(i);
+                            JSONObject userObg = obj.getJSONObject(result_keys[2]);
+
+                            newInfo.message = obj.getString(result_keys[0]);
+                            newInfo.user_id = userObg.getInt(result_keys[3]);
+                            Log.i("COMMENTS", "user_id = " + newInfo.user_id);
+                            newInfo.photo = userObg.getString(result_keys[4]).replaceAll("\\/", "/");
+
+                            list.add(newInfo);
+                        }
+                        DialogFragment.setListMessages(list);
+                        fragment.setAdapter();
+
+                    }
+                } catch (JSONException e) {
+                    if(activity != null)
+                        Toast.makeText(activity, getErrorMessage(code), Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                }
+            } else if(activity != null){
+                Toast.makeText(activity, getErrorMessage(code), Toast.LENGTH_SHORT).show();
+            }
+        }));
+        httpPostRequest.execute("http://" + SERVER + "/api/boards/" + boardId + "/comments");
+    }
+
+    public void sendComment(Activity activity, User user, DialogFragment fragment, int boardId, String message){
+        String[] result_keys = {"status"};
+        String[] header_keys = {"Authorization"};
+        String[] body_keys = {"message"};
+        String[] header_data = { user.getToken() };
+        String[] body_data = { message };
+
+            HttpPostRequest httpPostRequest = new HttpPostRequest(activity, header_keys, body_keys, header_data, body_data, ((output, resultJSON, code) -> {
+                if(output && resultJSON!=null){
+                    try {
+                        JSONObject json = new JSONObject(resultJSON);
+                        if(json.has(result_keys[0]) && json.getBoolean(result_keys[0]) ){
+                            fragment.createNewComment(message);
+                        }
+                    } catch (JSONException e) {
+                        if(activity != null)
+                            Toast.makeText(activity, getErrorMessage(code), Toast.LENGTH_SHORT).show();
+                        e.printStackTrace();
+                    }
+                } else if(activity != null){
+                    Toast.makeText(activity, getErrorMessage(code), Toast.LENGTH_SHORT).show();
+                }
+            }));
+            httpPostRequest.execute("http://" + SERVER + "/api/boards/" + boardId + "/comment");
+    }
+
+    public void editAnnouncement(Activity activity, User user, NewAnnouncementFragment nFragment, AnnouncementInfo old, AnnouncementInfo info){
+        String[] result_keys = {"status"};
+        String[] header_keys = {"Authorization"};
+        String[] body_keys = {"board_user_id", "board_title", "board_description", "board_photo", "board_subscriptions", "board_date_end", "board_enabled", "board_needs_subscriptions", "board_id"};
+        String[] header_data = { user.getToken() };
+        String[] body_data = { String.valueOf(user.getId()), info.title, info.description, info.url, String.valueOf(1), info.endDate, String.valueOf(1), info.needParticipants, String.valueOf(old.id)};
+
+        HttpPostRequest httpPostRequest = new HttpPostRequest(activity, header_keys, body_keys, header_data, body_data, ((output, resultJSON, code) -> {
+            if(output && resultJSON!=null){
+                try {
+                    JSONObject json = new JSONObject(resultJSON);
+                    if( json.getBoolean(result_keys[0]) ){
+                        Toast.makeText(activity, "Объявление изменено", Toast.LENGTH_SHORT).show();
+                        nFragment.close();
+                    }
+                } catch (JSONException e) {
+                    if(activity != null)
+                        Toast.makeText(activity, getErrorMessage(code), Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                }
+            } else if(activity != null){
+                Toast.makeText(activity, getErrorMessage(code), Toast.LENGTH_SHORT).show();
+            }
+        }));
+        httpPostRequest.execute("http://" + SERVER + "/api/boards/edit");
+    }
+
     private String getErrorMessage(int code){
         switch (code){
             case 400: return "Неверный формат данных";
@@ -730,7 +985,6 @@ public class HttpService {
             case 405: return "Пользователь не подтвержден";
             case 406: return "Логин уже занят";
             default:
-//                Log.i("RESPONSE ERROR", String.valueOf(code));
                 return "Ошибка сервера";
         }
     }

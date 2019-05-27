@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView;
@@ -31,7 +32,8 @@ public class ProfileActivity extends AppCompatActivity {
         User user = (User)bundle.getSerializable("user");
 
         if(user.getId() != HomeActivity.getMainUser().getId()){
-
+            ImageButton edit = findViewById(R.id.edit);
+            edit.setVisibility(View.INVISIBLE);
         }
 
         if(isNetworkConnected()){
@@ -54,7 +56,7 @@ public class ProfileActivity extends AppCompatActivity {
             middlename.setText(user.getMiddleName());
             position.setText(user.getPosition());
             usersCount.setText(String.valueOf(user.getUsersCount()));
-            if(user.getDescription().equals("null") || user.getDescription().equals("")){
+            if(user.getDescription() == null || user.getDescription().equals("null") || user.getDescription().equals("")){
                 CustomFontTextView label_description = findViewById(R.id.label_description);
                 label_description.setVisibility(View.INVISIBLE);
             } else{

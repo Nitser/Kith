@@ -4,8 +4,11 @@ import java.io.Serializable;
 
 public class AnnouncementInfo implements Serializable {
     public int id;
-    public int enabled;
     public String title;
+
+    public int enabled;
+    public int boardSubscription;
+    public int subscriptionOnBoard;
 
     public String startDate;
     public String endDate;
@@ -17,6 +20,9 @@ public class AnnouncementInfo implements Serializable {
 
     public int organizerId;
     public String organizerName;
+    public String organizerLastName;
+    public String organizerMiddleName;
+    public String organizerLogin;
     public String organizerPhoto;
 
 }

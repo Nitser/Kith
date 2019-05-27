@@ -19,6 +19,7 @@ public class HttpGetRequest extends AsyncTask<String, Void, String> {
     private static final int READ_TIMEOUT = 15000;
     private static final int CONNECTION_TIMEOUT = 15000;
     private String[] input_keys;
+    private String[] input_data;
     private HttpGetRequest.AsynResponse asynResponse;
     private WeakReference<Activity> weakActivity;
 
@@ -27,21 +28,16 @@ public class HttpGetRequest extends AsyncTask<String, Void, String> {
     }
 
     HttpGetRequest(Activity activity, AsynResponse asynResponse){
-        weakActivity = new WeakReference<Activity>(activity);
+        weakActivity = new WeakReference<>(activity);
         this.asynResponse = asynResponse;
     }
 
-    HttpGetRequest(Activity activity, String[] input_keys, AsynResponse asynResponse){
-        weakActivity = new WeakReference<Activity>(activity);
+    HttpGetRequest(Activity activity, String[] input_keys, String[] input_data, AsynResponse asynResponse){
+        weakActivity = new WeakReference<>(activity);
         this.input_keys = input_keys;
+        this.input_data = input_data;
         this.asynResponse = asynResponse;
     }
-
-//    HttpGetRequest(Activity activity, String[] input_keys, AsynResponse asynResponse){
-//        weakActivity = new WeakReference<Activity>(activity);
-//        this.input_keys = input_keys;
-//        this.asynResponse = asynResponse;
-//    }
 
     @Override
     protected String doInBackground(String... strings) {
@@ -57,7 +53,7 @@ public class HttpGetRequest extends AsyncTask<String, Void, String> {
             connection.setConnectTimeout(CONNECTION_TIMEOUT);
             if(input_keys != null){
                 connection.setDoInput(true);
-                connection.setRequestProperty(input_keys[0], HomeActivity.getMainUser().getToken());
+                connection.setRequestProperty(input_keys[0], input_data[0]);
             }
             connection.connect();
 

@@ -44,14 +44,15 @@
                 android:textSize="17sp"
                 customAttrs:customFont="intro_regular"/>
 
-            <!--<ImageButton-->
-                <!--android:id="@+id/plus"-->
-                <!--android:layout_width="30dp"-->
-                <!--android:layout_height="30dp"-->
-                <!--android:layout_marginEnd="10dp"-->
-                <!--android:layout_alignParentEnd="true"-->
-                <!--android:layout_centerVertical="true"-->
-                <!--android:background="@drawable/ic_edit"/>-->
+            <ImageButton
+                android:id="@+id/edit"
+                android:visibility="invisible"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginEnd="10dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/ic_edit"/>
 
         </RelativeLayout>
 
@@ -126,6 +127,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Присоединиться"
+                android:minWidth="170dp"
                 android:background="@drawable/button_basic"
                 android:padding="10dp"
                 android:layout_marginStart="10dp"

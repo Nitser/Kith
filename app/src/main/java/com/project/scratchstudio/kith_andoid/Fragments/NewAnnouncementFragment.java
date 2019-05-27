@@ -53,6 +53,8 @@ public class NewAnnouncementFragment extends Fragment {
     private Bitmap photo;
     private boolean correctDate = false;
 
+    private AnnouncementInfo board;
+
     public static NewAnnouncementFragment newInstance(Bundle bundle) {
         NewAnnouncementFragment fragment = new NewAnnouncementFragment();
         fragment.setArguments(bundle);
@@ -67,6 +69,7 @@ public class NewAnnouncementFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+
         setButtonsListener();
 
         MaskedEditText endDate = getActivity().findViewById(R.id.date_text);
@@ -93,9 +96,6 @@ public class NewAnnouncementFragment extends Fragment {
                     cal.set(Calendar.MONTH, mon-1);
                     year = (year<1900)?1900:(year>2100)?2100:year;
                     cal.set(Calendar.YEAR, year);
-                    // ^ first set year for the line below to work correctly
-                    //with leap years - otherwise, date e.g. 29/02/2012
-                    //would be automatically corrected to 28/02/2012
 
                     day = (day > cal.getActualMaximum(Calendar.DATE))? cal.getActualMaximum(Calendar.DATE):day;
                     clean = String.format("%02d%02d%02d",year, mon, day);
@@ -109,10 +109,6 @@ public class NewAnnouncementFragment extends Fragment {
                     else
                         correctDate = false;
                 }
-
-//                clean = String.format("%s-%s-%s", clean.substring(0, 4),
-//                        clean.substring(4, 6),
-//                        clean.substring(6, 8));
             }
 
             @Override
@@ -120,6 +116,23 @@ public class NewAnnouncementFragment extends Fragment {
 
             }
         });
+
+        if(bundle.containsKey("is_edit") && bundle.getBoolean("is_edit")){
+            board = (AnnouncementInfo) bundle.getSerializable("board");
+            fillFields();
+        }
+    }
+
+    private void fillFields(){
+        CustomFontEditText title = getActivity().findViewById(R.id.title_text);
+        CustomFontEditText description = getActivity().findViewById(R.id.description);
+        MaskedEditText endDate = getActivity().findViewById(R.id.date_text);
+        CustomFontEditText need = getActivity().findViewById(R.id.need_text);
+
+        title.setText(board.title);
+        description.setText(board.description);
+        endDate.setText(board.endDate);
+        need.setText(board.needParticipants);
     }
 
     private void setButtonsListener(){
@@ -146,7 +159,11 @@ public class NewAnnouncementFragment extends Fragment {
                 if (isNetworkConnected()) {
                     AnnouncementInfo info = createAnnouncementInfo();
                     HttpService httpService = new HttpService();
-                    httpService.addAnnouncement(getActivity(), HomeActivity.getMainUser(), this, info);
+
+                    if(board == null)
+                        httpService.addAnnouncement(getActivity(), HomeActivity.getMainUser(), this, info);
+                    else
+                        httpService.editAnnouncement(getActivity(), HomeActivity.getMainUser(), this, board, info );
 
                 } else
                     Toast.makeText(getContext(), "Нет подключения к интернету", Toast.LENGTH_SHORT).show();

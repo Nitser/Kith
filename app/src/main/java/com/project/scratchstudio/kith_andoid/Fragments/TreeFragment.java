@@ -12,6 +12,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -19,23 +21,32 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.project.scratchstudio.kith_andoid.Activities.CodeActivity;
 import com.project.scratchstudio.kith_andoid.Activities.HomeActivity;
 import com.project.scratchstudio.kith_andoid.Activities.ProfileActivity;
+import com.project.scratchstudio.kith_andoid.Adapters.SearchAdapter;
+import com.project.scratchstudio.kith_andoid.Adapters.TreeAdapter;
 import com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView;
+import com.project.scratchstudio.kith_andoid.Holders.TreeHolder;
 import com.project.scratchstudio.kith_andoid.Model.User;
 import com.project.scratchstudio.kith_andoid.R;
 import com.project.scratchstudio.kith_andoid.Service.HttpService;
 import com.project.scratchstudio.kith_andoid.Service.PicassoCircleTransformation;
 import com.squareup.picasso.Picasso;
 
+import java.util.List;
+
 public class TreeFragment extends Fragment {
 
     private static long buttonCount = 0;
     private Bundle bundle;
     private HttpService httpService;
+
+    private LinearLayout linearLayout;
     private SwipeRefreshLayout mySwipeRefreshLayout;
     private User currentUser;
 
@@ -59,70 +70,92 @@ public class TreeFragment extends Fragment {
         setButtonsListener();
         httpService = new HttpService();
         User mainUser = HomeActivity.getMainUser();
+        String userName = "";
 
         if(bundle!= null && bundle.containsKey("another_user") && !bundle.getBoolean("another_user")){
             currentUser = mainUser;
-            if(currentUser.getFirstName() == null){   //get all data about user
+            if(currentUser.getFirstName() == null){
                 httpService.getUser(getActivity());
             } else {
-                CustomFontTextView name = getActivity().findViewById(R.id.name);
-                CustomFontTextView position = getActivity().findViewById((R.id.position));
-                ImageView photo = getActivity().findViewById(R.id.photo);
-
-                String userName = currentUser.getFirstName() + " " + currentUser.getLastName();
-                name.setText(userName);
-                position.setText(currentUser.getPosition());
-                Picasso.with(getContext()).load(currentUser.getUrl())
-                        .placeholder(R.mipmap.person)
-                        .error(R.mipmap.person)
-                        .transform(new PicassoCircleTransformation())
-                        .into(photo);
+                userName = currentUser.getFirstName() + " " + currentUser.getLastName();
             }
-            httpService.referralCount(getActivity(), currentUser, false);
-            httpService.referralCount(getActivity(), currentUser, true);
-
             HomeActivity.createInvitedUsers();
-            httpService.getInvitedUsers(getActivity(), currentUser, true);
         } else if(bundle != null && bundle.containsKey("user")){
             currentUser = (User)bundle.getSerializable("user");
-            CustomFontTextView name = getActivity().findViewById(R.id.name);
-            CustomFontTextView position = getActivity().findViewById(R.id.position);
+            userName = currentUser.getFirstName() + " " + currentUser.getLastName();
 
             ImageButton back = getActivity().findViewById(R.id.back);
             back.setVisibility(View.VISIBLE);
-
-            ImageView photo = getActivity().findViewById(R.id.photo);
-            if(currentUser.getUrl() != null)
-            Picasso.with(getActivity()).load(currentUser.getUrl().replaceAll("@[0-9]*", ""))
-                    .placeholder(R.mipmap.person)
-                    .error(R.mipmap.person)
-                    .transform(new PicassoCircleTransformation())
-                    .into(photo);
-
-            httpService.referralCount(getActivity(), currentUser,true);
-
-            String userName = currentUser.getFirstName() + " " + currentUser.getLastName();
-            name.setText(userName);
-            position.setText(currentUser.getPosition());
-
-            httpService.referralCount(getActivity(), currentUser,false);
-            httpService.getInvitedUsers(getActivity(), currentUser, false);
         }
+
+        init(userName);
+        httpService.referralCount(getActivity(), currentUser, false);
+        httpService.referralCount(getActivity(), currentUser, true);
+        httpService.getInvitedUsers(getActivity(), currentUser, this);
 
         mySwipeRefreshLayout = getActivity().findViewById(R.id.swiperefresh);
         mySwipeRefreshLayout.setOnRefreshListener(this::myUpdateOperation);
 
     }
 
-    private void setButtonsListener(){
-        ImageButton back = getActivity().findViewById(R.id.back);
-        back.setOnClickListener(this::onClickBack);
-        ImageButton search = getActivity().findViewById(R.id.search);
-        search.setOnClickListener(this::onClickSearch);
-        ImageButton code = getActivity().findViewById(R.id.plus);
-        code.setOnClickListener(this::onClickCode);
-        ImageButton profile = getActivity().findViewById(R.id.buttonProfile);
-        profile.setOnClickListener(this::onClickProfileButton);
+    private void init(String str_name){
+        CustomFontTextView name = getActivity().findViewById(R.id.name);
+        CustomFontTextView position = getActivity().findViewById(R.id.position);
+        ImageView photo = getActivity().findViewById(R.id.photo);
+        if(currentUser.getUrl() != null)
+            Picasso.with(getActivity()).load(currentUser.getUrl().replaceAll("@[0-9]*", ""))
+                    .placeholder(R.mipmap.person)
+                    .error(R.mipmap.person)
+                    .transform(new PicassoCircleTransformation())
+                    .into(photo);
+        name.setText(str_name);
+        position.setText(currentUser.getPosition());
+
+        linearLayout = getActivity().findViewById(R.id.list_view);
+
+    }
+
+    public void setInvitedUsersList(List<User> invitedUsers) {
+        cleanUsers();
+        for (int i = 0; i < invitedUsers.size(); i++) {
+            LayoutInflater inflater = (LayoutInflater) getContext().getSystemService( Context.LAYOUT_INFLATER_SERVICE );
+            View itemView = inflater.inflate(R.layout.list_item_layout, null);
+            linearLayout.addView(itemView, i);
+            TreeHolder holder = new TreeHolder(itemView);
+
+            User user = invitedUsers.get(i);
+            String name = user.getFirstName() + " " + user.getLastName();
+            holder.name.setText(name);
+            holder.position.setText(user.getPosition());
+
+            if (user.getUrl() != null && !user.getUrl().equals("null") && !user.getUrl().equals("")) {
+                Picasso.with(getActivity()).load(user.getUrl())
+                        .error(com.project.scratchstudio.kith_andoid.R.mipmap.person)
+                        .transform(new PicassoCircleTransformation())
+                        .into(holder.image);
+                holder.image.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            }
+
+            itemView.setOnClickListener(v -> {
+                if (SystemClock.elapsedRealtime() - buttonCount < 1000) {
+                    return;
+                }
+                buttonCount = SystemClock.elapsedRealtime();
+//            view.setEnabled(false);
+
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("another_user", true);
+                bundle.putSerializable("user", user);
+                HomeActivity.getStackBundles().add(bundle);
+                HomeActivity homeActivity = (HomeActivity) getActivity();
+                homeActivity.loadFragment(TreeFragment.newInstance(bundle));
+//            view.setEnabled(true);
+            });
+        }
+    }
+
+    private void cleanUsers(){
+        linearLayout.removeAllViews();
     }
 
     private void myUpdateOperation(){
@@ -136,12 +169,12 @@ public class TreeFragment extends Fragment {
                     httpService.referralCount(activity, mainUser,true);
 
                     HomeActivity.createInvitedUsers();
-                    httpService.refreshInvitedUsers(activity, mainUser.getId(), true, mySwipeRefreshLayout);
+                    httpService.refreshInvitedUsers(activity, mainUser.getId(), true, mySwipeRefreshLayout, this);
                 } else {
                     User user = (User)bundle.getSerializable("user");
                     httpService.referralCount(activity, user,true);
                     httpService.referralCount(getActivity(), user,false);
-                    httpService.refreshInvitedUsers(activity, user.getId(), false, mySwipeRefreshLayout);
+                    httpService.refreshInvitedUsers(activity, user.getId(), false, mySwipeRefreshLayout, this);
                 }
             });
         } else {
@@ -154,6 +187,17 @@ public class TreeFragment extends Fragment {
     private boolean isNetworkConnected() {
         ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         return (cm != null && cm.getActiveNetworkInfo() != null) ;
+    }
+
+    private void setButtonsListener(){
+        ImageButton back = getActivity().findViewById(R.id.back);
+        back.setOnClickListener(this::onClickBack);
+        ImageButton search = getActivity().findViewById(R.id.search);
+        search.setOnClickListener(this::onClickSearch);
+        ImageButton code = getActivity().findViewById(R.id.plus);
+        code.setOnClickListener(this::onClickCode);
+        ImageButton profile = getActivity().findViewById(R.id.buttonProfile);
+        profile.setOnClickListener(this::onClickProfileButton);
     }
 
     public void onClickBack(View view) {
