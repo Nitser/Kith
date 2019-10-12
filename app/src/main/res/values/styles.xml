@@ -11,4 +11,25 @@
         <item name="android:autofilledHighlight" tools:targetApi="o">@android:color/transparent</item>
     </style>
 
+    <style name="CustomTitleText" parent="TextAppearance.AppCompat.Button">
+        <item name="android:textSize">17sp</item>
+        <item name="android:fontFamily">@font/intro_regular</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@color/colorAccent</item>
+    </style>
+
+    <style name="CustomProfileTitleText" parent="TextAppearance.AppCompat.Button">
+        <item name="android:textSize">17sp</item>
+        <item name="android:fontFamily">@font/intro_light</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@color/colorAccent</item>
+    </style>
+
+    <style name="CustomProfileText" parent="TextAppearance.AppCompat.Button">
+        <item name="android:textSize">20sp</item>
+        <item name="android:fontFamily">@font/intro_regular</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@color/colorAccent</item>
+    </style>
+
 </resources>

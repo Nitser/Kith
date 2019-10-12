@@ -24,13 +24,13 @@
 
         <ImageButton
             android:id="@+id/back"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@null"
             android:layout_centerVertical="true"
             android:layout_marginRight="5dp"
-            android:background="@android:color/transparent"
-            android:onClick="onClickBackButton"
-            app:srcCompat="@drawable/ic_left" />
+            android:src="@drawable/ic_left"
+            android:onClick="onClickBackButton" />
 
         <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
             android:layout_width="wrap_content"
@@ -39,22 +39,22 @@
             android:layout_toEndOf="@+id/back"
             android:text="@string/agreement"
             android:textColor="@color/colorAccent"
-            android:textSize="17sp"
+            android:textSize="16sp"
             customAttrs:customFont="intro_regular" />
     </RelativeLayout>
 
     <ScrollView
         android:id="@+id/scrollView2"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/relativeLayout"
         app:layout_constraintVertical_bias="0.0"
         tools:layout_editor_absoluteX="0dp">
 
-        <WebView xmlns:android="http://schemas.android.com/apk/res/android"
+        <WebView
             android:id="@+id/help_webview"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scrollbars="none" />
 

@@ -25,6 +25,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
+                android:padding="5dp"
+                android:gravity="center"
                 android:text="@string/label_announcements"
                 android:textColor="@color/colorAccent"
                 android:textSize="17sp"
@@ -32,16 +34,17 @@
 
             <ImageButton
                 android:id="@+id/plus"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@null"
                 android:layout_marginEnd="10dp"
                 android:layout_alignParentEnd="true"
-                android:background="@drawable/ic_add_white"/>
+                android:src="@drawable/ic_add_white"/>
 
             <LinearLayout
                 android:id="@+id/buttons"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="35dp"
                 android:layout_marginTop="10dp"
                 android:layout_below="@id/title"
                 android:layout_centerHorizontal="true">
@@ -50,19 +53,36 @@
                     android:id="@+id/all"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="All" />
+                    android:background="@drawable/button_announcement_left"
+                    android:layout_marginEnd="-1dp"
+                    android:textColor="@drawable/button_announcement_text"
+                    android:textSize="13sp"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="5dp"
+                    android:text="Все" />
 
                 <Button
                     android:id="@+id/sub"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Sub" />
+                    android:background="@drawable/button_announcement_center"
+                    android:textColor="@drawable/button_announcement_text"
+                    android:textSize="13sp"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:text="Подписки" />
 
                 <Button
                     android:id="@+id/my"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="My" />
+                    android:layout_marginStart="-1dp"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="5dp"
+                    android:background="@drawable/button_announcement_right"
+                    android:textColor="@drawable/button_announcement_text"
+                    android:textSize="13sp"
+                    android:text="Мои" />
 
             </LinearLayout>
 

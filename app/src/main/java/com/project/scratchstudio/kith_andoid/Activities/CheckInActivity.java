@@ -72,14 +72,12 @@ public class CheckInActivity extends AppCompatActivity {
     }
 
     private void customTextView(CustomFontTextView view) {
-        SpannableStringBuilder spanTxt = new SpannableStringBuilder(
-                "Я согласен с ");
+        SpannableStringBuilder spanTxt = new SpannableStringBuilder("Я согласен с ");
         spanTxt.append("пользовательским соглашением");
         spanTxt.setSpan(new ClickableSpan() {
             @Override
             public void onClick(View widget) {
-                if (SystemClock.elapsedRealtime() - buttonCount < 1000)
-                    return;
+                if (SystemClock.elapsedRealtime() - buttonCount < 1000) return;
                 buttonCount = SystemClock.elapsedRealtime();
 
                 Intent intent = new Intent(CheckInActivity.this, AgreementActivity.class);
@@ -91,9 +89,9 @@ public class CheckInActivity extends AppCompatActivity {
         spanTxt.setSpan(new ClickableSpan() {
             @Override
             public void onClick(View widget) {
-                if (SystemClock.elapsedRealtime() - buttonCount < 1000)
-                    return;
+                if (SystemClock.elapsedRealtime() - buttonCount < 1000) return;
                 buttonCount = SystemClock.elapsedRealtime();
+
                 Intent intent = new Intent(CheckInActivity.this, TermActivity.class);
                 startActivityForResult(intent, 2);
             }
@@ -131,6 +129,9 @@ public class CheckInActivity extends AppCompatActivity {
     }
 
     public void onClickCheckInButton(View view) {
+        if (SystemClock.elapsedRealtime() - buttonCount < 1000) return;
+        buttonCount = SystemClock.elapsedRealtime();
+
         checkInButton = (Button) view;
         view.setEnabled(false);
         status = true;
@@ -141,7 +142,6 @@ public class CheckInActivity extends AppCompatActivity {
         } else {
             httpService.checkReferral(this, String.valueOf(referralCode.getText()), view);
         }
-
     }
 
     public void checkFields(){
@@ -177,7 +177,13 @@ public class CheckInActivity extends AppCompatActivity {
 
     public void checkIn(String parent_id) throws UnsupportedEncodingException {
         if(status){
-            httpService.singup(this, checkInButton, currentBitmap, parent_id, requiredFields );
+            if(!isNetworkConnected()){
+                Toast.makeText(this, "Нет подключения к интернету", Toast.LENGTH_SHORT).show();
+                checkInButton.setEnabled(true);
+            } else {
+//                checkInButton.setEnabled(false);
+                httpService.singup(this, checkInButton, currentBitmap, parent_id, requiredFields );
+            }
         } else {
             ScrollView scrollView = findViewById(R.id.scroll);
             scrollView.fullScroll(ScrollView.FOCUS_UP);
@@ -186,6 +192,9 @@ public class CheckInActivity extends AppCompatActivity {
     }
 
     public void chooseImageButton(View view) {
+        if (SystemClock.elapsedRealtime() - buttonCount < 1000) return;
+        buttonCount = SystemClock.elapsedRealtime();
+
         view.setEnabled(false);
         Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(intent, 0);
@@ -205,6 +214,8 @@ public class CheckInActivity extends AppCompatActivity {
                e.printStackTrace();
            }
            currentBitmap = photoService.changePhoto(currentBitmap, imageUri);
+           currentBitmap = photoService.changePhoto(currentBitmap, imageUri);
+           currentBitmap = photoService.compressPhoto(currentBitmap, "");
            image.setImageBitmap(currentBitmap);
            photoButton.setEnabled(true);
         }
@@ -221,7 +232,6 @@ public class CheckInActivity extends AppCompatActivity {
             finish();
             return true;
         }
-
         return super.onKeyDown(keyCode, event);
     }
 
@@ -231,11 +241,17 @@ public class CheckInActivity extends AppCompatActivity {
     }
 
     public void onCheckButton(View view) {
+        if (SystemClock.elapsedRealtime() - buttonCount < 1000) return;
+        buttonCount = SystemClock.elapsedRealtime();
+
         CheckBox check = findViewById(R.id.checkbox);
         check.setButtonTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorDark)));
     }
 
     public void onClickBack(View view) {
+        if (SystemClock.elapsedRealtime() - buttonCount < 1000) return;
+        buttonCount = SystemClock.elapsedRealtime();
+
         Intent intent = new Intent(CheckInActivity.this, MainActivity.class);
         startActivity(intent);
         finish();

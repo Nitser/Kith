@@ -23,6 +23,7 @@ import com.project.scratchstudio.kith_andoid.R;
 import com.project.scratchstudio.kith_andoid.Service.HttpService;
 import com.project.scratchstudio.kith_andoid.Service.PhotoService;
 import com.project.scratchstudio.kith_andoid.Service.PicassoCircleTransformation;
+import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.io.FileNotFoundException;
@@ -36,9 +37,10 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class EditActivity extends AppCompatActivity {
 
-    private static final int PASSWORD_CHANGED = 0;
-    private static final int PASSWORD_NOT_CHANGED = 1;
+    private static final int DATA_CHANGED = 0;
+    private static final int DATA_NOT_CHANGED = 1;
     private static long buttonCount = 0;
+    private boolean isChanged = false;
     private Bitmap currentBitmap;
     private ImageButton photoButton;
     private List<CustomFontEditText> fields = new ArrayList<>();
@@ -67,17 +69,18 @@ public class EditActivity extends AppCompatActivity {
                 .placeholder(R.mipmap.person)
                 .error(R.mipmap.person)
                 .transform(new PicassoCircleTransformation())
+                .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
                 .into(photo);
 
         firstName.setText(mainUser.getFirstName());
         lastName.setText(mainUser.getLastName());
-        if(mainUser.getMiddleName() != null)
+        if(mainUser.getMiddleName() != null && !mainUser.getMiddleName().toLowerCase().equals("null"))
             middleName.setText(mainUser.getMiddleName());
         position.setText(mainUser.getPosition());
-        if(mainUser.getEmail() != null && !mainUser.getEmail().equals("null"))
+        if(mainUser.getEmail() != null && !mainUser.getEmail().toLowerCase().equals("null"))
             email.setText(mainUser.getEmail());
         phone.setText(mainUser.getPhone());
-        if(mainUser.getDescription() != null && !mainUser.getDescription().equals("null"))
+        if(mainUser.getDescription() != null && !mainUser.getDescription().toLowerCase().equals("null"))
             description.setText(mainUser.getDescription());
         password.setText(new String(new char[mainUser.getPassword().length()]).replace("\0", "*"));
     }
@@ -100,11 +103,11 @@ public class EditActivity extends AppCompatActivity {
             user.setToken(HomeActivity.getMainUser().getToken());
             user.setFirstName(Objects.requireNonNull(fields.get(0).getText()).toString());
             user.setLastName(Objects.requireNonNull(fields.get(1).getText()).toString());
-            user.setMiddleName(Objects.requireNonNull(fields.get(2).getText()).toString());
+            user.setMiddleName(Objects.requireNonNull(fields.get(2).getText()).toString().replaceAll("^null$", ""));
             user.setPosition(Objects.requireNonNull(fields.get(3).getText()).toString());
-            user.setEmail(Objects.requireNonNull(fields.get(4).getText()).toString());
+            user.setEmail(Objects.requireNonNull(fields.get(4).getText()).toString().replaceAll("^null$", ""));
             user.setPhone(Objects.requireNonNull(fields.get(5).getText()).toString());
-            user.setDescription(Objects.requireNonNull(fields.get(6).getText()).toString());
+            user.setDescription(Objects.requireNonNull(fields.get(6).getText()).toString().replaceAll("^null$", ""));
 
 //            user.setUrl();
         } catch (NullPointerException ignored){ }
@@ -131,13 +134,17 @@ public class EditActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
             currentBitmap = photoService.changePhoto(currentBitmap, imageUri);
+            currentBitmap = photoService.changePhoto(currentBitmap, imageUri);
+            currentBitmap = photoService.compressPhoto(currentBitmap, "");
             image.setImageBitmap(currentBitmap);
+//            HomeActivity.getMainUser().setUrl();
             photoButton.setEnabled(true);
+            isChanged = true;
         }
         else if( requestCode == 0 ) {
             photoButton.setEnabled(true);
         }
-        else if(requestCode == 3 && resultCode == PASSWORD_CHANGED && intent != null) {
+        else if(requestCode == 3 && resultCode == DATA_CHANGED && intent != null) {
             CustomFontTextView password = findViewById(R.id.password);
             password.setText(new String(new char[HomeActivity.getMainUser().getPassword().length()]).replace("\0", "*"));
         }
@@ -153,6 +160,11 @@ public class EditActivity extends AppCompatActivity {
     }
 
     public void onClickCancelButton(View view) {
+        Intent intent = new Intent(EditActivity.this, ProfileActivity.class);
+//        if(isChanged)
+//            setResult(PASSWORD_CHANGED, intent);
+//        else
+        setResult(DATA_NOT_CHANGED, intent);
         finish();
     }
 
@@ -167,11 +179,25 @@ public class EditActivity extends AppCompatActivity {
             view.setEnabled(true);
         } else {
             User refreshUser = makeRefreshUser();
-            service.refreshUser(this, refreshUser, currentBitmap);
+            service.refreshUser(this, refreshUser, currentBitmap, true);
+            isChanged = true;
         }
     }
 
+    public void finishEdit(){
+        Intent intent = new Intent(EditActivity.this, ProfileActivity.class);
+        if(isChanged)
+            setResult(DATA_CHANGED, intent);
+        else
+            setResult(DATA_NOT_CHANGED, intent);
+        finish();
+    }
+
     public void onClickChangePassword(View view) {
+        if (SystemClock.elapsedRealtime() - buttonCount < 1000){
+            return;
+        }
+        buttonCount = SystemClock.elapsedRealtime();
         Intent intent = new Intent(EditActivity.this, ChangePasswordActivity.class);
         startActivityForResult(intent, 3);
     }

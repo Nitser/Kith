@@ -6,17 +6,20 @@ import android.net.ConnectivityManager;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
-import com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView;
 import com.project.scratchstudio.kith_andoid.Model.User;
 import com.project.scratchstudio.kith_andoid.R;
 import com.project.scratchstudio.kith_andoid.Service.InternalStorageService;
 import com.project.scratchstudio.kith_andoid.Service.PicassoCircleTransformation;
 import com.project.scratchstudio.kith_andoid.SetInternalData.ClearUserIdAndToken;
+import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
 public class ProfileActivity extends AppCompatActivity {
@@ -34,33 +37,51 @@ public class ProfileActivity extends AppCompatActivity {
         if(user.getId() != HomeActivity.getMainUser().getId()){
             ImageButton edit = findViewById(R.id.edit);
             edit.setVisibility(View.INVISIBLE);
+            TextView exit = findViewById(R.id.exit);
+            exit.setVisibility(View.INVISIBLE);
         }
 
         if(isNetworkConnected()){
 
             ImageView photo = findViewById(R.id.photo);
-            CustomFontTextView name = findViewById(R.id.name);
-            CustomFontTextView surname = findViewById(R.id.surname);
-            CustomFontTextView middlename = findViewById(R.id.middlename);
-            CustomFontTextView position = findViewById(R.id.position);
-            CustomFontTextView usersCount = findViewById(R.id.users_count);
-            CustomFontTextView description = findViewById(R.id.description);
+            TextView name = findViewById(R.id.name);
+            TextView surname = findViewById(R.id.surname);
+            TextView middlename = findViewById(R.id.middlename);
+            TextView position = findViewById(R.id.position);
+            TextView usersCount = findViewById(R.id.users_count);
+            TextView description = findViewById(R.id.description);
+            TextView email = findViewById(R.id.email);
+            TextView phone = findViewById(R.id.phone);
 
             Picasso.with(this).load(user.getUrl().replaceAll("@[0-9]*", ""))
                     .placeholder(R.mipmap.person)
                     .error(R.mipmap.person)
                     .transform(new PicassoCircleTransformation())
+                    .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
                     .into(photo);
             name.setText(user.getFirstName());
             surname.setText(user.getLastName());
-            middlename.setText(user.getMiddleName());
+            phone.setText(user.getPhone());
+            if(user.getMiddleName() != null && !user.getMiddleName().equals("")  && !user.getMiddleName().toLowerCase().equals("null") )
+                middlename.setText(user.getMiddleName());
+            else{
+                middlename.setText("-");
+            }
             position.setText(user.getPosition());
             usersCount.setText(String.valueOf(user.getUsersCount()));
             if(user.getDescription() == null || user.getDescription().equals("null") || user.getDescription().equals("")){
-                CustomFontTextView label_description = findViewById(R.id.label_description);
-                label_description.setVisibility(View.INVISIBLE);
+                description.setText("-");
             } else{
                 description.setText(user.getDescription());
+            }
+
+            if(user.getEmail() == null || user.getEmail().equals("null") || user.getEmail().equals("")){
+//                TextView label_email = findViewById(R.id.label_email);
+//                ((ViewGroup)label_email.getParent()).removeView(label_email);
+//                ((ViewGroup)email.getParent()).removeView(email);
+                email.setText("-");
+            } else{
+                email.setText(user.getEmail());
             }
         }
     }
@@ -90,6 +111,71 @@ public class ProfileActivity extends AppCompatActivity {
         finish();
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)  {
+        if (keyCode == KeyEvent.KEYCODE_BACK ) {
+            finish();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == 1) {
+            if(data!=null && resultCode==0){
+                if(isNetworkConnected()){
+//                    HttpService httpService = new HttpService();
+//                    httpService.getUser(this, true);
+                    refreshUser();
+                } else Toast.makeText(this, "Нет подключения к интернету", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    public void refreshUser(){
+        ImageView photo = findViewById(R.id.photo);
+        TextView name = findViewById(R.id.name);
+        TextView surname = findViewById(R.id.surname);
+        TextView middlename = findViewById(R.id.middlename);
+        TextView position = findViewById(R.id.position);
+        TextView usersCount = findViewById(R.id.users_count);
+        TextView description = findViewById(R.id.description);
+        TextView phone = findViewById(R.id.phone);
+        TextView email = findViewById(R.id.email);
+
+        User user = HomeActivity.getMainUser();
+        Picasso.with(this).load(user.getUrl().replaceAll("@[0-9]*", ""))
+                .placeholder(R.mipmap.person)
+                .error(R.mipmap.person)
+                .transform(new PicassoCircleTransformation())
+                .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
+                .into(photo);
+        name.setText(user.getFirstName());
+        surname.setText(user.getLastName());
+        phone.setText(user.getPhone());
+        if(user.getMiddleName() != null && !user.getMiddleName().equals("") && !user.getMiddleName().toLowerCase().equals("null")  )
+            middlename.setText(user.getMiddleName());
+        else{
+            middlename.setText("-");
+        }
+        position.setText(user.getPosition());
+        usersCount.setText(String.valueOf(user.getUsersCount()));
+        if(user.getDescription() == null ||  user.getDescription().equals("") || user.getDescription().toLowerCase().equals("null") ){
+            description.setText("-");
+        } else{
+            description.setText(user.getDescription());
+        }
+        if(user.getEmail() == null || user.getEmail().equals("null") || user.getEmail().equals("")){
+//                TextView label_email = findViewById(R.id.label_email);
+//                ((ViewGroup)label_email.getParent()).removeView(label_email);
+//                ((ViewGroup)email.getParent()).removeView(email);
+            email.setText("-");
+        } else{
+            email.setText(user.getEmail());
+        }
+    }
+
     public void onClickEditButton(View view) {
         if (SystemClock.elapsedRealtime() - buttonCount < 1000){
             return;
@@ -97,7 +183,7 @@ public class ProfileActivity extends AppCompatActivity {
         buttonCount = SystemClock.elapsedRealtime();
         view.setEnabled(false);
         Intent intent = new Intent(ProfileActivity.this, EditActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, 1);
         view.setEnabled(true);
     }
 }

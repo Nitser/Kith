@@ -140,14 +140,14 @@ public class HttpPostRequest extends AsyncTask<String, Void, String> {
             }
             else{
                 BufferedReader in = new BufferedReader( new InputStreamReader( connection.getErrorStream()));
-                StringBuffer sb = new StringBuffer("");
+                StringBuffer sb = new StringBuffer();
                 String line;
 
                 while((line = in.readLine()) != null) {
                     sb.append(line);
-                    Log.i("CErr: ", line);
                     break;
                 }
+                Log.i("CErr: ", String.valueOf(connection.getResponseCode()));
 
                 in.close();
                 return null;

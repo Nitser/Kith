@@ -58,6 +58,8 @@ public class InternalStorageService extends AsyncTask<String, Void, Integer> {
             return iSetInternalData.set(sp);
     }
 
+//    public String
+
     public void setiGetInternalData(IGetInternalData iGetInternalData) {
         this.iGetInternalData = iGetInternalData;
     }
@@ -71,7 +73,7 @@ public class InternalStorageService extends AsyncTask<String, Void, Integer> {
         ed = sp.edit();
         ed.putInt("count_users", 0);
         ed.putInt("cur_user_id", -1 );
-        ed.putString("cur_user_token", "");
+        ed.putString("user_token", "");
         ed.apply();
 
         Cache.setAllUsers(0);

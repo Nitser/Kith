@@ -19,6 +19,7 @@ import android.util.Base64;
 import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -79,18 +80,36 @@ public class PhotoService  {
         return resultBitmap;
     }
 
+    public Bitmap resizeBitmap(Bitmap bm, int newWidth, int newHeight) {
+        int width = bm.getWidth();
+        int height = bm.getHeight();
+        float scaleWidth = ((float) newWidth) / width;
+        float scaleHeight = ((float) newHeight) / height;
+        Matrix matrix = new Matrix();
+        matrix.postScale(scaleWidth, scaleHeight);
+        Bitmap resizedBitmap = Bitmap.createBitmap(bm, 0, 0, width, height, matrix, false);
+        bm.recycle();
+        return resizedBitmap;
+    }
+
     public Bitmap compressPhoto(Bitmap bitmap, String path) {
-
-        try(FileOutputStream out = new FileOutputStream(path)){
-
-            bitmap.compress(Bitmap.CompressFormat.JPEG,20,out);
+        File file = new File(context.getFilesDir(),"tmp");
+        if(!file.exists()){
+            file.mkdirs();
+        }
+        File img = new File(file, "tmp_img");
+        try{
+            FileOutputStream out = new FileOutputStream(img);
+            bitmap.compress(Bitmap.CompressFormat.JPEG,50,out);
 
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        context.deleteFile("tmp_img");
         return bitmap;
     }
+
+
 
     private int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
         final int height = options.outHeight;
@@ -116,10 +135,8 @@ public class PhotoService  {
         try {
             angel = getExifAngle(path);
         } catch (Exception e){
-//            Log.i("ERROR IN ANGEL:", e.getMessage());
+            Log.i("ERROR IN ANGEL:", e.getMessage());
         }
-//        Log.i("ANGEL: ", String.valueOf(angel));
-
         bitmap = changeOrientation( bitmap, angel );
         return bitmap;
     }

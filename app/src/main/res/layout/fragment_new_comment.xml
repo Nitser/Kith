@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:customAttrs="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/colorAccent">
+
+    <RelativeLayout
+        android:layout_marginBottom="10dp"
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:layout_editor_absoluteX="0dp"
+        android:paddingTop="10dp"
+        customAttrs:layout_constraintTop_toTopOf="parent"
+        customAttrs:layout_constraintLeft_toLeftOf="parent"
+        customAttrs:layout_constraintRight_toRightOf="parent"
+        android:background="@color/colorPrimary"
+        tools:layout_editor_absoluteY="16dp">
+
+        <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+            android:id="@+id/cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:padding="5dp"
+            android:gravity="center"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true"
+            android:textColor="@color/colorAccent"
+            android:textSize="17sp"
+            android:onClick="onClickCancel"
+            customAttrs:customFont="intro_regular"
+            android:text="@string/button_cancel"/>
+
+        <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:padding="5dp"
+            android:gravity="center"
+            android:text="Ваш комментарий"
+            android:textColor="@color/colorAccent"
+            android:textSize="17sp"
+            customAttrs:customFont="intro_regular"/>
+
+        <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+            android:id="@+id/done"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:gravity="center"
+            android:layout_marginEnd="10dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:textColor="@color/colorAccent"
+            android:textSize="17sp"
+            android:onClick="onClickDone"
+            customAttrs:customFont="intro_regular"
+            android:text="@string/button_done"/>
+
+    </RelativeLayout>
+
+    <android.support.v7.widget.CardView
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorAccent"
+        app:cardBackgroundColor="@color/colorAccent"
+        app:cardCornerRadius="10dp"
+        app:layout_constraintTop_toBottomOf="@id/header">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="20dp">
+
+            <ImageView
+                android:id="@+id/photo"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:scaleType="centerCrop"
+                android:layout_gravity="center_vertical"
+                android:src="@mipmap/person"/>
+
+            <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+                android:id="@+id/name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorBlack"
+                android:textSize="14sp"
+                android:layout_marginStart="5dp"
+                android:layout_marginBottom="5dp"
+                customAttrs:customFont="intro_regular"
+                android:text="Max Wright"
+                android:layout_toEndOf="@+id/photo"/>
+
+            <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+                android:id="@+id/position"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorBlack"
+                android:textSize="14sp"
+                android:layout_marginStart="5dp"
+                customAttrs:customFont="intro_regular"
+                android:text="IOS developer"
+                android:layout_toEndOf="@+id/photo"
+                android:layout_below="@+id/name"/>
+
+            <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontEditText
+                android:id="@+id/comment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:textColor="@color/colorBlack"
+                android:textSize="14sp"
+                android:minLines="4"
+                android:padding="10dp"
+                android:lines="10"
+                android:layout_marginTop="20dp"
+                customAttrs:customFont="intro_regular"
+                android:layout_below="@+id/position"
+                android:background="@drawable/entry_field"/>
+
+
+        </RelativeLayout>
+
+
+    </android.support.v7.widget.CardView>
+
+</android.support.constraint.ConstraintLayout>

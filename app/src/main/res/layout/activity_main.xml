@@ -10,73 +10,73 @@
 
     <ImageView
         android:id="@+id/view2"
-        android:layout_width="250dp"
-        android:layout_height="250dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="28dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="75dp"
+        android:layout_marginTop="80dp"
+        android:layout_marginEnd="75dp"
         android:background="@drawable/ic_logo"
+        app:layout_constraintDimensionRatio="W,3:3"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
-        android:id="@+id/customFontTextView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/our"
-        android:textColor="@color/colorAccent"
-        android:textSize="40sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view2"
-        customAttrs:customFont="intro_regular" />
+    <!--<com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView-->
+        <!--android:id="@+id/customFontTextView3"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginEnd="8dp"-->
+        <!--android:layout_marginStart="8dp"-->
+        <!--android:layout_marginTop="8dp"-->
+        <!--android:text="@string/our"-->
+        <!--android:textColor="@color/colorAccent"-->
+        <!--android:textSize="40sp"-->
+        <!--app:layout_constraintEnd_toEndOf="parent"-->
+        <!--app:layout_constraintHorizontal_bias="0.498"-->
+        <!--app:layout_constraintStart_toStartOf="parent"-->
+        <!--app:layout_constraintTop_toBottomOf="@+id/view2"-->
+        <!--customAttrs:customFont="intro_regular" />-->
 
-    <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
-        android:id="@+id/customFontTextView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:text="-"
-        android:textColor="@color/colorAccent"
-        android:textSize="58sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/customFontTextView3"
-        customAttrs:customFont="intro" />
+    <!--<com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView-->
+        <!--android:id="@+id/customFontTextView2"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginEnd="8dp"-->
+        <!--android:layout_marginStart="8dp"-->
+        <!--android:text="-"-->
+        <!--android:textColor="@color/colorAccent"-->
+        <!--android:textSize="58sp"-->
+        <!--app:layout_constraintEnd_toEndOf="parent"-->
+        <!--app:layout_constraintStart_toStartOf="parent"-->
+        <!--app:layout_constraintTop_toBottomOf="@+id/customFontTextView3"-->
+        <!--customAttrs:customFont="intro" />-->
 
     <Button
         android:id="@+id/button2"
         android:layout_width="265dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="2dp"
+        android:layout_marginTop="52dp"
+        android:layout_marginEnd="8dp"
         android:background="@drawable/button_basic"
         android:onClick="signInButton"
         android:padding="10dp"
         android:text="@string/sign_in"
         android:textColor="@color/colorAccent"
         android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/button"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.484"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/customFontTextView2"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toBottomOf="@+id/view2" />
 
     <Button
         android:id="@+id/button"
         android:layout_width="265dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="72dp"
+        android:layout_marginStart="4dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginBottom="8dp"
         android:background="@drawable/button_basic"
         android:onClick="registrationButton"
         android:padding="10dp"
@@ -85,6 +85,8 @@
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button2"
+        app:layout_constraintVertical_bias="0.096" />
 
 </android.support.constraint.ConstraintLayout>

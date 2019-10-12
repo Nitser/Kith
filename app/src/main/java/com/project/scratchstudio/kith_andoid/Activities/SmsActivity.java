@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 
 import com.project.scratchstudio.kith_andoid.CustomViews.CustomFontEditText;
@@ -20,7 +21,7 @@ public class SmsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sms);
         httpService = new HttpService();
-        httpService.sendSms(this, HomeActivity.getMainUser().getId());
+        httpService.sendSms(this, HomeActivity.getMainUser().getLogin());
     }
 
     public void onClickBackButton(View view) {
@@ -40,7 +41,7 @@ public class SmsActivity extends AppCompatActivity {
     public void againButton(View view) {
         view.setEnabled(false);
         httpService = new HttpService();
-        httpService.sendSms(this, HomeActivity.getMainUser().getId());
+        httpService.sendSms(this, HomeActivity.getMainUser().getLogin());
 
         CustomFontTextView text = (CustomFontTextView) view;
         text.setTextColor(getResources().getColor(R.color.colorHint));
@@ -58,5 +59,15 @@ public class SmsActivity extends AppCompatActivity {
             }
         }.start();
 
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)  {
+        if (keyCode == KeyEvent.KEYCODE_BACK ) {
+            Intent intent = new Intent(SmsActivity.this, MainActivity.class);
+            startActivity(intent);
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

@@ -14,11 +14,13 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.KeyEvent;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -29,15 +31,18 @@ import com.project.scratchstudio.kith_andoid.Activities.CodeActivity;
 import com.project.scratchstudio.kith_andoid.Activities.HomeActivity;
 import com.project.scratchstudio.kith_andoid.Activities.ProfileActivity;
 import com.project.scratchstudio.kith_andoid.Adapters.SearchAdapter;
-import com.project.scratchstudio.kith_andoid.Adapters.TreeAdapter;
+import com.project.scratchstudio.kith_andoid.CustomViews.CustomFontEditText;
 import com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView;
 import com.project.scratchstudio.kith_andoid.Holders.TreeHolder;
+import com.project.scratchstudio.kith_andoid.Model.SearchInfo;
 import com.project.scratchstudio.kith_andoid.Model.User;
 import com.project.scratchstudio.kith_andoid.R;
 import com.project.scratchstudio.kith_andoid.Service.HttpService;
 import com.project.scratchstudio.kith_andoid.Service.PicassoCircleTransformation;
+import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TreeFragment extends Fragment {
@@ -45,10 +50,16 @@ public class TreeFragment extends Fragment {
     private static long buttonCount = 0;
     private Bundle bundle;
     private HttpService httpService;
+    public SearchAdapter searchAdapter;
 
+    private RecyclerView list;
     private LinearLayout linearLayout;
     private SwipeRefreshLayout mySwipeRefreshLayout;
     private User currentUser;
+
+    private static List<SearchInfo> listPersons  = new ArrayList<>();
+
+    public static void setListPersons(List<SearchInfo> list) { listPersons = list; }
 
     public TreeFragment() {}
 
@@ -74,8 +85,10 @@ public class TreeFragment extends Fragment {
 
         if(bundle!= null && bundle.containsKey("another_user") && !bundle.getBoolean("another_user")){
             currentUser = mainUser;
-            if(currentUser.getFirstName() == null){
-                httpService.getUser(getActivity());
+            if(currentUser.getFirstName() == null ){
+                if(isNetworkConnected())
+                    httpService.getUser(getActivity(), false);
+                else Toast.makeText(getActivity(), "Нет подключения к интернету", Toast.LENGTH_SHORT).show();
             } else {
                 userName = currentUser.getFirstName() + " " + currentUser.getLastName();
             }
@@ -89,9 +102,12 @@ public class TreeFragment extends Fragment {
         }
 
         init(userName);
-        httpService.referralCount(getActivity(), currentUser, false);
-        httpService.referralCount(getActivity(), currentUser, true);
-        httpService.getInvitedUsers(getActivity(), currentUser, this);
+        if(isNetworkConnected()) {
+            httpService.referralCount(getActivity(), currentUser, false);
+            httpService.referralCount(getActivity(), currentUser, true);
+            httpService.getInvitedUsers(getActivity(), currentUser, this);
+        } else
+            Toast.makeText(getActivity(), "Нет подключения к интернету", Toast.LENGTH_SHORT).show();
 
         mySwipeRefreshLayout = getActivity().findViewById(R.id.swiperefresh);
         mySwipeRefreshLayout.setOnRefreshListener(this::myUpdateOperation);
@@ -102,11 +118,12 @@ public class TreeFragment extends Fragment {
         CustomFontTextView name = getActivity().findViewById(R.id.name);
         CustomFontTextView position = getActivity().findViewById(R.id.position);
         ImageView photo = getActivity().findViewById(R.id.photo);
-        if(currentUser.getUrl() != null)
+        if(currentUser.getUrl() != null )
             Picasso.with(getActivity()).load(currentUser.getUrl().replaceAll("@[0-9]*", ""))
                     .placeholder(R.mipmap.person)
                     .error(R.mipmap.person)
                     .transform(new PicassoCircleTransformation())
+                    .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
                     .into(photo);
         name.setText(str_name);
         position.setText(currentUser.getPosition());
@@ -129,11 +146,12 @@ public class TreeFragment extends Fragment {
             holder.position.setText(user.getPosition());
 
             if (user.getUrl() != null && !user.getUrl().equals("null") && !user.getUrl().equals("")) {
-                Picasso.with(getActivity()).load(user.getUrl())
+                Picasso.with(getActivity()).load(user.getUrl().replaceAll("@[0-9]*", ""))
+                        .placeholder(com.project.scratchstudio.kith_andoid.R.mipmap.person)
                         .error(com.project.scratchstudio.kith_andoid.R.mipmap.person)
                         .transform(new PicassoCircleTransformation())
+                        .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
                         .into(holder.image);
-                holder.image.setScaleType(ImageView.ScaleType.CENTER_CROP);
             }
 
             itemView.setOnClickListener(v -> {
@@ -170,6 +188,9 @@ public class TreeFragment extends Fragment {
 
                     HomeActivity.createInvitedUsers();
                     httpService.refreshInvitedUsers(activity, mainUser.getId(), true, mySwipeRefreshLayout, this);
+
+                    refreshUser();
+
                 } else {
                     User user = (User)bundle.getSerializable("user");
                     httpService.referralCount(activity, user,true);
@@ -181,6 +202,23 @@ public class TreeFragment extends Fragment {
             Toast.makeText(activity, "Нет подключения к интернету", Toast.LENGTH_SHORT).show();
             mySwipeRefreshLayout.setRefreshing(false);
         }
+    }
+
+    public void refreshUser(){
+        ImageView photo = getActivity().findViewById(R.id.photo);
+        CustomFontTextView name = getActivity().findViewById(R.id.name);
+        CustomFontTextView position = getActivity().findViewById(R.id.position);
+
+        User user = HomeActivity.getMainUser();
+        Picasso.with(getActivity()).load(user.getUrl().replaceAll("@[0-9]*", ""))
+                .placeholder(R.mipmap.person)
+                .error(R.mipmap.person)
+                .transform(new PicassoCircleTransformation())
+                .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
+                .into(photo);
+        String nameStr = HomeActivity.getMainUser().getFirstName() + " " + HomeActivity.getMainUser().getLastName();
+        name.setText(nameStr);
+        position.setText(user.getPosition());
     }
 
     @SuppressLint("MissingPermission")
@@ -198,6 +236,8 @@ public class TreeFragment extends Fragment {
         code.setOnClickListener(this::onClickCode);
         ImageButton profile = getActivity().findViewById(R.id.buttonProfile);
         profile.setOnClickListener(this::onClickProfileButton);
+        ImageButton searchBack = getActivity().findViewById(R.id.back_search);
+        searchBack.setOnClickListener(this::onClickBackSearch);
     }
 
     public void onClickBack(View view) {
@@ -232,7 +272,87 @@ public class TreeFragment extends Fragment {
     }
 
     public void onClickSearch(View view) {
-        ((HomeActivity)view.getContext()).loadFragment( SearchFragment.newInstance(bundle));
+        RelativeLayout layout = getActivity().findViewById(R.id.search_header);
+        layout.setVisibility(View.VISIBLE);
+        LinearLayout linearLayout = getActivity().findViewById(R.id.paper_search);
+//        linearLayout.setVisibility(View.VISIBLE);
+        EditText editText= getActivity().findViewById(R.id.filter);
+        editText.requestFocus();
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
+
+        if(isNetworkConnected())
+            httpService.searchUsers(getActivity(), HomeActivity.getMainUser(), this);
+        else
+            Toast.makeText(getActivity(), "Нет подключения к интернету", Toast.LENGTH_SHORT).show();
+
+        list = getActivity().findViewById(R.id.listPerson);
+        EditText filter = getActivity().findViewById(R.id.filter);
+        filter.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(s.length()>0)
+                    linearLayout.setVisibility(View.VISIBLE);
+                else
+                    linearLayout.setVisibility(View.INVISIBLE);
+                (TreeFragment.this).searchAdapter.getFilter().filter(s);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        LinearLayoutManager llm = new LinearLayoutManager(getContext());
+        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        list.setLayoutManager(llm);
+
+    }
+
+    public void onClickBackSearch(View view){
+        RelativeLayout layout = getActivity().findViewById(R.id.search_header);
+        layout.setVisibility(View.INVISIBLE);
+        LinearLayout linearLayout = getActivity().findViewById(R.id.paper_search);
+        linearLayout.setVisibility(View.INVISIBLE);
+        EditText editText= getActivity().findViewById(R.id.filter);
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+    }
+
+    public void setSearchAdapter(){
+        searchAdapter = new SearchAdapter(getActivity(), listPersons, item -> {
+            if (SystemClock.elapsedRealtime() - buttonCount < 1000){
+                return;
+            }
+            buttonCount = SystemClock.elapsedRealtime();
+//            view.setEnabled(false);
+
+            User user = new User();
+            user.setId(item.id);
+            user.setFirstName(item.firstName);
+            user.setLastName(item.lastName);
+            user.setMiddleName(item.middleName);
+            user.setPosition(item.position);
+            user.setUrl(item.photo);
+            user.setPhone(item.phone);
+            user.setEmail(item.email);
+            user.setDescription(item.description);
+
+            Bundle bundle = new Bundle();
+            bundle.putBoolean("another_user", true);
+            bundle.putSerializable("user", user);
+            HomeActivity.getStackBundles().add(bundle);
+            HomeActivity homeActivity = (HomeActivity) getActivity();
+            homeActivity.loadFragment(TreeFragment.newInstance(bundle));
+//            view.setEnabled(true);
+        });
+        list.setAdapter(searchAdapter);
     }
 
     public void onClickProfileButton(View view) {

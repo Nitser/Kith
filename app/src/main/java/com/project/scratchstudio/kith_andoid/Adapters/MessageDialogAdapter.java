@@ -14,6 +14,7 @@ import com.project.scratchstudio.kith_andoid.Model.AnnouncementInfo;
 import com.project.scratchstudio.kith_andoid.Model.SearchInfo;
 import com.project.scratchstudio.kith_andoid.R;
 import com.project.scratchstudio.kith_andoid.Service.PicassoCircleTransformation;
+import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -53,6 +54,7 @@ public class MessageDialogAdapter extends RecyclerView.Adapter<MessageDialogHold
         if(msgInfo.url != null && !msgInfo.url.equals("null") && !msgInfo.url.equals("")) {
             Picasso.with(activity).load(msgInfo.url.replaceAll("@[0-9]*", ""))
                     .transform(new PicassoCircleTransformation())
+                    .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
                     .placeholder(R.drawable.newspaper)
                     .error(R.drawable.newspaper)
                     .into(holder.nPhoto);

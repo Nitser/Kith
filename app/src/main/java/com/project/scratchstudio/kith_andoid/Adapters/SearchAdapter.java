@@ -14,6 +14,7 @@ import com.project.scratchstudio.kith_andoid.R;
 import com.project.scratchstudio.kith_andoid.Holders.SearchHolder;
 import com.project.scratchstudio.kith_andoid.Model.SearchInfo;
 import com.project.scratchstudio.kith_andoid.Service.PicassoCircleTransformation;
+import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.lang.reflect.Array;
@@ -57,6 +58,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchHolder> implements
                 .placeholder(com.project.scratchstudio.kith_andoid.R.mipmap.person)
                 .error(com.project.scratchstudio.kith_andoid.R.mipmap.person)
                 .transform(new PicassoCircleTransformation())
+                .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
                 .into(searchHolder.nPhoto);
 
         searchHolder.bind(searchInfo, listener);
@@ -95,23 +97,19 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchHolder> implements
                     results.count = searchList.size();
                 }
                 else {
-                    String filter = String.valueOf(charSequence).toLowerCase().replaceAll("\\s+", "");
+                    String filter = String.valueOf(charSequence).toLowerCase();
+//                            .replaceAll("\\s+", "");
                     ArrayList<SearchInfo> filterResultsData = new ArrayList<>();
 
                     for(SearchInfo data : searchList) {
-                        String lfp = data.lastName.toLowerCase() + data.firstName.toLowerCase() + data.position.toLowerCase();
-                        String lpf = data.lastName.toLowerCase() + data.position.toLowerCase() + data.firstName.toLowerCase();
-                        String flp = data.firstName.toLowerCase() + data.lastName.toLowerCase() + data.position.toLowerCase();
-                        String fpl = data.firstName.toLowerCase() + data.position.toLowerCase() + data.lastName.toLowerCase();
-                        String plf = data.position.toLowerCase() + data.lastName.toLowerCase() + data.firstName.toLowerCase();
-                        String pfl = data.position.toLowerCase() + data.firstName.toLowerCase() + data.lastName.toLowerCase();
-
-                        if(flp.toLowerCase().contains(filter) || lpf.toLowerCase().contains(filter) || lfp.toLowerCase().contains(filter)
-                                || fpl.toLowerCase().contains(filter) || plf.toLowerCase().contains(filter) || pfl.toLowerCase().contains(filter)
-                                || data.lastName.toLowerCase().contains(filter) || data.firstName.toLowerCase().contains(filter) || data.position.toLowerCase().contains(filter)) {
-
-                            filterResultsData.add(data);
+                        String searchInfo = data.firstName + data.lastName + data.position + data.description;
+                        boolean contain = true;
+                        for (String filt: filter.split(" ")){
+                            if(!searchInfo.toLowerCase().contains(filt))
+                                contain = false;
                         }
+                        if(contain)
+                            filterResultsData.add(data);
                     }
 
                     results.values = filterResultsData;

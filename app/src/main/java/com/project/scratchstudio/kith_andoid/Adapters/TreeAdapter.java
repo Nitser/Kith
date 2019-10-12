@@ -12,6 +12,7 @@ import com.project.scratchstudio.kith_andoid.Holders.TreeHolder;
 import com.project.scratchstudio.kith_andoid.Model.User;
 import com.project.scratchstudio.kith_andoid.R;
 import com.project.scratchstudio.kith_andoid.Service.PicassoCircleTransformation;
+import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -46,13 +47,12 @@ public class TreeAdapter extends RecyclerView.Adapter<TreeHolder> {
         holder.name.setText(name);
         holder.position.setText(user.getPosition());
 
-        if(user.getUrl() != null && !user.getUrl().equals("null") && !user.getUrl().equals("")) {
-            Picasso.with(activity).load(user.getUrl())
+            Picasso.with(activity).load(user.getUrl().replaceAll("@[0-9]*", ""))
+                    .placeholder(com.project.scratchstudio.kith_andoid.R.mipmap.person)
                     .error(com.project.scratchstudio.kith_andoid.R.mipmap.person)
                     .transform(new PicassoCircleTransformation())
+                    .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
                     .into(holder.image);
-            holder.image.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        }
 
         holder.bind(user, listener);
     }

@@ -17,6 +17,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.project.scratchstudio.kith_andoid.Activities.HomeActivity;
 import com.project.scratchstudio.kith_andoid.Adapters.DialogAdapter;
@@ -66,15 +68,17 @@ public class DialogFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        HttpService httpService = new HttpService();
-        httpService.getComments(getActivity(), HomeActivity.getMainUser(), this, boardId);
+        if(isNetworkConnected()) {
+            HttpService httpService = new HttpService();
+            httpService.getComments(getActivity(), HomeActivity.getMainUser(), this, boardId);
+        } else Toast.makeText(getActivity(), "Нет подключения к интернету", Toast.LENGTH_SHORT).show();
 
         setButtonsListener();
 
         listView = getActivity().findViewById(R.id.listDialog);
         LinearLayoutManager llm = new LinearLayoutManager(getContext());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
-        llm.setStackFromEnd(true);
+//        llm.setStackFromEnd(true);
         listView.setLayoutManager(llm);
         CustomFontTextView title = getActivity().findViewById(R.id.title);
         title.setText(boardTitle);
@@ -113,32 +117,31 @@ public class DialogFragment extends Fragment {
 
 //            view.setEnabled(true);
         });
-        listView.smoothScrollToPosition(adapter.getItemCount()-1);
+//        listView.smoothScrollToPosition(adapter.getItemCount()-1);
         listView.setAdapter(adapter);
     }
 
     private void setButtonsListener(){
         ImageButton back = getActivity().findViewById(R.id.back);
         back.setOnClickListener(this::onClickBack);
-        ImageButton send = getActivity().findViewById(R.id.send);
+        LinearLayout send = getActivity().findViewById(R.id.new_c);
         send.setOnClickListener(this::onClickSend);
     }
 
     public void onClickBack(View view) {
-        Bundle bundle = new Bundle();
         HomeActivity homeActivity = (HomeActivity) getActivity();
-        homeActivity.loadFragment(MessagesFragment.newInstance(bundle));
+        homeActivity.loadFragment(AnnouncementInfoFragment.newInstance(bundle));
+    }
+
+    public boolean onBackPressed() {
+        HomeActivity homeActivity = (HomeActivity) getActivity();
+        homeActivity.loadFragment(AnnouncementInfoFragment.newInstance(bundle));
+        return true;
     }
 
     public void onClickSend(View view){
-        CustomFontEditText user_message = getActivity().findViewById(R.id.user_message);
-        String message = Objects.requireNonNull(user_message.getText()).toString();
-//                .replaceAll("\\s+", "");
-        if(message.length()>0){
-            HttpService httpService = new HttpService();
-            httpService.sendComment(getActivity(), HomeActivity.getMainUser(), this, boardId, message);
-            user_message.setText("");
-        }
+        HomeActivity homeActivity = (HomeActivity) getActivity();
+        homeActivity.loadFragment(NewCommentFragment.newInstance(bundle));
     }
 
     public void createNewComment(String message){
@@ -152,6 +155,13 @@ public class DialogFragment extends Fragment {
         listView.smoothScrollToPosition(adapter.getItemCount()-1);
         adapter.notifyDataSetChanged();
 //        listView.scrollToPosition(adapter.getItemCount()-1);
+    }
+
+    public void addNewComment(){
+        DialogInfo dialogInfo = (DialogInfo) bundle.getSerializable("new_comment");
+        listMessages.add(dialogInfo);
+        listView.smoothScrollToPosition(adapter.getItemCount()-1);
+        adapter.notifyDataSetChanged();
     }
 
     private boolean isNetworkConnected() {

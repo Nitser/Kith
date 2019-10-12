@@ -34,12 +34,15 @@ import java.util.List;
 public class AnnouncementFragment extends Fragment {
 
     private static long buttonCount = 0;
+    private String type = "all";
     private Bundle bundle;
     private RecyclerView container;
     private AnnouncementAdapter adapter;
 
+    public String getType(){ return type; }
     private static List<AnnouncementInfo> listAnn  = new ArrayList<>();
 
+    public static List<AnnouncementInfo> getListAnn() { return listAnn; }
     public static void setListAnn( List<AnnouncementInfo> list ) {
         listAnn = list;
     }
@@ -61,8 +64,22 @@ public class AnnouncementFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         setButtonsListener();
-        HttpService httpService = new HttpService();
-        httpService.getAnnouncements(getActivity(), HomeActivity.getMainUser(), this);
+
+        if(bundle != null && bundle.containsKey("type"))
+            type = bundle.getString("type");
+
+        if(isNetworkConnected()) {
+            HttpService httpService = new HttpService();
+            switch (type) {
+                case "sub": httpService.getSubscribedAnnouncement(getActivity(), HomeActivity.getMainUser(), this, false);
+                    break;
+                case "all": httpService.getAnnouncements(getActivity(), HomeActivity.getMainUser(), this);
+                    break;
+                case "my": httpService.getMyAnnouncement(getActivity(), HomeActivity.getMainUser(), this);
+                    break;
+            }
+            changeSelectedButton();
+        } else Toast.makeText(getActivity(), "Нет подключения к интернету", Toast.LENGTH_SHORT).show();
 
         container = getActivity().findViewById(R.id.listCards);
 
@@ -73,10 +90,10 @@ public class AnnouncementFragment extends Fragment {
     }
 
     public void setAdapter(){
-        adapter = new AnnouncementAdapter(getActivity(), listAnn, item -> {
-            Bundle newBundle = new Bundle();
-            newBundle.putSerializable("info", item);
-            ((HomeActivity)getContext()).loadFragment( AnnouncementInfoFragment.newInstance(newBundle));
+        adapter = new AnnouncementAdapter(getActivity(), listAnn, (item, id) -> {
+            bundle.putSerializable("board_list_id", id);
+            bundle.putString("type", type);
+            ((HomeActivity)getContext()).loadFragment( AnnouncementInfoFragment.newInstance(bundle));
         });
         container.setAdapter(adapter);
     }
@@ -94,24 +111,74 @@ public class AnnouncementFragment extends Fragment {
         my.setOnClickListener(this::onClickMy);
     }
 
+    private void changeSelectedButton(){
+        Button all = getActivity().findViewById(R.id.all);
+        Button sub = getActivity().findViewById(R.id.sub);
+        Button my = getActivity().findViewById(R.id.my);
+        switch (type) {
+            case "sub":
+                sub.setSelected(true);
+                all.setSelected(false);
+                my.setSelected(false);
+                break;
+            case "all":
+                sub.setSelected(false);
+                all.setSelected(true);
+                my.setSelected(false);
+                break;
+            case "my":
+                sub.setSelected(false);
+                all.setSelected(false);
+                my.setSelected(true);
+                break;
+        }
+    }
+
     public void onClickAll(View view){
-        HttpService httpService = new HttpService();
-        httpService.getAnnouncements(getActivity(), HomeActivity.getMainUser(), this);
+        if(isNetworkConnected()) {
+            HttpService httpService = new HttpService();
+            httpService.getAnnouncements(getActivity(), HomeActivity.getMainUser(), this);
+        } else Toast.makeText(getActivity(), "Нет подключения к интернету", Toast.LENGTH_SHORT).show();
+        type = "all";
+        changeSelectedButton();
     }
 
     public void onClickSub(View view){
-        HttpService httpService = new HttpService();
-        httpService.getSubscribedAnnouncement(getActivity(), HomeActivity.getMainUser(), this, false);
+        if(isNetworkConnected()) {
+            HttpService httpService = new HttpService();
+            httpService.getSubscribedAnnouncement(getActivity(), HomeActivity.getMainUser(), this, false);
+        } else Toast.makeText(getActivity(), "Нет подключения к интернету", Toast.LENGTH_SHORT).show();
+        type = "sub";
+        changeSelectedButton();
     }
 
     public void onClickMy(View view){
-        HttpService httpService = new HttpService();
-        httpService.getMyAnnouncement(getActivity(), HomeActivity.getMainUser(), this);
+        if(isNetworkConnected()) {
+            HttpService httpService = new HttpService();
+            httpService.getMyAnnouncement(getActivity(), HomeActivity.getMainUser(), this);
+        } else Toast.makeText(getActivity(), "Нет подключения к интернету", Toast.LENGTH_SHORT).show();
+        type = "my";
+        changeSelectedButton();
     }
 
     public void onClickAdd(View view){
         HomeActivity homeActivity = (HomeActivity) getActivity();
+        bundle.putString("type", type);
         homeActivity.loadFragment(NewAnnouncementFragment.newInstance(bundle));
+    }
+
+    public boolean onBackPressed() {
+        if (HomeActivity.getStackBundles().size() == 1) {
+            HomeActivity homeActivity = (HomeActivity) getActivity();
+            homeActivity.loadFragment(TreeFragment.newInstance(bundle));
+            homeActivity.setTreeNavigation();
+        } else {
+            Bundle bundle = HomeActivity.getStackBundles().get(HomeActivity.getStackBundles().size() - 1);
+            HomeActivity homeActivity = (HomeActivity) getActivity();
+            homeActivity.loadFragment(TreeFragment.newInstance(bundle));
+            homeActivity.setTreeNavigation();
+        }
+        return true;
     }
 
     private boolean isNetworkConnected() {

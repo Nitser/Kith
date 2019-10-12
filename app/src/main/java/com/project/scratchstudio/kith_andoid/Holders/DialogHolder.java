@@ -15,28 +15,27 @@ import com.project.scratchstudio.kith_andoid.R;
 
 public class DialogHolder extends RecyclerView.ViewHolder {
 
-    public CustomFontTextView nRightMessage;
-    public CustomFontTextView nLeftMessage;
-    public ImageView nRightPhoto;
-    public ImageView nLeftPhoto;
+    public CustomFontTextView name;
+    public CustomFontTextView position;
+    public CustomFontTextView time;
+    public CustomFontTextView date;
+    public CustomFontTextView comment;
+    public ImageView photo;
     private CardView cardView;
-
-    public LinearLayout right;
-    public LinearLayout left;
 
     public DialogHolder(@NonNull View itemView) {
         super(itemView);
-        right = itemView.findViewById(R.id.right);
-        left = itemView.findViewById(R.id.left);
+        name = itemView.findViewById(R.id.name);
+        position = itemView.findViewById(R.id.position);
+        time = itemView.findViewById(R.id.time);
+        date = itemView.findViewById(R.id.date);
+        comment = itemView.findViewById(R.id.comment);
 
-        nRightMessage = itemView.findViewById(R.id.right_message);
-        nRightPhoto = itemView.findViewById(R.id.right_photo);
-
-        nLeftMessage = itemView.findViewById(R.id.left_message);
-        nLeftPhoto = itemView.findViewById(R.id.left_photo);
+        photo = itemView.findViewById(R.id.photo);
 
         cardView = itemView.findViewById(R.id.card_view);
-        cardView.setCardBackgroundColor(Color.TRANSPARENT);
+//        cardView.setCardBackgroundColor(Color.TRANSPARENT);
+        cardView.setCardBackgroundColor(Color.parseColor("#eff1f2"));
         cardView.setCardElevation(0);
     }
 

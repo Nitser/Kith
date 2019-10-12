@@ -7,9 +7,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import com.project.scratchstudio.kith_andoid.Fragments.AnnouncementFragment;
+import com.project.scratchstudio.kith_andoid.Fragments.AnnouncementInfoFragment;
+import com.project.scratchstudio.kith_andoid.Fragments.DialogFragment;
 import com.project.scratchstudio.kith_andoid.Fragments.MessagesFragment;
+import com.project.scratchstudio.kith_andoid.Fragments.NewAnnouncementFragment;
+import com.project.scratchstudio.kith_andoid.Fragments.NewCommentFragment;
+import com.project.scratchstudio.kith_andoid.Fragments.SearchFragment;
 import com.project.scratchstudio.kith_andoid.Fragments.TreeFragment;
 import com.project.scratchstudio.kith_andoid.Model.AnnouncementInfo;
 import com.project.scratchstudio.kith_andoid.Model.User;
@@ -27,6 +34,8 @@ public class HomeActivity extends AppCompatActivity {
     private static List<User> invitedUsers = new ArrayList<>();
     private static List<Bundle> stackBundles = new ArrayList<>();
     private static List<AnnouncementInfo> boardsList = new ArrayList<>();
+
+    private BottomNavigationView navigationView;
 
     public static User getMainUser() {
         return mainUser;
@@ -55,12 +64,16 @@ public class HomeActivity extends AppCompatActivity {
                     case R.id.navigation_announcements:
                         loadFragment(AnnouncementFragment.newInstance(bundle));
                         return true;
-                    case R.id.navigation_messages:
-                        loadFragment(MessagesFragment.newInstance(bundle));
-                        return true;
+//                    case R.id.navigation_messages:
+//                        loadFragment(MessagesFragment.newInstance(bundle));
+//                        return true;
                 }
                 return false;
             };
+
+    public void setTreeNavigation(){
+        navigationView.getMenu().getItem(0).setChecked(true);
+    }
 
     public void loadFragment(Fragment fragment) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -81,8 +94,8 @@ public class HomeActivity extends AppCompatActivity {
         stackBundles.add(bundle);
         loadFragment(TreeFragment.newInstance(bundle));
 
-        BottomNavigationView navigation = findViewById(R.id.navigation);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        navigationView = findViewById(R.id.navigation);
+        navigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
     }
 
@@ -97,6 +110,42 @@ public class HomeActivity extends AppCompatActivity {
                 if(handled) {
                     break;
                 }
+            }
+//            else if(f instanceof SearchFragment){
+//                handled = ((SearchFragment)f).onBackPressed();
+//                if(handled) {
+//                    break;
+//                }
+//            }
+            else  if(f instanceof NewAnnouncementFragment){
+                handled = ((NewAnnouncementFragment)f).onBackPressed();
+                if(handled) {
+                    break;
+                }
+            } else if(f instanceof MessagesFragment){
+                handled = ((MessagesFragment)f).onBackPressed();
+                if(handled) {
+                    break;
+                }
+            } else if(f instanceof DialogFragment){
+                handled = ((DialogFragment)f).onBackPressed();
+                if(handled) {
+                    break;
+                }
+            } else if(f instanceof AnnouncementInfoFragment){
+                handled = ((AnnouncementInfoFragment)f).onBackPressed();
+                if(handled) {
+                    break;
+                }
+            } else if(f instanceof AnnouncementFragment){
+                handled = ((AnnouncementFragment)f).onBackPressed();
+                if(handled) {
+                    break;
+                }
+            } else if(f instanceof NewCommentFragment){
+                handled = ((NewCommentFragment)f).onBackPressed();
+                if(handled)
+                    break;
             }
         }
         if(!handled) {

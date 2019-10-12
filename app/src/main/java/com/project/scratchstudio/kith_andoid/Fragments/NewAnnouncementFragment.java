@@ -1,6 +1,7 @@
 package com.project.scratchstudio.kith_andoid.Fragments;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -16,11 +17,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.SpannableStringBuilder;
 import android.text.TextWatcher;
-import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,7 +32,10 @@ import com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView;
 import com.project.scratchstudio.kith_andoid.Model.AnnouncementInfo;
 import com.project.scratchstudio.kith_andoid.R;
 import com.project.scratchstudio.kith_andoid.Service.HttpService;
+import com.project.scratchstudio.kith_andoid.Service.ImageFilePath;
 import com.project.scratchstudio.kith_andoid.Service.PhotoService;
+import com.squareup.picasso.MemoryPolicy;
+import com.squareup.picasso.Picasso;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -54,6 +54,20 @@ public class NewAnnouncementFragment extends Fragment {
     private boolean correctDate = false;
 
     private AnnouncementInfo board;
+    private static final int REQUEST_EXTERNAL_STORAGE = 1;
+    private static String[] PERMISSIONS_STORAGE = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+
+    public static void verifyStoragePermissions(Activity activity) {
+        int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(
+                    activity,
+                    PERMISSIONS_STORAGE,
+                    REQUEST_EXTERNAL_STORAGE
+            );
+        }
+    }
 
     public static NewAnnouncementFragment newInstance(Bundle bundle) {
         NewAnnouncementFragment fragment = new NewAnnouncementFragment();
@@ -69,7 +83,7 @@ public class NewAnnouncementFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-
+        verifyStoragePermissions(getActivity());
         setButtonsListener();
 
         MaskedEditText endDate = getActivity().findViewById(R.id.date_text);
@@ -108,7 +122,7 @@ public class NewAnnouncementFragment extends Fragment {
                         correctDate = true;
                     else
                         correctDate = false;
-                }
+                } else correctDate = false;
             }
 
             @Override
@@ -118,7 +132,8 @@ public class NewAnnouncementFragment extends Fragment {
         });
 
         if(bundle.containsKey("is_edit") && bundle.getBoolean("is_edit")){
-            board = (AnnouncementInfo) bundle.getSerializable("board");
+            int id =  bundle.getInt("board_list_id");
+            board = AnnouncementFragment.getListAnn().get(id);
             fillFields();
         }
     }
@@ -128,11 +143,19 @@ public class NewAnnouncementFragment extends Fragment {
         CustomFontEditText description = getActivity().findViewById(R.id.description);
         MaskedEditText endDate = getActivity().findViewById(R.id.date_text);
         CustomFontEditText need = getActivity().findViewById(R.id.need_text);
+        ImageView photo = getActivity().findViewById(R.id.photo);
 
         title.setText(board.title);
         description.setText(board.description);
         endDate.setText(board.endDate);
         need.setText(board.needParticipants);
+        if(board.url != null && !board.url.equals("null") && !board.url.equals("")) {
+            Picasso.with(getActivity()).load(board.url.replaceAll("@[0-9]*", ""))
+                    .error(R.drawable.newspaper)
+                    .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
+                    .into(photo);
+            photo.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        }
     }
 
     private void setButtonsListener(){
@@ -145,15 +168,39 @@ public class NewAnnouncementFragment extends Fragment {
     }
 
     public void onClickCancel(View view){
-        HomeActivity homeActivity = (HomeActivity) getActivity();
-        homeActivity.loadFragment(AnnouncementFragment.newInstance(bundle));
+        if(bundle.containsKey("is_edit") && bundle.getBoolean("is_edit")){
+            HomeActivity homeActivity = (HomeActivity) getActivity();
+            homeActivity.loadFragment(AnnouncementInfoFragment.newInstance(bundle));
+        } else {
+            HomeActivity homeActivity = (HomeActivity) getActivity();
+            homeActivity.loadFragment(AnnouncementFragment.newInstance(bundle));
+        }
+    }
+
+    public boolean onBackPressed() {
+        if(bundle.containsKey("is_edit") && bundle.getBoolean("is_edit")){
+            HomeActivity homeActivity = (HomeActivity) getActivity();
+            homeActivity.loadFragment(AnnouncementInfoFragment.newInstance(bundle));
+        } else {
+            HomeActivity homeActivity = (HomeActivity) getActivity();
+            homeActivity.loadFragment(AnnouncementFragment.newInstance(bundle));
+        }
+        return true;
     }
 
     public void onClickDone(View view){
+        if (SystemClock.elapsedRealtime() - buttonCount < 1000){
+            return;
+        }
+        buttonCount = SystemClock.elapsedRealtime();
+        CustomFontTextView done = getActivity().findViewById(R.id.done);
+        done.setEnabled(false);
+
         CustomFontEditText title = getActivity().findViewById(R.id.title_text);
         CustomFontEditText description = getActivity().findViewById(R.id.description);
         if(title.getText() == null || title.getText().toString().equals("") || description.getText() == null || description.getText().toString().equals("") ){
             Toast.makeText(getContext(),"Не заполнены все поля обьявления", Toast.LENGTH_SHORT).show();
+            done.setEnabled(true);
         } else{
             if(correctDate) {
                 if (isNetworkConnected()) {
@@ -161,20 +208,52 @@ public class NewAnnouncementFragment extends Fragment {
                     HttpService httpService = new HttpService();
 
                     if(board == null)
-                        httpService.addAnnouncement(getActivity(), HomeActivity.getMainUser(), this, info);
+                        httpService.addAnnouncement(getActivity(), HomeActivity.getMainUser(), this, info, photo);
                     else
-                        httpService.editAnnouncement(getActivity(), HomeActivity.getMainUser(), this, board, info );
+                        httpService.editAnnouncement(getActivity(), HomeActivity.getMainUser(), this, board, info, photo );
 
-                } else
+                } else {
+                    done.setEnabled(true);
                     Toast.makeText(getContext(), "Нет подключения к интернету", Toast.LENGTH_SHORT).show();
-            } else
+                }
+            } else {
                 Toast.makeText(getContext(), "Неправильный формат даты", Toast.LENGTH_SHORT).show();
+                done.setEnabled(true);
+            }
         }
     }
 
     public void close(){
-        HomeActivity homeActivity = (HomeActivity) getActivity();
-        homeActivity.loadFragment(AnnouncementFragment.newInstance(bundle));
+        CustomFontTextView done = getActivity().findViewById(R.id.done);
+        done.setEnabled(true);
+        if(bundle.containsKey("is_edit") && bundle.getBoolean("is_edit")){
+            editBoard();
+            HomeActivity homeActivity = (HomeActivity) getActivity();
+            homeActivity.loadFragment(AnnouncementInfoFragment.newInstance(bundle));
+        } else {
+            HomeActivity homeActivity = (HomeActivity) getActivity();
+            homeActivity.loadFragment(AnnouncementFragment.newInstance(bundle));
+        }
+    }
+
+    private void editBoard(){
+        CustomFontEditText title = getActivity().findViewById(R.id.title_text);
+        CustomFontEditText description = getActivity().findViewById(R.id.description);
+        MaskedEditText endDate = getActivity().findViewById(R.id.date_text);
+        CustomFontEditText need = getActivity().findViewById(R.id.need_text);
+
+        board.title = title.getText().toString();
+        board.description = description.getText().toString();
+        if(endDate.getText() != null)
+            board.endDate = endDate.getText().toString();
+        try {
+            if(need.getText().equals(""))
+                board.needParticipants = "";
+            else
+                board.needParticipants = need.getText().toString();
+        } catch (NullPointerException ex){
+            board.needParticipants = "";
+        }
     }
 
     private AnnouncementInfo createAnnouncementInfo() {
@@ -197,18 +276,6 @@ public class NewAnnouncementFragment extends Fragment {
             info.needParticipants = need.getText().toString();
 
         info.description = description.getText().toString();
-
-        PhotoService photoService = new PhotoService(getActivity());
-        if(photo != null) {
-            String res;
-            try {
-                res = photoService.base64Photo(photo);
-                info.url = res;
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-        }
-
         info.organizerId = HomeActivity.getMainUser().getId();
 
         return info;
@@ -216,20 +283,14 @@ public class NewAnnouncementFragment extends Fragment {
 
     public void onClickLoadPhoto(View view){
         if(ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
-        {
-            requestPermissions(
-                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                    2000);
-        }
-        else {
+            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 2000);
+        else
             startGallery(view);
-        }
     }
 
     private void startGallery(View view){
-        if (SystemClock.elapsedRealtime() - buttonCount < 1000){
-            return;
-        }
+        if (SystemClock.elapsedRealtime() - buttonCount < 1000) return;
+
         view.setEnabled(false);
         Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(intent, 0);
@@ -242,12 +303,15 @@ public class NewAnnouncementFragment extends Fragment {
         if (requestCode == 0 && resultCode == RESULT_OK && intent != null && intent.getData() != null) {
             ImageView image = getActivity().findViewById(R.id.photo);
             Uri imageUri = intent.getData();
+            String path = ImageFilePath.getPath(getContext(), intent.getData());
             InputStream imageStream;
             PhotoService photoService = new PhotoService(getActivity());
             try {
                 imageStream = getActivity().getContentResolver().openInputStream(imageUri);
                 photo = BitmapFactory.decodeStream(imageStream);
                 photo = photoService.changePhoto(photo, imageUri);
+                photo = photoService.resizeBitmap(photo, image.getWidth(), image.getHeight());
+                photo = photoService.compressPhoto(photo, path);
                 image.setImageBitmap(photo);
                 image.setScaleType(ImageView.ScaleType.CENTER_CROP);
             } catch (FileNotFoundException e) {
@@ -258,6 +322,8 @@ public class NewAnnouncementFragment extends Fragment {
             load.setEnabled(true);
         }
     }
+
+
 
     private boolean isNetworkConnected() {
         ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);

@@ -118,4 +118,9 @@ public class MessagesFragment extends Fragment {
         return (cm != null && cm.getActiveNetworkInfo() != null) ;
     }
 
+    public boolean onBackPressed() {
+        return true;
+    }
+
+
 }

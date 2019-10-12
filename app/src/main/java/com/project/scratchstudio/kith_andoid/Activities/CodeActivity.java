@@ -3,6 +3,7 @@ package com.project.scratchstudio.kith_andoid.Activities;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Intent;
+import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -17,7 +18,7 @@ import com.project.scratchstudio.kith_andoid.Service.HttpService;
 public class CodeActivity extends AppCompatActivity {
 
     private ImageButton share;
-
+    private static long buttonCount = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +55,10 @@ public class CodeActivity extends AppCompatActivity {
 
 
     public void shareButton(View view) {
+        if (SystemClock.elapsedRealtime() - buttonCount < 1000){
+            return;
+        }
+        buttonCount = SystemClock.elapsedRealtime();
         view.setEnabled(false);
         share = (ImageButton) view;
         TextView code = findViewById(R.id.customFontTextView6);
@@ -66,7 +71,7 @@ public class CodeActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        if(requestCode == 0 && resultCode == RESULT_OK && intent != null && intent.getData() != null)
+        if(requestCode == 0 )
             share.setEnabled(true);
     }
 

@@ -11,7 +11,7 @@ public class SetUserIdAndToken implements ISetInternalData {
         SharedPreferences.Editor ed;
         ed = sp.edit();
         ed.putInt("cur_user_id", HomeActivity.getMainUser().getId());
-        ed.putString("cur_user_token", HomeActivity.getMainUser().getToken());
+        ed.putString("user_token", HomeActivity.getMainUser().getToken());
         ed.putString("cur_user_password", HomeActivity.getMainUser().getPassword());
         ed.apply();
         return 0;

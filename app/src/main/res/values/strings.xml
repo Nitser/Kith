@@ -15,13 +15,13 @@
     <string name="term_of_use">Я согласен с пользовательским соглашением и политикой конфиденциальности</string>
     <string name="agreement">ПОЛЬЗОВАТЕЛЬСКОЕ СОГЛАШЕНИЕ</string>
     <string name="term">ПОЛИТИКА КОНФИДЕНЦИАЛЬНОСТИ</string>
-    <string name="position">Должность</string>
+    <string name="position">Сфера деятельности</string>
     <string name="description">Описание</string>
     <string name="label_main">Главная</string>
     <string name="button_exit">Выход</string>
     <string name="button_done">Готово</string>
     <string name="label_profile">Профиль</string>
-    <string name="label_announcements">Объявления</string>
+    <string name="label_announcements">Сарафанное радио</string>
     <string name="label_messages">Сообщения</string>
     <string name="label_new_password">Новый пароль</string>
     <string name="edit">Редактировать</string>

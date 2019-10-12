@@ -20,45 +20,48 @@
 
             <ImageButton
                 android:id="@+id/back"
-                android:layout_width="15dp"
-                android:layout_height="25dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@null"
+                android:padding="5dp"
                 android:layout_marginStart="20dp"
                 android:layout_centerVertical="true"
                 android:layout_alignParentStart="true"
-                android:background="@drawable/ic_left"
+                android:src="@drawable/ic_left"
                 android:onClick="onClickBack" />
 
-            <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_centerHorizontal="true"
+                android:padding="5dp"
+                android:gravity="center"
                 android:text="@string/label_profile"
-                android:textColor="@color/colorAccent"
-                android:textSize="17sp"
-                customAttrs:customFont="intro_regular"/>
+                style="@style/CustomTitleText"/>
 
-           <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+           <TextView
+               android:id="@+id/exit"
                android:layout_width="wrap_content"
                android:layout_height="wrap_content"
                android:layout_toStartOf="@+id/edit"
                android:layout_centerVertical="true"
-               android:layout_marginEnd="15dp"
-               android:background="@android:color/transparent"
+               android:layout_marginEnd="5dp"
+               android:padding="5dp"
                android:onClick="onClickExitButton"
                android:text="@string/button_exit"
-               android:textColor="@color/colorAccent"
-               android:textSize="15sp"
-               customAttrs:customFont="intro_regular" />
+               style="@style/CustomTitleText" />
 
             <ImageButton
                 android:id="@+id/edit"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@null"
+                android:padding="5dp"
                 android:layout_marginEnd="10dp"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:background="@drawable/ic_edit"
+                android:src="@drawable/ic_edit"
                 android:onClick="onClickEditButton"/>
 
         </RelativeLayout>
@@ -74,20 +77,21 @@
                 android:layout_marginEnd="10dp"
                 android:orientation="vertical">
 
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
                     <android.support.constraint.ConstraintLayout
+                        android:id="@+id/photo_container"
                         android:layout_height="wrap_content"
-                        android:layout_width="0dp"
-                        android:layout_weight="1">
+                        android:layout_width="wrap_content"
+                        android:layout_marginEnd="5dp">
 
                         <ImageView
                             android:id="@+id/photo"
-                            android:layout_width="135dp"
-                            android:layout_height="135dp"
+                            android:layout_width="140dp"
+                            android:layout_height="140dp"
                             android:layout_marginTop="8dp"
                             android:layout_marginEnd="8dp"
                             android:layout_marginBottom="8dp"
@@ -102,124 +106,126 @@
 
                     </android.support.constraint.ConstraintLayout>
 
-
                     <LinearLayout
                         android:layout_height="wrap_content"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
+                        android:layout_width="wrap_content"
+                        android:layout_toEndOf="@+id/photo_container"
+                        android:orientation="vertical"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp">
 
-                        <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+                        <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5dp"
                             android:text="Фамилия:"
-                            android:textColor="@color/colorAccent"
-                            android:textSize="16sp"
-                            customAttrs:customFont="intro_regular"/>
+                            style="@style/CustomProfileTitleText"/>
 
-                        <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+                        <TextView
                             android:id="@+id/surname"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/colorAccent"
-                            android:textSize="20sp"
-                            customAttrs:customFont="intro_regular"/>
+                            style="@style/CustomProfileText"/>
 
-                        <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+                        <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5dp"
                             android:text="Имя:"
-                            android:textColor="@color/colorAccent"
-                            android:textSize="16sp"
-                            customAttrs:customFont="intro_regular"/>
+                            style="@style/CustomProfileTitleText"/>
 
-                        <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+                        <TextView
                             android:id="@+id/name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/colorAccent"
-                            android:textSize="20sp"
-                            customAttrs:customFont="intro_regular"/>
+                            style="@style/CustomProfileText"/>
 
-                        <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+                        <TextView
+                            android:id="@+id/label_middlename"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5dp"
                             android:text="Отчество:"
-                            android:textColor="@color/colorAccent"
-                            android:textSize="16sp"
-                            customAttrs:customFont="intro_regular"/>
+                            style="@style/CustomProfileTitleText"/>
 
-                        <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+                        <TextView
                             android:id="@+id/middlename"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/colorAccent"
-                            android:textSize="20sp"
-                            customAttrs:customFont="intro_regular"/>
+                            style="@style/CustomProfileText"/>
 
                     </LinearLayout>
 
-                </LinearLayout>
+                </RelativeLayout>
 
-                <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:text="Должность:"
-                    android:textColor="@color/colorAccent"
-                    android:textSize="16sp"
-                    customAttrs:customFont="intro_regular"/>
+                    android:text="Сфера деятельности:"
+                    style="@style/CustomProfileTitleText"/>
 
-                <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+                <TextView
                     android:id="@+id/position"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/colorAccent"
-                    android:textSize="20sp"
-                    customAttrs:customFont="intro_regular"/>
+                    style="@style/CustomProfileText"/>
 
-                <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+                <TextView
+                    android:id="@+id/label_email"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:text="Количество знакомых:"
-                    android:textColor="@color/colorAccent"
-                    android:textSize="16sp"
-                    customAttrs:customFont="intro_regular"/>
+                    android:text="Эл. почта:"
+                    style="@style/CustomProfileTitleText"/>
 
-                <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+                <TextView
+                    android:id="@+id/email"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/CustomProfileText"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="Телефон:"
+                    style="@style/CustomProfileTitleText"/>
+
+                <TextView
+                    android:id="@+id/phone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/CustomProfileText"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="Количество друзей:"
+                    style="@style/CustomProfileTitleText"/>
+
+                <TextView
                     android:id="@+id/users_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/colorAccent"
-                    android:textSize="20sp"
-                    customAttrs:customFont="intro_regular"/>
+                    style="@style/CustomProfileText"/>
 
-                <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+                <TextView
                     android:id="@+id/label_description"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:text="Описание:"
-                    android:textColor="@color/colorAccent"
-                    android:textSize="16sp"
-                    customAttrs:customFont="intro_regular"/>
+                    style="@style/CustomProfileTitleText"/>
 
-                <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+                <TextView
                     android:id="@+id/description"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/colorAccent"
-                    android:textSize="20sp"
-                    customAttrs:customFont="intro_regular"/>
-
+                    style="@style/CustomProfileText"/>
 
             </LinearLayout>
-
-
 
         </ScrollView>
 
