@@ -26,6 +26,8 @@
     <string name="label_new_password">Новый пароль</string>
     <string name="edit">Редактировать</string>
 
+    <string name="signature">&#169; Знакомые 2020</string>
+
     <plurals name="people">
         <item quantity="zero">%1$d человек</item>
         <item quantity="one">%1$d человека</item>

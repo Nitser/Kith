@@ -227,6 +227,15 @@
                     android:layout_height="wrap_content"
                     style="@style/CustomProfileText"/>
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:textSize="22sp"
+                    android:onClick="onClickContactShare"
+                    android:text="Поделиться контактом"
+                    style="@style/CustomProfileText"/>
+
             </LinearLayout>
 
         </ScrollView>
