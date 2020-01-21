@@ -70,7 +70,7 @@
                     android:textSize="13sp"
                     android:paddingStart="10dp"
                     android:paddingEnd="10dp"
-                    android:text="Подписки" />
+                    android:text="@string/favorite" />
 
                 <Button
                     android:id="@+id/my"

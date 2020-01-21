@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -40,12 +41,11 @@ public class AnnouncementInfoFragment extends Fragment {
     private AnnouncementInfo info;
     private boolean is_join = false;
 
-    public void setIsJoin(boolean bol, String str){
-        Button join = getActivity().findViewById(R.id.join);
-        join.setEnabled(true);
+    public void setIsJoin(boolean bol){
+        CheckBox favorite = getActivity().findViewById(R.id.heart);
+        favorite.setChecked(bol);
+        favorite.setEnabled(true);
         is_join = bol;
-        Button button = getActivity().findViewById(R.id.join);
-        button.setText(str);
     }
 
     public static AnnouncementInfoFragment newInstance(Bundle bundle) {
@@ -71,8 +71,6 @@ public class AnnouncementInfoFragment extends Fragment {
 
         CustomFontTextView title = view.findViewById(R.id.title);
         CustomFontTextView date = view.findViewById(R.id.date);
-        CustomFontTextView need = view.findViewById(R.id.need);
-        CustomFontTextView have = view.findViewById(R.id.have);
         CustomFontTextView description = view.findViewById(R.id.description);
         CustomFontTextView owner = view.findViewById(R.id.owner);
         CustomFontTextView creationDate = view.findViewById(R.id.creationDate);
@@ -83,11 +81,11 @@ public class AnnouncementInfoFragment extends Fragment {
             info.endDate = "Неограниченно";
 
         try {
-            DateFormat inputFormat = null;
+            DateFormat inputFormat;
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
                 inputFormat = new SimpleDateFormat("yyyy-MM-dd");
                 DateFormat outputFormat = new SimpleDateFormat("dd.MM.yyyy");
-                Date newDateFormat = null;
+                Date newDateFormat;
                 Date newCreationDateFormat = null;
                 newDateFormat = inputFormat.parse(info.endDate.replaceAll("\\s.*$", ""));
                 if(info.startDate.equals("null"))
@@ -119,8 +117,6 @@ public class AnnouncementInfoFragment extends Fragment {
 
         if(info.needParticipants.equals("null") || info.needParticipants.equals(""))
             info.needParticipants = "-";
-        need.setText(info.needParticipants);
-        have.setText(info.participants);
         description.setText(info.description);
         if(info.url != null && !info.url.equals("null") && !info.url.equals("")) {
             Picasso.with(getActivity()).load(info.url.replaceAll("@[0-9]*", ""))
@@ -137,15 +133,15 @@ public class AnnouncementInfoFragment extends Fragment {
         }
 
         if(info.subscriptionOnBoard == 1){
-            setIsJoin(true, "Покинуть");
+            setIsJoin(true);
         }
     }
 
     private void setButtonsListener(){
         ImageButton back = getActivity().findViewById(R.id.back);
         back.setOnClickListener(this::onClickBack);
-        Button join = getActivity().findViewById(R.id.join);
-        join.setOnClickListener(this::onClickJoin);
+        CheckBox favorite = getActivity().findViewById(R.id.heart);
+        favorite.setOnClickListener(this::onClickJoin);
         Button comments = getActivity().findViewById(R.id.comments);
         comments.setOnClickListener(this::onClickComments);
     }
@@ -180,8 +176,8 @@ public class AnnouncementInfoFragment extends Fragment {
             return;
         }
         buttonCount = SystemClock.elapsedRealtime();
-        Button join = getActivity().findViewById(R.id.join);
-        join.setEnabled(false);
+        CheckBox favorite = getActivity().findViewById(R.id.heart);
+        favorite.setEnabled(false);
         if(isNetworkConnected()) {
             HttpService httpService = new HttpService();
             if (!is_join)

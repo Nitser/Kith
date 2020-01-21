@@ -34,7 +34,6 @@ public class AnnouncementAdapter extends RecyclerView.Adapter<AnnouncementHolder
     private List<AnnouncementInfo> annList;
     private final OnItemClickListener listener;
     private Activity activity;
-    private BlurLayout blurLayout;
 
     public AnnouncementAdapter(Activity activity, List<AnnouncementInfo> annInfos, OnItemClickListener listener) {
         this.activity = activity;
@@ -53,9 +52,9 @@ public class AnnouncementAdapter extends RecyclerView.Adapter<AnnouncementHolder
     public void onBindViewHolder(@NonNull AnnouncementHolder holder, int i) {
         AnnouncementInfo annInfo = annList.get(i);
         holder.title.setText(annInfo.title);
-
+        if(annInfo.subscriptionOnBoard == 1) holder.favorite.setVisibility(View.VISIBLE);
         try {
-            DateFormat inputFormat = null;
+            DateFormat inputFormat;
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
                 inputFormat = new SimpleDateFormat("yyyy-MM-dd");
                 DateFormat outputFormat = new SimpleDateFormat("dd.MM.yyyy");

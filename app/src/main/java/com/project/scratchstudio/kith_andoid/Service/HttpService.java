@@ -730,13 +730,9 @@ public class HttpService {
                 try {
                     JSONObject json = new JSONObject(resultJSON);
                     if (json.getBoolean(result_keys[0]) && activity != null) {
-                        Toast.makeText(activity, "Вы подписаны", Toast.LENGTH_SHORT).show();
-                        CustomFontTextView have = activity.findViewById(R.id.have);
-                        String result = have.getText().toString();
-                        int res = Integer.parseInt(result) + 1;
-                        have.setText(String.valueOf(res));
                         if (fragment != null)
-                            fragment.setIsJoin(true, "Покинуть");
+                            fragment.setIsJoin(true);
+                        Toast.makeText(activity, "Добавлено в избранное", Toast.LENGTH_SHORT).show();
                     }
                 } catch (JSONException e) {
                     if (activity != null)
@@ -761,12 +757,8 @@ public class HttpService {
                 try {
                     JSONObject json = new JSONObject(resultJSON);
                     if (json.getBoolean(result_keys[0]) && activity != null) {
-                        Toast.makeText(activity, "Вы отписаны", Toast.LENGTH_SHORT).show();
-                        CustomFontTextView have = activity.findViewById(R.id.have);
-                        String result = have.getText().toString();
-                        int res = Integer.parseInt(result) - 1;
-                        have.setText(String.valueOf(res));
-                        if (fragment != null) fragment.setIsJoin(false, "Присоединиться");
+                        if (fragment != null) fragment.setIsJoin(false);
+                        Toast.makeText(activity, "Удалено из избранного", Toast.LENGTH_SHORT).show();
                     }
                 } catch (JSONException e) {
                     if (activity != null)
