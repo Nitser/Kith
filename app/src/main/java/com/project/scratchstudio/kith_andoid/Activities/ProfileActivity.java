@@ -3,6 +3,7 @@ package com.project.scratchstudio.kith_andoid.Activities;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
+import android.net.Uri;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -25,6 +26,7 @@ import com.squareup.picasso.Picasso;
 public class ProfileActivity extends AppCompatActivity {
 
     private static long buttonCount = 0;
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +34,7 @@ public class ProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
 
         Bundle bundle = getIntent().getExtras();
-        User user = (User)bundle.getSerializable("user");
+        user = (User)bundle.getSerializable("user");
 
         if(user.getId() != HomeActivity.getMainUser().getId()){
             ImageButton edit = findViewById(R.id.edit);
@@ -185,5 +187,11 @@ public class ProfileActivity extends AppCompatActivity {
         Intent intent = new Intent(ProfileActivity.this, EditActivity.class);
         startActivityForResult(intent, 1);
         view.setEnabled(true);
+    }
+
+    public void onClickCallPhone(View view) {
+        Intent intent = new Intent(Intent.ACTION_DIAL);
+        intent.setData(Uri.parse("tel:" + user.getPhone()));
+        startActivity(intent);
     }
 }
