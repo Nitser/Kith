@@ -718,7 +718,7 @@ public class HttpService {
         httpPostRequest.execute("http://" + SERVER + "/api/boards/list");
     }
 
-    public void joinAnnouncement(Activity activity, User user, int boardId, AnnouncementInfoFragment fragment) {
+    public void joinAnnouncement(Activity activity, User user, int boardId, Fragment fragment) {
         String[] result_keys = {"status"};
         String[] header_keys = {"Authorization"};
         String[] body_keys = {"subscription_user_id", "subscription_board_id"};
@@ -730,8 +730,6 @@ public class HttpService {
                 try {
                     JSONObject json = new JSONObject(resultJSON);
                     if (json.getBoolean(result_keys[0]) && activity != null) {
-                        if (fragment != null)
-                            fragment.setIsJoin(true);
                         Toast.makeText(activity, "Добавлено в избранное", Toast.LENGTH_SHORT).show();
                     }
                 } catch (JSONException e) {
@@ -745,7 +743,7 @@ public class HttpService {
         httpPostRequest.execute("http://" + SERVER + "/api/boards/subscribe");
     }
 
-    public void unsubscribeAnnouncement(Activity activity, User user, int boardId, AnnouncementInfoFragment fragment) {
+    public void unsubscribeAnnouncement(Activity activity, User user, int boardId, Fragment fragment) {
         String[] result_keys = {"status"};
         String[] header_keys = {"Authorization"};
         String[] body_keys = {"subscription_user_id", "subscription_board_id"};
@@ -757,7 +755,7 @@ public class HttpService {
                 try {
                     JSONObject json = new JSONObject(resultJSON);
                     if (json.getBoolean(result_keys[0]) && activity != null) {
-                        if (fragment != null) fragment.setIsJoin(false);
+//                        if (fragment != null) fragment.setIsJoin(false);
                         Toast.makeText(activity, "Удалено из избранного", Toast.LENGTH_SHORT).show();
                     }
                 } catch (JSONException e) {

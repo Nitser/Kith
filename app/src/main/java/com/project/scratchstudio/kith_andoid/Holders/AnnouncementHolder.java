@@ -3,6 +3,7 @@ package com.project.scratchstudio.kith_andoid.Holders;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 
 import com.project.scratchstudio.kith_andoid.Adapters.AnnouncementAdapter;
@@ -17,7 +18,7 @@ public class AnnouncementHolder extends RecyclerView.ViewHolder  {
     public View bluring;
     public CustomFontTextView title;
     public CustomFontTextView date;
-    public ImageView favorite;
+    public CheckBox favorite;
 
     public AnnouncementHolder(@NonNull View itemView){
         super(itemView);

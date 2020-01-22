@@ -20,14 +20,14 @@
             android:background="@color/colorPrimaryDark"
             android:src="@drawable/newspaper"/>
 
-        <ImageView
+        <CheckBox
             android:id="@+id/favorite"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:src="@drawable/ic_favorite"
+            android:padding="15dp"
             android:layout_alignParentEnd="true"
-            android:layout_margin="10dp"
-            android:visibility="invisible"/>
+            android:button="@drawable/cb_heart"
+            android:stateListAnimator="@animator/anim_heart"/>
 
         <RelativeLayout
             android:id="@+id/container"

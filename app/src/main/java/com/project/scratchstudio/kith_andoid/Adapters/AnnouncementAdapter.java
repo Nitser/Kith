@@ -3,27 +3,23 @@ package com.project.scratchstudio.kith_andoid.Adapters;
 import android.app.Activity;
 import android.icu.text.DateFormat;
 import android.icu.text.SimpleDateFormat;
-import android.os.Build;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.project.scratchstudio.kith_andoid.Activities.HomeActivity;
+import com.project.scratchstudio.kith_andoid.Fragments.AnnouncementFragment;
 import com.project.scratchstudio.kith_andoid.Holders.AnnouncementHolder;
 import com.project.scratchstudio.kith_andoid.Model.AnnouncementInfo;
-import com.project.scratchstudio.kith_andoid.Model.SearchInfo;
 import com.project.scratchstudio.kith_andoid.R;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
-import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
-
-import io.alterac.blurkit.BlurLayout;
 
 public class AnnouncementAdapter extends RecyclerView.Adapter<AnnouncementHolder> {
 
@@ -33,12 +29,14 @@ public class AnnouncementAdapter extends RecyclerView.Adapter<AnnouncementHolder
 
     private List<AnnouncementInfo> annList;
     private final OnItemClickListener listener;
+    private final AnnouncementFragment fragment;
     private Activity activity;
 
-    public AnnouncementAdapter(Activity activity, List<AnnouncementInfo> annInfos, OnItemClickListener listener) {
+    public AnnouncementAdapter(Activity activity, List<AnnouncementInfo> annInfos, OnItemClickListener listener, AnnouncementFragment fragment) {
         this.activity = activity;
         this.annList = annInfos;
         this.listener = listener;
+        this.fragment = fragment;
     }
 
     @NonNull
@@ -52,7 +50,10 @@ public class AnnouncementAdapter extends RecyclerView.Adapter<AnnouncementHolder
     public void onBindViewHolder(@NonNull AnnouncementHolder holder, int i) {
         AnnouncementInfo annInfo = annList.get(i);
         holder.title.setText(annInfo.title);
-        if(annInfo.subscriptionOnBoard == 1) holder.favorite.setVisibility(View.VISIBLE);
+        if (annInfo.subscriptionOnBoard == 1) {
+            holder.favorite.setChecked(true);
+        }
+
         try {
             DateFormat inputFormat;
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
@@ -61,14 +62,15 @@ public class AnnouncementAdapter extends RecyclerView.Adapter<AnnouncementHolder
                 Date date = inputFormat.parse(annInfo.endDate.replaceAll("\\s.*$", ""));
                 String outputDateStr = outputFormat.format(date);
                 holder.date.setText(outputDateStr);
-            } else
+            } else {
                 holder.date.setText(annInfo.endDate.replaceAll("\\s.*$", ""));
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        if(annInfo.url != null && !annInfo.url.equals("null") && !annInfo.url.equals("")) {
+        if (annInfo.url != null && !annInfo.url.equals("null") && !annInfo.url.equals("")) {
             Picasso.with(activity).load(annInfo.url)
                     .error(R.drawable.newspaper)
                     .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
@@ -76,8 +78,18 @@ public class AnnouncementAdapter extends RecyclerView.Adapter<AnnouncementHolder
             holder.image.setScaleType(ImageView.ScaleType.CENTER_CROP);
         }
 
+        holder.favorite.setOnClickListener(l -> {
+            holder.favorite.setEnabled(false);
+            if (annInfo.subscriptionOnBoard != 1) {
+                fragment.subscribeAnnouncement(HomeActivity.getMainUser().getId(), annInfo, holder.favorite);
+            } else {
+                fragment.unsubscribeAnnouncement(HomeActivity.getMainUser().getId(), annInfo, holder.favorite);
+            }
+        });
+
         holder.bind(annInfo, listener, i);
     }
+
 
     @Override
     public int getItemCount() {
