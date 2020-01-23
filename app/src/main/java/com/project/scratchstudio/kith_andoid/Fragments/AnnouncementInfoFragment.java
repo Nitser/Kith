@@ -1,7 +1,9 @@
 package com.project.scratchstudio.kith_andoid.Fragments;
 
+import android.content.Intent;
 import android.icu.text.DateFormat;
 import android.icu.text.SimpleDateFormat;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -161,6 +163,14 @@ public class AnnouncementInfoFragment extends Fragment {
         comments.setOnClickListener(this::onClickComments);
         Button profile = getActivity().findViewById(R.id.user_profile);
         profile.setOnClickListener(this::onClickProfile);
+        TextView phone = getActivity().findViewById(R.id.phone);
+        phone.setOnClickListener(this::onClickPhone);
+    }
+
+    private void onClickPhone(View view) {
+        Intent intent = new Intent(Intent.ACTION_DIAL);
+        intent.setData(Uri.parse("tel:" + info.organizerPhone));
+        startActivity(intent);
     }
 
     public void onClickProfile(View view) {
