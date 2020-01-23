@@ -9,6 +9,7 @@ import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -47,6 +48,11 @@ public class ProfileActivity extends AppCompatActivity {
             edit.setVisibility(View.INVISIBLE);
             TextView exit = findViewById(R.id.exit);
             exit.setVisibility(View.INVISIBLE);
+
+            Button share = findViewById(R.id.my_share);
+            share.setVisibility(View.GONE);
+            ImageView share2 = findViewById(R.id.share);
+            share2.setVisibility(View.VISIBLE);
         }
 
         if (isNetworkConnected()) {
@@ -207,7 +213,6 @@ public class ProfileActivity extends AppCompatActivity {
         }
         buttonCount = SystemClock.elapsedRealtime();
         view.setEnabled(false);
-        share = (TextView) view;
 
         String result = surname.getText() + " " + name.getText() + " " + middlename.getText() + "\n" + phone.getText() + "\n" + email.getText() + "\n"
                 + getString(R.string.signature);
