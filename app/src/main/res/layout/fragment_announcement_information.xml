@@ -18,7 +18,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <RelativeLayout
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
@@ -30,16 +30,19 @@
                 android:layout_height="40dp"
                 android:background="@null"
                 android:layout_marginStart="10dp"
-                android:layout_centerVertical="true"
-                android:layout_alignParentStart="true"
+                customAttrs:layout_constraintStart_toStartOf="parent"
+                customAttrs:layout_constraintTop_toTopOf="parent"
+                customAttrs:layout_constraintBottom_toBottomOf="parent"
                 android:src="@drawable/ic_left"
                 android:visibility="visible" />
 
             <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_centerHorizontal="true"
+                customAttrs:layout_constraintTop_toTopOf="parent"
+                customAttrs:layout_constraintBottom_toBottomOf="parent"
+                customAttrs:layout_constraintStart_toEndOf="@id/back"
+                customAttrs:layout_constraintEnd_toStartOf="@id/edit"
                 android:text="@string/label_announcements"
                 android:padding="5dp"
                 android:gravity="center"
@@ -49,26 +52,28 @@
 
             <ImageButton
                 android:id="@+id/edit"
-                android:visibility="invisible"
+                android:visibility="gone"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:background="@null"
                 android:layout_marginEnd="10dp"
-                android:layout_toStartOf="@+id/heart"
-                android:layout_centerVertical="true"
+                customAttrs:layout_constraintEnd_toStartOf="@id/heart"
+                customAttrs:layout_constraintTop_toTopOf="parent"
+                customAttrs:layout_constraintBottom_toBottomOf="parent"
                 android:src="@drawable/ic_edit"/>
 
             <CheckBox
                 android:id="@+id/heart"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
+                customAttrs:layout_constraintEnd_toEndOf="parent"
+                customAttrs:layout_constraintTop_toTopOf="parent"
+                customAttrs:layout_constraintBottom_toBottomOf="parent"
                 android:layout_marginEnd="10dp"
                 android:button="@drawable/cb_heart"
                 android:stateListAnimator="@animator/anim_heart"/>
 
-        </RelativeLayout>
+        </android.support.constraint.ConstraintLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -170,6 +175,18 @@
 
         <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
             android:id="@+id/owner"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:textColor="@color/colorAccent"
+            android:textSize="17sp"
+            customAttrs:customFont="intro_regular"/>
+
+        <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+            android:id="@+id/phone"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"

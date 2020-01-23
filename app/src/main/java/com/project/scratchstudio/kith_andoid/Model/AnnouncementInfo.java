@@ -24,5 +24,6 @@ public class AnnouncementInfo implements Serializable {
     public String organizerMiddleName;
     public String organizerLogin;
     public String organizerPhoto;
+    public String organizerPhone;
 
 }

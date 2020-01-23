@@ -670,7 +670,7 @@ public class HttpService {
     }
 
     public void getAnnouncements(Activity activity, User user, AnnouncementFragment fragment) {
-        String[] result_keys = {"status", "user_id", "user_firstname", "user_lastname", "user_photo", "user_middlename", "user_position", "user_description", "subscription_on_board"};
+        String[] result_keys = {"status", "user_id", "user_firstname", "user_lastname", "user_photo", "user_middlename", "user_position", "user_description", "subscription_on_board", "user_phone"};
         String[] header_keys = {"Authorization"};
         String[] body_keys = {"user_id"};
         String[] header_data = {user.getToken()};
@@ -685,6 +685,7 @@ public class HttpService {
                     if (response.length() != 0 && json.getBoolean(result_keys[0])) {
                         for (int i = 0; i < response.length(); i++) {
                             JSONObject obj = response.getJSONObject(i);
+                            Log.i("BORD RESPONSE", obj.toString());
                             AnnouncementInfo newInfo = new AnnouncementInfo();
 
                             newInfo.id = obj.getInt("board_id");
@@ -699,9 +700,9 @@ public class HttpService {
                             newInfo.participants = obj.getString("board_current_subscriptions");
                             newInfo.organizerId = obj.getInt("board_user_id");
                             newInfo.subscriptionOnBoard = obj.getInt("subscription_on_board");
+                            newInfo.organizerPhone = obj.getString("user_phone");
 
                             list.add(newInfo);
-                            Log.i("New AnInf", newInfo.title);
                         }
                         AnnouncementFragment.setListAnn(list);
                         if (fragment != null)
@@ -716,57 +717,6 @@ public class HttpService {
                 Toast.makeText(activity, getErrorMessage(code), Toast.LENGTH_SHORT).show();
         }));
         httpPostRequest.execute("http://" + SERVER + "/api/boards/list");
-    }
-
-    public void joinAnnouncement(Activity activity, User user, int boardId, Fragment fragment) {
-        String[] result_keys = {"status"};
-        String[] header_keys = {"Authorization"};
-        String[] body_keys = {"subscription_user_id", "subscription_board_id"};
-        String[] header_data = {user.getToken()};
-        String[] body_data = {String.valueOf(user.getId()), String.valueOf(boardId)};
-
-        HttpPostRequest httpPostRequest = new HttpPostRequest(activity, header_keys, body_keys, header_data, body_data, ((output, resultJSON, code) -> {
-            if (output && resultJSON != null) {
-                try {
-                    JSONObject json = new JSONObject(resultJSON);
-                    if (json.getBoolean(result_keys[0]) && activity != null) {
-                        Toast.makeText(activity, "Добавлено в избранное", Toast.LENGTH_SHORT).show();
-                    }
-                } catch (JSONException e) {
-                    if (activity != null)
-                        Toast.makeText(activity, getErrorMessage(code), Toast.LENGTH_SHORT).show();
-                    e.printStackTrace();
-                }
-            } else if (activity != null)
-                Toast.makeText(activity, getErrorMessage(code), Toast.LENGTH_SHORT).show();
-        }));
-        httpPostRequest.execute("http://" + SERVER + "/api/boards/subscribe");
-    }
-
-    public void unsubscribeAnnouncement(Activity activity, User user, int boardId, Fragment fragment) {
-        String[] result_keys = {"status"};
-        String[] header_keys = {"Authorization"};
-        String[] body_keys = {"subscription_user_id", "subscription_board_id"};
-        String[] header_data = {user.getToken()};
-        String[] body_data = {String.valueOf(user.getId()), String.valueOf(boardId)};
-
-        HttpPostRequest httpPostRequest = new HttpPostRequest(activity, header_keys, body_keys, header_data, body_data, ((output, resultJSON, code) -> {
-            if (output && resultJSON != null) {
-                try {
-                    JSONObject json = new JSONObject(resultJSON);
-                    if (json.getBoolean(result_keys[0]) && activity != null) {
-//                        if (fragment != null) fragment.setIsJoin(false);
-                        Toast.makeText(activity, "Удалено из избранного", Toast.LENGTH_SHORT).show();
-                    }
-                } catch (JSONException e) {
-                    if (activity != null)
-                        Toast.makeText(activity, getErrorMessage(code), Toast.LENGTH_SHORT).show();
-                    e.printStackTrace();
-                }
-            } else if (activity != null)
-                Toast.makeText(activity, getErrorMessage(code), Toast.LENGTH_SHORT).show();
-        }));
-        httpPostRequest.execute("http://" + SERVER + "/api/boards/unsubscribe");
     }
 
     public void addAnnouncement(Activity activity, User user, NewAnnouncementFragment nFragment, AnnouncementInfo info, Bitmap photo) {

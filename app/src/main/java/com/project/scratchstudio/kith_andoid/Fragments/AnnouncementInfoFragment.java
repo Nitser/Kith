@@ -1,15 +1,10 @@
 package com.project.scratchstudio.kith_andoid.Fragments;
 
-import android.content.Context;
 import android.icu.text.DateFormat;
 import android.icu.text.SimpleDateFormat;
-import android.net.ConnectivityManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,27 +20,31 @@ import com.project.scratchstudio.kith_andoid.Activities.HomeActivity;
 import com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView;
 import com.project.scratchstudio.kith_andoid.Model.AnnouncementInfo;
 import com.project.scratchstudio.kith_andoid.R;
-import com.project.scratchstudio.kith_andoid.Service.HttpService;
-import com.project.scratchstudio.kith_andoid.Service.PicassoCircleTransformation;
+import com.project.scratchstudio.kith_andoid.network.ApiClient;
+import com.project.scratchstudio.kith_andoid.network.ApiService;
+import com.project.scratchstudio.kith_andoid.network.model.FavoriteResponse;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
-import java.text.ParseException;
 import java.util.Date;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.observers.DisposableSingleObserver;
+import io.reactivex.schedulers.Schedulers;
 
 public class AnnouncementInfoFragment extends Fragment {
 
-    private static long buttonCount = 0;
     private Bundle bundle;
     int boardListId;
     private AnnouncementInfo info;
-    private boolean is_join = false;
+    private ApiService apiService;
+    private CompositeDisposable disposable = new CompositeDisposable();
 
-    public void setIsJoin(boolean bol){
+    public void setIsJoin(boolean bol) {
         CheckBox favorite = getActivity().findViewById(R.id.heart);
         favorite.setChecked(bol);
         favorite.setEnabled(true);
-        is_join = bol;
     }
 
     public static AnnouncementInfoFragment newInstance(Bundle bundle) {
@@ -58,7 +57,7 @@ public class AnnouncementInfoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         bundle = getArguments();
         bundle.putBoolean("is_edit", false);
-        if(bundle != null) {
+        if (bundle != null) {
             boardListId = bundle.getInt("board_list_id");
             info = AnnouncementFragment.getListAnn().get(boardListId);
         }
@@ -73,12 +72,14 @@ public class AnnouncementInfoFragment extends Fragment {
         CustomFontTextView date = view.findViewById(R.id.date);
         CustomFontTextView description = view.findViewById(R.id.description);
         CustomFontTextView owner = view.findViewById(R.id.owner);
+        CustomFontTextView phone = view.findViewById(R.id.phone);
         CustomFontTextView creationDate = view.findViewById(R.id.creationDate);
         ImageView photo = view.findViewById(R.id.photo);
 
         title.setText(info.title);
-        if(info.endDate.equals("null"))
+        if (info.endDate.equals("null")) {
             info.endDate = "Неограниченно";
+        }
 
         try {
             DateFormat inputFormat;
@@ -88,14 +89,14 @@ public class AnnouncementInfoFragment extends Fragment {
                 Date newDateFormat;
                 Date newCreationDateFormat = null;
                 newDateFormat = inputFormat.parse(info.endDate.replaceAll("\\s.*$", ""));
-                if(info.startDate.equals("null"))
-                    creationDate.setVisibility(View.INVISIBLE);
-                else
+                if (info.startDate.equals("null")) {
+                    creationDate.setVisibility(View.GONE);
+                } else {
                     newCreationDateFormat = inputFormat.parse(info.startDate.replaceAll("\\s.*$", ""));
+                }
                 String outputDateStr = outputFormat.format(newDateFormat);
                 date.setText(outputDateStr);
-                outputDateStr = "Создано: " + outputFormat.format(newCreationDateFormat);
-                creationDate.setText(outputDateStr);
+                creationDate.setText(getString(R.string.create_date, outputFormat.format(newCreationDateFormat)));
             } else {
                 date.setText(info.endDate.replaceAll("\\s.*$", ""));
                 String errDate = "Создано: " + info.startDate.replaceAll("\\s.*$", "");
@@ -107,18 +108,28 @@ public class AnnouncementInfoFragment extends Fragment {
         }
 
         String ownerName = "Владелец: ";
-        if(info.organizerLastName!= null && !info.organizerLastName.equals("null"))
-            ownerName += (info.organizerLastName + " ");
-        if(!info.organizerName.equals("null"))
+        if (info.organizerLastName != null && !info.organizerLastName.equals("null")) {
+            ownerName += info.organizerLastName + " ";
+        } else {
+            owner.setVisibility(View.GONE);
+        }
+        if (!info.organizerName.equals("null")) {
+            owner.setVisibility(View.VISIBLE);
             ownerName += info.organizerName;
-        else
-            owner.setVisibility(View.INVISIBLE);
+        }
         owner.setText(ownerName);
 
-        if(info.needParticipants.equals("null") || info.needParticipants.equals(""))
+        if (info.organizerPhone != null && !info.organizerPhone.equals("null")) {
+            phone.setText(getString(R.string.organizer_phone, info.organizerPhone));
+        } else {
+            phone.setVisibility(View.GONE);
+        }
+
+        if (info.needParticipants.equals("null") || info.needParticipants.equals("")) {
             info.needParticipants = "-";
+        }
         description.setText(info.description);
-        if(info.url != null && !info.url.equals("null") && !info.url.equals("")) {
+        if (info.url != null && !info.url.equals("null") && !info.url.equals("")) {
             Picasso.with(getActivity()).load(info.url.replaceAll("@[0-9]*", ""))
                     .error(R.drawable.newspaper)
                     .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
@@ -126,18 +137,20 @@ public class AnnouncementInfoFragment extends Fragment {
             photo.setScaleType(ImageView.ScaleType.CENTER_CROP);
         }
 
-        if(info.organizerId == HomeActivity.getMainUser().getId()) {
+        if (info.organizerId == HomeActivity.getMainUser().getId()) {
             ImageButton button = getActivity().findViewById(R.id.edit);
             button.setVisibility(View.VISIBLE);
             button.setOnClickListener(this::onClickEdit);
         }
 
-        if(info.subscriptionOnBoard == 1){
+        if (info.subscriptionOnBoard == 1) {
             setIsJoin(true);
         }
+
+        apiService = ApiClient.getClient(getContext()).create(ApiService.class);
     }
 
-    private void setButtonsListener(){
+    private void setButtonsListener() {
         ImageButton back = getActivity().findViewById(R.id.back);
         back.setOnClickListener(this::onClickBack);
         CheckBox favorite = getActivity().findViewById(R.id.heart);
@@ -146,7 +159,7 @@ public class AnnouncementInfoFragment extends Fragment {
         comments.setOnClickListener(this::onClickComments);
     }
 
-    public void onClickEdit(View view){
+    public void onClickEdit(View view) {
         HomeActivity homeActivity = (HomeActivity) getActivity();
         bundle.putBoolean("is_edit", true);
         bundle.putSerializable("board_list_id", boardListId);
@@ -164,32 +177,77 @@ public class AnnouncementInfoFragment extends Fragment {
         return true;
     }
 
-    public void onClickComments(View view){
+    public void onClickComments(View view) {
         bundle.putInt("board_id", info.id);
         bundle.putString("board_title", info.title);
         HomeActivity homeActivity = (HomeActivity) getActivity();
         homeActivity.loadFragment(DialogFragment.newInstance(bundle));
     }
 
-    public void onClickJoin(View view){
-        if (SystemClock.elapsedRealtime() - buttonCount < 1000){
-            return;
+    public void onClickJoin(View view) {
+        view.setEnabled(false);
+        if (info.subscriptionOnBoard != 1) {
+            subscribeAnnouncement(HomeActivity.getMainUser().getId(), info, (CheckBox) view);
+        } else {
+            unsubscribeAnnouncement(HomeActivity.getMainUser().getId(), info, (CheckBox) view);
         }
-        buttonCount = SystemClock.elapsedRealtime();
-        CheckBox favorite = getActivity().findViewById(R.id.heart);
-        favorite.setEnabled(false);
-        if(isNetworkConnected()) {
-            HttpService httpService = new HttpService();
-            if (!is_join)
-                httpService.joinAnnouncement(getActivity(), HomeActivity.getMainUser(), info.id, this);
-            else
-                httpService.unsubscribeAnnouncement(getActivity(), HomeActivity.getMainUser(), info.id, this);
-        } else Toast.makeText(getActivity(), "Нет подключения к интернету", Toast.LENGTH_SHORT).show();
     }
 
-    private boolean isNetworkConnected() {
-        ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        return (cm != null && cm.getActiveNetworkInfo() != null) ;
+    public void subscribeAnnouncement(int user_id, AnnouncementInfo board, CheckBox favorite) {
+        disposable.add(
+                apiService.subscribeAnnouncement(String.valueOf(user_id), String.valueOf(board.id))
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(new DisposableSingleObserver<FavoriteResponse>() {
+                            @Override
+                            public void onSuccess(FavoriteResponse response) {
+                                if (response.getStatus()) {
+                                    board.subscriptionOnBoard = 1;
+                                    Toast.makeText(getContext(), "Добавлено в избранное", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(getContext(), "Ошибка отправки запроса", Toast.LENGTH_SHORT).show();
+                                    favorite.setChecked(!favorite.isChecked());
+                                }
+                                favorite.setEnabled(true);
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                Log.e("AnnouncementFragment", "onError: " + e.getMessage());
+                                Toast.makeText(getContext(), "Ошибка отправки запроса", Toast.LENGTH_SHORT).show();
+                                favorite.setChecked(!favorite.isChecked());
+                                favorite.setEnabled(true);
+                            }
+                        })
+        );
     }
 
+    public void unsubscribeAnnouncement(int user_id, AnnouncementInfo board, CheckBox favorite) {
+        disposable.add(
+                apiService.unsubscribeAnnouncement(String.valueOf(user_id), String.valueOf(board.id))
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(new DisposableSingleObserver<FavoriteResponse>() {
+                            @Override
+                            public void onSuccess(FavoriteResponse response) {
+                                if (response.getStatus()) {
+                                    board.subscriptionOnBoard = 0;
+                                    Toast.makeText(getContext(), "Удалено из избранного", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(getContext(), "Ошибка отправки запроса", Toast.LENGTH_SHORT).show();
+                                    favorite.setChecked(!favorite.isChecked());
+                                }
+                                favorite.setEnabled(true);
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                Log.e("AnnouncementFragment", "onError: " + e.getMessage());
+                                Toast.makeText(getContext(), "Ошибка отправки запроса", Toast.LENGTH_SHORT).show();
+                                favorite.setChecked(!favorite.isChecked());
+                                favorite.setEnabled(true);
+                            }
+                        })
+        );
+    }
 }
