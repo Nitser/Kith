@@ -3,7 +3,6 @@ package com.project.scratchstudio.kith_andoid.Fragments;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
-import android.os.Message;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,7 +11,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,15 +18,8 @@ import android.widget.EditText;
 
 import com.project.scratchstudio.kith_andoid.Activities.HomeActivity;
 import com.project.scratchstudio.kith_andoid.Adapters.MessageDialogAdapter;
-import com.project.scratchstudio.kith_andoid.Adapters.SearchAdapter;
-import com.project.scratchstudio.kith_andoid.Model.MessageDialogInfo;
-import com.project.scratchstudio.kith_andoid.Model.SearchInfo;
-import com.project.scratchstudio.kith_andoid.Model.User;
 import com.project.scratchstudio.kith_andoid.R;
 import com.project.scratchstudio.kith_andoid.Service.HttpService;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MessagesFragment extends Fragment {
 

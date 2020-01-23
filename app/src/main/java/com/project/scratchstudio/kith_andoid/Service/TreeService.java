@@ -14,11 +14,10 @@ import android.widget.RelativeLayout;
 import com.project.scratchstudio.kith_andoid.Activities.CodeActivity;
 import com.project.scratchstudio.kith_andoid.Activities.HomeActivity;
 import com.project.scratchstudio.kith_andoid.Fragments.TreeFragment;
-import com.project.scratchstudio.kith_andoid.Model.User;
+import com.project.scratchstudio.kith_andoid.network.model.User;
 import com.project.scratchstudio.kith_andoid.R;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class TreeService {

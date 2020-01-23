@@ -138,42 +138,42 @@
 
         </RelativeLayout>
 
-        <Button
-            android:id="@+id/comments"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Комментарии"
-            android:minWidth="170dp"
-            android:background="@drawable/button_basic"
-            android:padding="10dp"
+            android:orientation="horizontal"
+            android:weightSum="2"
             android:layout_marginTop="15dp"
             android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:textColor="@color/colorAccent"
-            android:textSize="16sp"/>
+            android:layout_marginEnd="10dp">
 
-        <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="20dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Описание"
-            android:textColor="@color/colorAccent"
-            android:textSize="17sp"
-            customAttrs:customFont="intro_regular"/>
+            <Button
+                android:id="@+id/comments"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="Комментарии"
+                android:background="@drawable/button_basic"
+                android:padding="10dp"
+                android:layout_marginEnd="5dp"
+                android:textColor="@color/colorAccent"
+                android:textSize="16sp"/>
 
-        <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
-            android:id="@+id/description"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Тут будет описание"
-            android:textColor="@color/colorAccent"
-            android:textSize="17sp"
-            customAttrs:customFont="intro_regular"/>
+            <Button
+                android:id="@+id/user_profile"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="Профиль"
+                android:background="@drawable/button_basic"
+                android:padding="10dp"
+                android:layout_marginStart="5dp"
+                android:textColor="@color/colorAccent"
+                android:textSize="16sp"/>
 
-        <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+        </LinearLayout>
+
+        <TextView
             android:id="@+id/owner"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
@@ -183,21 +183,9 @@
             android:layout_gravity="end"
             android:textColor="@color/colorAccent"
             android:textSize="17sp"
-            customAttrs:customFont="intro_regular"/>
+            style="@style/CustomProfileTitleText"/>
 
-        <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
-            android:id="@+id/phone"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:textColor="@color/colorAccent"
-            android:textSize="17sp"
-            customAttrs:customFont="intro_regular"/>
-
-        <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+        <TextView
             android:id="@+id/creationDate"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
@@ -207,7 +195,40 @@
             android:layout_height="wrap_content"
             android:textColor="@color/colorAccent"
             android:textSize="17sp"
-            customAttrs:customFont="intro_regular"/>
+            style="@style/CustomProfileTitleText"/>
+
+        <TextView
+            android:id="@+id/phone"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:textColor="@color/colorAccent"
+            android:textSize="17sp"
+            style="@style/CustomProfileText"/>
+
+        <TextView
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Описание"
+            android:textColor="@color/colorAccent"
+            android:textSize="17sp"
+            style="@style/CustomProfileTitleText"/>
+
+        <TextView
+            android:id="@+id/description"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Тут будет описание"
+            android:textColor="@color/colorAccent"
+            android:textSize="17sp"
+            style="@style/CustomProfileText"/>
 
     </LinearLayout>
 

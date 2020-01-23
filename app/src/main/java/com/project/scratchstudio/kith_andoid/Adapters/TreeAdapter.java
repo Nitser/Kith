@@ -6,10 +6,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import com.project.scratchstudio.kith_andoid.Holders.TreeHolder;
-import com.project.scratchstudio.kith_andoid.Model.User;
+import com.project.scratchstudio.kith_andoid.network.model.User;
 import com.project.scratchstudio.kith_andoid.R;
 import com.project.scratchstudio.kith_andoid.Service.PicassoCircleTransformation;
 import com.squareup.picasso.MemoryPolicy;

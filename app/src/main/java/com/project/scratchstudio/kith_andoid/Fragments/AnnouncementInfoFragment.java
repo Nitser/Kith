@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.project.scratchstudio.kith_andoid.Activities.HomeActivity;
@@ -23,6 +24,7 @@ import com.project.scratchstudio.kith_andoid.R;
 import com.project.scratchstudio.kith_andoid.network.ApiClient;
 import com.project.scratchstudio.kith_andoid.network.ApiService;
 import com.project.scratchstudio.kith_andoid.network.model.FavoriteResponse;
+import com.project.scratchstudio.kith_andoid.network.model.UserResponse;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
@@ -68,12 +70,12 @@ public class AnnouncementInfoFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         setButtonsListener();
 
-        CustomFontTextView title = view.findViewById(R.id.title);
-        CustomFontTextView date = view.findViewById(R.id.date);
-        CustomFontTextView description = view.findViewById(R.id.description);
-        CustomFontTextView owner = view.findViewById(R.id.owner);
-        CustomFontTextView phone = view.findViewById(R.id.phone);
-        CustomFontTextView creationDate = view.findViewById(R.id.creationDate);
+        TextView title = view.findViewById(R.id.title);
+        TextView date = view.findViewById(R.id.date);
+        TextView description = view.findViewById(R.id.description);
+        TextView owner = view.findViewById(R.id.owner);
+        TextView phone = view.findViewById(R.id.phone);
+        TextView creationDate = view.findViewById(R.id.creationDate);
         ImageView photo = view.findViewById(R.id.photo);
 
         title.setText(info.title);
@@ -157,6 +159,44 @@ public class AnnouncementInfoFragment extends Fragment {
         favorite.setOnClickListener(this::onClickJoin);
         Button comments = getActivity().findViewById(R.id.comments);
         comments.setOnClickListener(this::onClickComments);
+        Button profile = getActivity().findViewById(R.id.user_profile);
+        profile.setOnClickListener(this::onClickProfile);
+    }
+
+    public void onClickProfile(View view) {
+        view.setEnabled(false);
+        Log.i("AUTH", HomeActivity.getMainUser().getToken());
+        disposable.add(
+                apiService.getUser(info.organizerId)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(new DisposableSingleObserver<UserResponse>() {
+                            @Override
+                            public void onSuccess(UserResponse response) {
+                                if (response.getStatus()) {
+                                    response.getUser().setId(info.organizerId);
+                                    response.getUser().setUrl(response.getUser().photo.replaceAll("\\/", "/"));
+
+                                    Bundle bundle = new Bundle();
+                                    bundle.putBoolean("another_user", true);
+                                    bundle.putSerializable("user", response.getUser());
+                                    HomeActivity.getStackBundles().add(bundle);
+                                    HomeActivity homeActivity = (HomeActivity) getActivity();
+                                    homeActivity.loadFragment(TreeFragment.newInstance(bundle));
+                                } else {
+                                    Toast.makeText(getContext(), "Ошибка отправки запроса", Toast.LENGTH_SHORT).show();
+                                    view.setEnabled(true);
+                                }
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                Log.e("BoardFragmentInfo", "onError: " + e.getMessage());
+                                Toast.makeText(getContext(), "Ошибка отправки запроса", Toast.LENGTH_SHORT).show();
+                                view.setEnabled(true);
+                            }
+                        })
+        );
     }
 
     public void onClickEdit(View view) {

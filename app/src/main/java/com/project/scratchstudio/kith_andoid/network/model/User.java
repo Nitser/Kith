@@ -1,25 +1,48 @@
-package com.project.scratchstudio.kith_andoid.Model;
+package com.project.scratchstudio.kith_andoid.network.model;
 
 import android.graphics.Bitmap;
+
+import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
 public class User implements Serializable{
 
-    private int id;
-    private String firstName;
-    private String lastName;
-    private String middleName;
-    private transient Bitmap image;
+    public int id;
     private String token;
-    private String login;
     private String password;
-    private String phone;
-    private String email;
-    private String position;
-    private String description;
     private String url;
     private int usersCount;
+
+    @SerializedName("user_firstname")
+    public String firstName;
+
+    @SerializedName("user_lastname")
+    public String lastName;
+
+    @SerializedName("user_middlename")
+    public String middleName;
+
+    @SerializedName("user_login")
+    public String login;
+
+    @SerializedName("user_phone")
+    public String phone;
+
+    @SerializedName("user_description")
+    public String description;
+
+    @SerializedName("user_position")
+    public String position;
+
+    @SerializedName("user_email")
+    public String email;
+
+    @SerializedName("photo")
+    public String photo;
+
+    private transient Bitmap image;
+
 
     public String getToken() {
         return token;

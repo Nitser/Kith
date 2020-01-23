@@ -9,7 +9,7 @@ import android.widget.ImageView;
 
 import com.project.scratchstudio.kith_andoid.Adapters.TreeAdapter;
 import com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView;
-import com.project.scratchstudio.kith_andoid.Model.User;
+import com.project.scratchstudio.kith_andoid.network.model.User;
 import com.project.scratchstudio.kith_andoid.R;
 
 public class TreeHolder extends RecyclerView.ViewHolder  {
