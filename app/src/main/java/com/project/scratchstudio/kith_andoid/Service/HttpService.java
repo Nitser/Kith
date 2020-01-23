@@ -610,7 +610,6 @@ public class HttpService {
                             newInfo.phone = obj.getString("user_phone");
                             newInfo.email = obj.getString("user_email");
                             newInfo.description = obj.getString("user_description");
-                            Log.i("SEARCH", newInfo.lastName);
                             list.add(newInfo);
                         }
                         TreeFragment.setListPersons(list);
@@ -680,7 +679,6 @@ public class HttpService {
                     if (response.length() != 0 && json.getBoolean(result_keys[0])) {
                         for (int i = 0; i < response.length(); i++) {
                             JSONObject obj = response.getJSONObject(i);
-                            Log.i("BORD RESPONSE", obj.toString());
                             AnnouncementInfo newInfo = new AnnouncementInfo();
 
                             newInfo.id = obj.getInt("board_id");

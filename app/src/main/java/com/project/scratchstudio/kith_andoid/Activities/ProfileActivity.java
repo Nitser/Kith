@@ -15,11 +15,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.project.scratchstudio.kith_andoid.network.model.User;
 import com.project.scratchstudio.kith_andoid.R;
 import com.project.scratchstudio.kith_andoid.Service.InternalStorageService;
 import com.project.scratchstudio.kith_andoid.Service.PicassoCircleTransformation;
 import com.project.scratchstudio.kith_andoid.SetInternalData.ClearUserIdAndToken;
+import com.project.scratchstudio.kith_andoid.network.model.User;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
@@ -27,7 +27,8 @@ public class ProfileActivity extends AppCompatActivity {
 
     private static long buttonCount = 0;
     private User user;
-    private TextView share;
+
+    private View share;
 
     private TextView name;
     private TextView surname;
@@ -49,9 +50,9 @@ public class ProfileActivity extends AppCompatActivity {
             TextView exit = findViewById(R.id.exit);
             exit.setVisibility(View.INVISIBLE);
 
-            Button share = findViewById(R.id.my_share);
+            final Button share = findViewById(R.id.my_share);
             share.setVisibility(View.GONE);
-            ImageView share2 = findViewById(R.id.share);
+            final ImageView share2 = findViewById(R.id.share);
             share2.setVisibility(View.VISIBLE);
         }
 
@@ -213,6 +214,7 @@ public class ProfileActivity extends AppCompatActivity {
         }
         buttonCount = SystemClock.elapsedRealtime();
         view.setEnabled(false);
+        share = view;
 
         String result = surname.getText() + " " + name.getText() + " " + middlename.getText() + "\n" + phone.getText() + "\n" + email.getText() + "\n"
                 + getString(R.string.signature);
