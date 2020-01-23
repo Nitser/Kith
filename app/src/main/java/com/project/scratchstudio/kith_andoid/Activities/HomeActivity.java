@@ -14,7 +14,7 @@ import com.project.scratchstudio.kith_andoid.Fragments.NewAnnouncementFragment;
 import com.project.scratchstudio.kith_andoid.Fragments.NewCommentFragment;
 import com.project.scratchstudio.kith_andoid.Fragments.TreeFragment;
 import com.project.scratchstudio.kith_andoid.Model.AnnouncementInfo;
-import com.project.scratchstudio.kith_andoid.network.model.User;
+import com.project.scratchstudio.kith_andoid.network.model.user.User;
 import com.project.scratchstudio.kith_andoid.R;
 import com.project.scratchstudio.kith_andoid.Service.InternalStorageService;
 import com.project.scratchstudio.kith_andoid.SetInternalData.SetUserIdAndToken;

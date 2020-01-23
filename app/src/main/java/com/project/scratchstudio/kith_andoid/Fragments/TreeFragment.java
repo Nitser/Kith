@@ -34,7 +34,7 @@ import com.project.scratchstudio.kith_andoid.Adapters.SearchAdapter;
 import com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView;
 import com.project.scratchstudio.kith_andoid.Holders.TreeHolder;
 import com.project.scratchstudio.kith_andoid.Model.SearchInfo;
-import com.project.scratchstudio.kith_andoid.network.model.User;
+import com.project.scratchstudio.kith_andoid.network.model.user.User;
 import com.project.scratchstudio.kith_andoid.R;
 import com.project.scratchstudio.kith_andoid.Service.HttpService;
 import com.project.scratchstudio.kith_andoid.Service.PicassoCircleTransformation;

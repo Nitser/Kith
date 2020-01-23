@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.project.scratchstudio.kith_andoid.Holders.TreeHolder;
-import com.project.scratchstudio.kith_andoid.network.model.User;
+import com.project.scratchstudio.kith_andoid.network.model.user.User;
 import com.project.scratchstudio.kith_andoid.R;
 import com.project.scratchstudio.kith_andoid.Service.PicassoCircleTransformation;
 import com.squareup.picasso.MemoryPolicy;

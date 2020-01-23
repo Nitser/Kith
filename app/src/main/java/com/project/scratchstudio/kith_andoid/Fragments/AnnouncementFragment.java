@@ -24,7 +24,7 @@ import com.project.scratchstudio.kith_andoid.R;
 import com.project.scratchstudio.kith_andoid.Service.HttpService;
 import com.project.scratchstudio.kith_andoid.network.ApiClient;
 import com.project.scratchstudio.kith_andoid.network.ApiService;
-import com.project.scratchstudio.kith_andoid.network.model.FavoriteResponse;
+import com.project.scratchstudio.kith_andoid.network.model.favorite.FavoriteResponse;
 
 import java.util.ArrayList;
 import java.util.List;

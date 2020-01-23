@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -19,9 +20,18 @@ import com.project.scratchstudio.kith_andoid.R;
 import com.project.scratchstudio.kith_andoid.Service.InternalStorageService;
 import com.project.scratchstudio.kith_andoid.Service.PicassoCircleTransformation;
 import com.project.scratchstudio.kith_andoid.SetInternalData.ClearUserIdAndToken;
-import com.project.scratchstudio.kith_andoid.network.model.User;
+import com.project.scratchstudio.kith_andoid.app.Const;
+import com.project.scratchstudio.kith_andoid.network.ApiClient;
+import com.project.scratchstudio.kith_andoid.network.ApiService;
+import com.project.scratchstudio.kith_andoid.network.model.referral.ReferralResponse;
+import com.project.scratchstudio.kith_andoid.network.model.user.User;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.observers.DisposableSingleObserver;
+import io.reactivex.schedulers.Schedulers;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -36,6 +46,9 @@ public class ProfileActivity extends AppCompatActivity {
     private TextView phone;
     private TextView email;
 
+    private ApiService apiService;
+    private CompositeDisposable disposable = new CompositeDisposable();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +56,8 @@ public class ProfileActivity extends AppCompatActivity {
 
         Bundle bundle = getIntent().getExtras();
         user = (User) bundle.getSerializable("user");
+
+        apiService = ApiClient.getClient(getApplication()).create(ApiService.class);
 
         if (user.getId() != HomeActivity.getMainUser().getId()) {
             ImageButton edit = findViewById(R.id.edit);
@@ -209,20 +224,47 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     public void onClickContactShare(View view) {
-        if (SystemClock.elapsedRealtime() - buttonCount < 1000) {
-            return;
-        }
-        buttonCount = SystemClock.elapsedRealtime();
         view.setEnabled(false);
         share = view;
+        disposable.add(
+                apiService.getReferralCode(HomeActivity.getMainUser().id)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(new DisposableSingleObserver<ReferralResponse>() {
+                            @Override
+                            public void onSuccess(ReferralResponse response) {
+                                Log.i("REf", response.getStatus() + " " + response.getReferral());
+                                String result = "ФИО: " + surname.getText() + " " + name.getText() + " " + middlename.getText() + "\n"
+                                        + (phone.getText().length() > 1 ? "Телефон: " + phone.getText() + "\n" : "")
+                                        + (email.getText().length() > 1 ? "Эл.почта: " + email.getText() + "\n" : "")
+                                        + (user.position.length() > 1 ? "Сфера деятельности: " + user.position + "\n" : "")
+                                        + "Приложение: " + Const.APP_URL + "\n"
+                                        + "Реф.код для регистрации: " + response.getReferral() + "\n"
+                                        + getString(R.string.signature);
 
-        String result = surname.getText() + " " + name.getText() + " " + middlename.getText() + "\n" + phone.getText() + "\n" + email.getText() + "\n"
-                + getString(R.string.signature);
+                                shareDate(result);
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                String result = "ФИО: " + surname.getText() + " " + name.getText() + " " + middlename.getText() + "\n"
+                                        + "Телефон: " + phone.getText() + "\n"
+                                        + "Эл.почта: " + email.getText() + "\n"
+                                        + "Сфера деятельности: " + user.position + "\n"
+                                        + "Приложение: " + Const.APP_URL + "\n"
+                                        + getString(R.string.signature);
+
+                                shareDate(result);
+                            }
+                        })
+        );
+    }
+
+    private void shareDate(String share) {
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
-        sendIntent.putExtra(Intent.EXTRA_TEXT, result);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, share);
         sendIntent.setType("text/plain");
         startActivityForResult(sendIntent, 0);
     }
-
 }

@@ -1,8 +1,9 @@
 package com.project.scratchstudio.kith_andoid.network;
 
-import com.project.scratchstudio.kith_andoid.network.model.BoardsResponse;
-import com.project.scratchstudio.kith_andoid.network.model.FavoriteResponse;
-import com.project.scratchstudio.kith_andoid.network.model.UserResponse;
+import com.project.scratchstudio.kith_andoid.network.model.board.BoardsResponse;
+import com.project.scratchstudio.kith_andoid.network.model.favorite.FavoriteResponse;
+import com.project.scratchstudio.kith_andoid.network.model.referral.ReferralResponse;
+import com.project.scratchstudio.kith_andoid.network.model.user.UserResponse;
 
 import io.reactivex.Observable;
 import io.reactivex.Single;
@@ -37,4 +38,7 @@ public interface ApiService {
     @GET("api/users/{id}")
     Single<UserResponse> getUser(@Path("id") int id);
 
+    @FormUrlEncoded
+    @POST("api/users/referral")
+    Single<ReferralResponse> getReferralCode(@Field("user_id") int id);
 }

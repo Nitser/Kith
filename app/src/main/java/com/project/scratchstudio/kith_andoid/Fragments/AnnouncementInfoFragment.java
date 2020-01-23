@@ -20,13 +20,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.project.scratchstudio.kith_andoid.Activities.HomeActivity;
-import com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView;
 import com.project.scratchstudio.kith_andoid.Model.AnnouncementInfo;
 import com.project.scratchstudio.kith_andoid.R;
 import com.project.scratchstudio.kith_andoid.network.ApiClient;
 import com.project.scratchstudio.kith_andoid.network.ApiService;
-import com.project.scratchstudio.kith_andoid.network.model.FavoriteResponse;
-import com.project.scratchstudio.kith_andoid.network.model.UserResponse;
+import com.project.scratchstudio.kith_andoid.network.model.favorite.FavoriteResponse;
+import com.project.scratchstudio.kith_andoid.network.model.user.UserResponse;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
@@ -175,7 +174,6 @@ public class AnnouncementInfoFragment extends Fragment {
 
     public void onClickProfile(View view) {
         view.setEnabled(false);
-        Log.i("AUTH", HomeActivity.getMainUser().getToken());
         disposable.add(
                 apiService.getUser(info.organizerId)
                         .subscribeOn(Schedulers.io())
