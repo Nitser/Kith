@@ -116,7 +116,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.v4.widget.SwipeRefreshLayout
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/swiperefresh"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -131,7 +131,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <android.support.constraint.ConstraintLayout
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center">
@@ -168,7 +168,7 @@
                             customAttrs:layout_constraintHorizontal_bias="0.915"
                             customAttrs:layout_constraintStart_toStartOf="parent" />
 
-                    </android.support.constraint.ConstraintLayout>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
                         android:id="@+id/name"
@@ -223,7 +223,7 @@
 
             </ScrollView>
 
-        </android.support.v4.widget.SwipeRefreshLayout>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
         <LinearLayout
             android:orientation="vertical"
@@ -233,7 +233,7 @@
             android:visibility="invisible"
             android:background="@color/colorPrimary">
 
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/listPerson"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>

@@ -3,15 +3,13 @@ package com.project.scratchstudio.kith_andoid.Adapters;
 import android.app.Activity;
 import android.icu.text.DateFormat;
 import android.icu.text.SimpleDateFormat;
-import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
-import android.support.v7.widget.RecyclerView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.project.scratchstudio.kith_andoid.Activities.HomeActivity;
 import com.project.scratchstudio.kith_andoid.Holders.DialogHolder;
 import com.project.scratchstudio.kith_andoid.Model.DialogInfo;
 import com.project.scratchstudio.kith_andoid.R;

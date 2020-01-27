@@ -1,12 +1,11 @@
 package com.project.scratchstudio.kith_andoid.Holders;
 
 import android.graphics.Color;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import com.project.scratchstudio.kith_andoid.Adapters.DialogAdapter;
 import com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView;

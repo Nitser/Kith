@@ -4,7 +4,7 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
 
-public class CustomFontTextView extends android.support.v7.widget.AppCompatTextView {
+public class CustomFontTextView extends androidx.appcompat.widget.AppCompatTextView {
 
     private static final String sScheme = "http://schemas.android.com/apk/res-auto";
     private static final String sAttribute = "customFont";

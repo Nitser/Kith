@@ -1,8 +1,8 @@
 package com.project.scratchstudio.kith_andoid.Adapters;
 
 import android.app.Activity;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +11,6 @@ import android.widget.Filterable;
 
 import com.project.scratchstudio.kith_andoid.Holders.MessageDialogHolder;
 import com.project.scratchstudio.kith_andoid.Model.AnnouncementInfo;
-import com.project.scratchstudio.kith_andoid.Model.SearchInfo;
 import com.project.scratchstudio.kith_andoid.R;
 import com.project.scratchstudio.kith_andoid.Service.PicassoCircleTransformation;
 import com.squareup.picasso.MemoryPolicy;
