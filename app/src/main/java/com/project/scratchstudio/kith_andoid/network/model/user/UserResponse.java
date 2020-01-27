@@ -4,9 +4,6 @@ import com.google.gson.annotations.SerializedName;
 import com.project.scratchstudio.kith_andoid.network.model.BaseResponse;
 
 public class UserResponse extends BaseResponse {
-
-    boolean status;
-
     @SerializedName("user")
     User user;
 
@@ -15,10 +12,6 @@ public class UserResponse extends BaseResponse {
 
     @SerializedName("referral_count")
     int referalCount;
-
-    public boolean getStatus() {
-        return status;
-    }
 
     public User getUser() {
         return user;

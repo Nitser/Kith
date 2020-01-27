@@ -5,9 +5,6 @@ import android.icu.text.DateFormat;
 import android.icu.text.SimpleDateFormat;
 import android.net.Uri;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,6 +28,9 @@ import com.squareup.picasso.Picasso;
 
 import java.util.Date;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.observers.DisposableSingleObserver;
@@ -39,7 +39,7 @@ import io.reactivex.schedulers.Schedulers;
 public class AnnouncementInfoFragment extends Fragment {
 
     private Bundle bundle;
-    int boardListId;
+    private int boardListId;
     private AnnouncementInfo info;
     private ApiService apiService;
     private CompositeDisposable disposable = new CompositeDisposable();
@@ -172,7 +172,7 @@ public class AnnouncementInfoFragment extends Fragment {
         startActivity(intent);
     }
 
-    public void onClickProfile(View view) {
+    void onClickProfile(View view) {
         view.setEnabled(false);
         disposable.add(
                 apiService.getUser(info.organizerId)
@@ -183,8 +183,9 @@ public class AnnouncementInfoFragment extends Fragment {
                             public void onSuccess(UserResponse response) {
                                 if (response.getStatus()) {
                                     response.getUser().setId(info.organizerId);
-                                    response.getUser().setUrl(response.getUser().photo.replaceAll("\\/", "/"));
-
+                                    if (response.getUser().photo != null) {
+                                        response.getUser().setUrl(response.getUser().photo.replaceAll("\\/", "/"));
+                                    }
                                     Bundle bundle = new Bundle();
                                     bundle.putBoolean("another_user", true);
                                     bundle.putSerializable("user", response.getUser());
@@ -192,7 +193,7 @@ public class AnnouncementInfoFragment extends Fragment {
                                     HomeActivity homeActivity = (HomeActivity) getActivity();
                                     homeActivity.loadFragment(TreeFragment.newInstance(bundle));
                                 } else {
-                                    Toast.makeText(getContext(), "Ошибка отправки запроса", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), "Ошибка отправки запроса, т.к false", Toast.LENGTH_SHORT).show();
                                     view.setEnabled(true);
                                 }
                             }
@@ -200,14 +201,14 @@ public class AnnouncementInfoFragment extends Fragment {
                             @Override
                             public void onError(Throwable e) {
                                 Log.e("BoardFragmentInfo", "onError: " + e.getMessage());
-                                Toast.makeText(getContext(), "Ошибка отправки запроса", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), "Ошибка отправки запроса, т.к error", Toast.LENGTH_SHORT).show();
                                 view.setEnabled(true);
                             }
                         })
         );
     }
 
-    public void onClickEdit(View view) {
+    void onClickEdit(View view) {
         HomeActivity homeActivity = (HomeActivity) getActivity();
         bundle.putBoolean("is_edit", true);
         bundle.putSerializable("board_list_id", boardListId);
