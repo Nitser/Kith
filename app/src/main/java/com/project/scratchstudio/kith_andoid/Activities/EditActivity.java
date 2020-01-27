@@ -134,7 +134,7 @@ public class EditActivity extends AppCompatActivity {
             }
             currentBitmap = photoService.changePhoto(currentBitmap, imageUri);
             currentBitmap = photoService.changePhoto(currentBitmap, imageUri);
-            currentBitmap = photoService.compressPhoto(currentBitmap, "");
+            currentBitmap = photoService.compressPhoto(currentBitmap);
             image.setImageBitmap(currentBitmap);
 //            HomeActivity.getMainUser().setUrl();
             photoButton.setEnabled(true);

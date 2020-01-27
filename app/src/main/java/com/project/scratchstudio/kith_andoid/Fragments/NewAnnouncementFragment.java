@@ -310,7 +310,7 @@ public class NewAnnouncementFragment extends Fragment {
                 photo = BitmapFactory.decodeStream(imageStream);
                 photo = photoService.changePhoto(photo, imageUri);
                 photo = photoService.resizeBitmap(photo, image.getWidth(), image.getHeight());
-                photo = photoService.compressPhoto(photo, path);
+                photo = photoService.compressPhoto(photo);
                 image.setImageBitmap(photo);
                 image.setScaleType(ImageView.ScaleType.CENTER_CROP);
             } catch (FileNotFoundException e) {

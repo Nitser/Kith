@@ -191,6 +191,7 @@ public class CheckInActivity extends AppCompatActivity {
         buttonCount = SystemClock.elapsedRealtime();
 
         view.setEnabled(false);
+
         Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(intent, 0);
     }
@@ -209,8 +210,7 @@ public class CheckInActivity extends AppCompatActivity {
                e.printStackTrace();
            }
            currentBitmap = photoService.changePhoto(currentBitmap, imageUri);
-           currentBitmap = photoService.changePhoto(currentBitmap, imageUri);
-           currentBitmap = photoService.compressPhoto(currentBitmap, "");
+           currentBitmap = photoService.compressPhoto(currentBitmap);
            image.setImageBitmap(currentBitmap);
            photoButton.setEnabled(true);
         }

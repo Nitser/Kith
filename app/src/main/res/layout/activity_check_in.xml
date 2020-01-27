@@ -94,7 +94,8 @@
                         android:src="@mipmap/person"
                         app:civ_border_color="@color/colorPrimaryDark"
                         app:civ_border_width="2dp"
-                        app:civ_circle_background_color="@color/colorAccent" />
+                        app:civ_circle_background_color="@color/colorAccent"
+                        tools:ignore="MissingConstraints" />
 
 
                     <ImageButton
