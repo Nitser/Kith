@@ -1,17 +1,12 @@
-package com.project.scratchstudio.kith_andoid.Adapters;
+package com.project.scratchstudio.kith_andoid.UI.Comments;
 
 import android.app.Activity;
 import android.icu.text.DateFormat;
 import android.icu.text.SimpleDateFormat;
-
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.project.scratchstudio.kith_andoid.Holders.DialogHolder;
-import com.project.scratchstudio.kith_andoid.Model.DialogInfo;
 import com.project.scratchstudio.kith_andoid.R;
 import com.project.scratchstudio.kith_andoid.Service.PicassoCircleTransformation;
 import com.project.scratchstudio.kith_andoid.network.model.comment.Comment;
@@ -19,26 +14,37 @@ import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class DialogAdapter extends RecyclerView.Adapter<DialogHolder>  {
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
-    public boolean newItem = false;
+public class DialogAdapter extends RecyclerView.Adapter<DialogHolder> {
 
     public interface OnItemClickListener {
         void onItemClick(Comment item);
     }
 
-    private List<Comment> dialogList;
-    private final DialogAdapter.OnItemClickListener listener;
+    private List<Comment> dialogList = new ArrayList<>();
+    private DialogAdapter.OnItemClickListener listener;
     private Activity activity;
 
-    public DialogAdapter(Activity activity, List<Comment> annInfos, DialogAdapter.OnItemClickListener listener) {
+    public DialogAdapter(Activity activity) {
         this.activity = activity;
-        dialogList = annInfos;
-        this.listener = listener;
     }
+
+    public void setDialogList(List<Comment> list) {
+        dialogList = list;
+    }
+
+    //TODO: for active comments
+//    public DialogAdapter(Activity activity, List<Comment> annInfos, DialogAdapter.OnItemClickListener listener) {
+//        this.activity = activity;
+//        dialogList = annInfos;
+//        this.listener = listener;
+//    }
 
     @NonNull
     @Override
@@ -63,8 +69,9 @@ public class DialogAdapter extends RecyclerView.Adapter<DialogHolder>  {
                 newDateFormat = inputFormat.parse(comment.getTimestamp().replaceAll("\\s.*$", ""));
                 String outputDateStr = outputFormat.format(newDateFormat);
                 holder.date.setText(outputDateStr);
-            } else
+            } else {
                 holder.date.setText(comment.getTimestamp().replaceAll("\\s.*$", ""));
+            }
 
         } catch (ParseException e) {
             e.printStackTrace();
@@ -73,10 +80,10 @@ public class DialogAdapter extends RecyclerView.Adapter<DialogHolder>  {
 
         holder.comment.setText(comment.getMessage());
         Picasso.with(activity).load(comment.getUser().photo.replaceAll("@[0-9]*", ""))
-                        .transform(new PicassoCircleTransformation())
-                        .error(com.project.scratchstudio.kith_andoid.R.mipmap.person)
-                        .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
-                        .into(holder.photo);
+                .transform(new PicassoCircleTransformation())
+                .error(com.project.scratchstudio.kith_andoid.R.mipmap.person)
+                .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
+                .into(holder.photo);
         holder.bind(comment, listener);
     }
 
@@ -85,8 +92,7 @@ public class DialogAdapter extends RecyclerView.Adapter<DialogHolder>  {
         return dialogList.size();
     }
 
-    public long getItemId(int position)
-    {
+    public long getItemId(int position) {
         return position;
     }
 

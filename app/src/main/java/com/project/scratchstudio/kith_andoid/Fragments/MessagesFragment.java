@@ -20,6 +20,7 @@ import com.project.scratchstudio.kith_andoid.Activities.HomeActivity;
 import com.project.scratchstudio.kith_andoid.Adapters.MessageDialogAdapter;
 import com.project.scratchstudio.kith_andoid.R;
 import com.project.scratchstudio.kith_andoid.Service.HttpService;
+import com.project.scratchstudio.kith_andoid.UI.Comments.DialogFragment;
 
 public class MessagesFragment extends Fragment {
 
