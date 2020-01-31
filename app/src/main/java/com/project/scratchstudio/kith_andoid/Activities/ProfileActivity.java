@@ -6,7 +6,6 @@ import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.SystemClock;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -28,6 +27,7 @@ import com.project.scratchstudio.kith_andoid.network.model.user.User;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
+import androidx.appcompat.app.AppCompatActivity;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.observers.DisposableSingleObserver;
@@ -83,12 +83,15 @@ public class ProfileActivity extends AppCompatActivity {
             email = findViewById(R.id.email);
             phone = findViewById(R.id.phone);
 
-            Picasso.with(this).load(user.getUrl().replaceAll("@[0-9]*", ""))
-                    .placeholder(R.mipmap.person)
-                    .error(R.mipmap.person)
-                    .transform(new PicassoCircleTransformation())
-                    .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
-                    .into(photo);
+            if (user.getUrl() != null) {
+                Picasso.with(this).load(user.getUrl().replaceAll("@[0-9]*", ""))
+                        .placeholder(R.mipmap.person)
+                        .error(R.mipmap.person)
+                        .transform(new PicassoCircleTransformation())
+                        .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
+                        .into(photo);
+            }
+
             name.setText(user.getFirstName());
             surname.setText(user.getLastName());
             phone.setText(user.getPhone());
@@ -175,12 +178,14 @@ public class ProfileActivity extends AppCompatActivity {
         TextView email = findViewById(R.id.email);
 
         User user = HomeActivity.getMainUser();
-        Picasso.with(this).load(user.getUrl().replaceAll("@[0-9]*", ""))
-                .placeholder(R.mipmap.person)
-                .error(R.mipmap.person)
-                .transform(new PicassoCircleTransformation())
-                .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
-                .into(photo);
+        if (user.getUrl() != null) {
+            Picasso.with(this).load(user.getUrl().replaceAll("@[0-9]*", ""))
+                    .placeholder(R.mipmap.person)
+                    .error(R.mipmap.person)
+                    .transform(new PicassoCircleTransformation())
+                    .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
+                    .into(photo);
+        }
         name.setText(user.getFirstName());
         surname.setText(user.getLastName());
         phone.setText(user.getPhone());

@@ -6,9 +6,11 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-public class User implements Serializable{
+public class User implements Serializable {
 
+    @SerializedName("user_id")
     public int id;
+
     private String token;
     private String password;
     private String url;

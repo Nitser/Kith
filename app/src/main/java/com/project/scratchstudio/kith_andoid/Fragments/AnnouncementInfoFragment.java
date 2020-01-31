@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.project.scratchstudio.kith_andoid.Activities.HomeActivity;
+import com.project.scratchstudio.kith_andoid.Activities.ProfileActivity;
 import com.project.scratchstudio.kith_andoid.Model.AnnouncementInfo;
 import com.project.scratchstudio.kith_andoid.R;
 import com.project.scratchstudio.kith_andoid.network.ApiClient;
@@ -182,18 +183,25 @@ public class AnnouncementInfoFragment extends Fragment {
                             @Override
                             public void onSuccess(UserResponse response) {
                                 if (response.getStatus()) {
+                                    Log.i("Get User Resp", response.toString());
                                     response.getUser().setId(info.organizerId);
                                     if (response.getUser().photo != null) {
                                         response.getUser().setUrl(response.getUser().photo.replaceAll("\\/", "/"));
                                     }
                                     Bundle bundle = new Bundle();
                                     bundle.putBoolean("another_user", true);
-                                    bundle.putSerializable("user", response.getUser());
-                                    HomeActivity.getStackBundles().add(bundle);
-                                    HomeActivity homeActivity = (HomeActivity) getActivity();
-                                    homeActivity.loadFragment(TreeFragment.newInstance(bundle));
+                                    Intent intent = new Intent(getContext(), ProfileActivity.class);
+                                    intent.putExtra("user", response.getUser());
+
+                                    if (response.getUser().id != HomeActivity.getMainUser().id) {
+                                        intent.putExtra("another_user", true);
+                                    } else {
+                                        intent.putExtra("another_user", false);
+                                    }
+
+                                    startActivity(intent);
                                 } else {
-                                    Toast.makeText(getContext(), "Ошибка отправки запроса, т.к false", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), "Ошибка отправки запроса", Toast.LENGTH_SHORT).show();
                                     view.setEnabled(true);
                                 }
                             }
@@ -201,7 +209,7 @@ public class AnnouncementInfoFragment extends Fragment {
                             @Override
                             public void onError(Throwable e) {
                                 Log.e("BoardFragmentInfo", "onError: " + e.getMessage());
-                                Toast.makeText(getContext(), "Ошибка отправки запроса, т.к error", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), "Ошибка отправки запроса", Toast.LENGTH_SHORT).show();
                                 view.setEnabled(true);
                             }
                         })
