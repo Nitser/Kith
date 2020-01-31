@@ -896,6 +896,7 @@ public class HttpService {
         HttpPostRequest httpPostRequest = new HttpPostRequest(activity, header_keys, body_keys, header_data, body_data, ((output, resultJSON, code) -> {
             if (output && resultJSON != null) {
                 try {
+                    Log.i("Comm Resp", resultJSON);
                     JSONObject json = new JSONObject(resultJSON);
                     JSONArray response = json.getJSONArray("comments");
                     List<DialogInfo> list = new ArrayList<>();
@@ -914,8 +915,8 @@ public class HttpService {
                             newInfo.date = obj.getString(result_keys[1]);
                             list.add(newInfo);
                         }
-                        DialogFragment.setListMessages(list);
-                        if(fragment != null) fragment.setAdapter();
+//                        DialogFragment.setListMessages(list);
+//                        if(fragment != null) fragment.setAdapter();
                     }
                 } catch (JSONException e) {
                     if (activity != null) Toast.makeText(activity, getErrorMessage(code), Toast.LENGTH_SHORT).show();

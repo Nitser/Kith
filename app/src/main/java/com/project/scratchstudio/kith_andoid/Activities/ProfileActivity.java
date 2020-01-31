@@ -21,7 +21,7 @@ import com.project.scratchstudio.kith_andoid.Service.PicassoCircleTransformation
 import com.project.scratchstudio.kith_andoid.SetInternalData.ClearUserIdAndToken;
 import com.project.scratchstudio.kith_andoid.app.Const;
 import com.project.scratchstudio.kith_andoid.network.ApiClient;
-import com.project.scratchstudio.kith_andoid.network.ApiService;
+import com.project.scratchstudio.kith_andoid.network.apiService.ApiService;
 import com.project.scratchstudio.kith_andoid.network.model.referral.ReferralResponse;
 import com.project.scratchstudio.kith_andoid.network.model.user.User;
 import com.squareup.picasso.MemoryPolicy;

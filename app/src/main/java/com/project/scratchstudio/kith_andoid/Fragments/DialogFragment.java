@@ -1,15 +1,7 @@
 package com.project.scratchstudio.kith_andoid.Fragments;
 
-import android.content.Context;
-import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.SystemClock;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,30 +13,39 @@ import android.widget.Toast;
 import com.project.scratchstudio.kith_andoid.Activities.HomeActivity;
 import com.project.scratchstudio.kith_andoid.Adapters.DialogAdapter;
 import com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView;
-import com.project.scratchstudio.kith_andoid.Model.DialogInfo;
 import com.project.scratchstudio.kith_andoid.R;
-import com.project.scratchstudio.kith_andoid.Service.HttpService;
+import com.project.scratchstudio.kith_andoid.network.ApiClient;
+import com.project.scratchstudio.kith_andoid.network.apiService.CommentApi;
+import com.project.scratchstudio.kith_andoid.network.model.comment.Comment;
+import com.project.scratchstudio.kith_andoid.network.model.comment.CommentResponse;
 
-import net.mrbin99.laravelechoandroid.Echo;
-import net.mrbin99.laravelechoandroid.EchoOptions;
-
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.observers.DisposableSingleObserver;
+import io.reactivex.schedulers.Schedulers;
 
 public class DialogFragment extends Fragment {
     private static long buttonCount = 0;
     private Bundle bundle;
-    private Echo echo;
     private int boardId;
     private String boardTitle;
     private RecyclerView listView;
     private DialogAdapter adapter;
+    private CommentApi commentApi;
+    private CompositeDisposable disposable = new CompositeDisposable();
 
-    private static List<DialogInfo> listMessages  = new ArrayList<>();
+    private static List<Comment> listMessages;
 
-    public static void setListMessages ( List<DialogInfo> list ) { listMessages = list; }
-
-    public DialogFragment() {}
+    public DialogFragment() {
+    }
 
     public static DialogFragment newInstance(Bundle bundle) {
         DialogFragment fragment = new DialogFragment();
@@ -62,60 +63,55 @@ public class DialogFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        if(isNetworkConnected()) {
-            HttpService httpService = new HttpService();
-            httpService.getComments(getActivity(), HomeActivity.getMainUser(), this, boardId);
-        } else Toast.makeText(getActivity(), "Нет подключения к интернету", Toast.LENGTH_SHORT).show();
+        commentApi = ApiClient.getClient(getContext()).create(CommentApi.class);
+        getComments();
 
         setButtonsListener();
 
         listView = getActivity().findViewById(R.id.listDialog);
         LinearLayoutManager llm = new LinearLayoutManager(getContext());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
-//        llm.setStackFromEnd(true);
         listView.setLayoutManager(llm);
         CustomFontTextView title = getActivity().findViewById(R.id.title);
         title.setText(boardTitle);
-        setNewMessageListener();
     }
 
-    public void setNewMessageListener(){
-        EchoOptions options = new EchoOptions();
+    private void getComments() {
+        disposable.add(
+                commentApi.getComments(boardId, "0", "50", "2019-06-22 22:22:22")
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(new DisposableSingleObserver<CommentResponse>() {
+                            @Override
+                            public void onSuccess(CommentResponse response) {
+                                for (Comment comment : response.getComments()) {
+                                    comment.getUser().photo = comment.getUser().photo.replaceAll("\\/", "/");
+                                }
+                                listMessages = Arrays.asList(response.getComments());
+                                setAdapter();
+                            }
 
-        options.host = "http://dev.kith.ml:6001";
-        options.headers.put("Authorization", HomeActivity.getMainUser().getToken());
-
-        echo = new Echo(options);
-        echo.connect(args -> {
-            // Success connect
-            Log.i("ECHO", "ok");
-        }, args -> {
-            // Error connect
-            Log.i("ECHO", "error");
-        });
+                            @Override
+                            public void onError(Throwable e) {
+                                Log.e("BoardFragmentInfo", "onError: " + e.getMessage());
+                                Toast.makeText(getContext(), "Ошибка отправки запроса", Toast.LENGTH_SHORT).show();
+                            }
+                        })
+        );
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        echo.disconnect();
-    }
-
-    public void setAdapter(){
+    public void setAdapter() {
         adapter = new DialogAdapter(getActivity(), listMessages, item -> {
-            if (SystemClock.elapsedRealtime() - buttonCount < 1000){
+            if (SystemClock.elapsedRealtime() - buttonCount < 1000) {
                 return;
             }
             buttonCount = SystemClock.elapsedRealtime();
-//            view.setEnabled(false);
-
-//            view.setEnabled(true);
         });
 //        listView.smoothScrollToPosition(adapter.getItemCount()-1);
         listView.setAdapter(adapter);
     }
 
-    private void setButtonsListener(){
+    private void setButtonsListener() {
         ImageButton back = getActivity().findViewById(R.id.back);
         back.setOnClickListener(this::onClickBack);
         LinearLayout send = getActivity().findViewById(R.id.new_c);
@@ -133,34 +129,29 @@ public class DialogFragment extends Fragment {
         return true;
     }
 
-    public void onClickSend(View view){
+    public void onClickSend(View view) {
         HomeActivity homeActivity = (HomeActivity) getActivity();
         homeActivity.loadFragment(NewCommentFragment.newInstance(bundle));
     }
 
-    public void createNewComment(String message){
-        DialogInfo newDialog = new DialogInfo();
-        newDialog.user_id = HomeActivity.getMainUser().getId();
-        newDialog.message = message;
-        newDialog.photo = HomeActivity.getMainUser().getUrl();
-
-        adapter.newItem = true;
-        listMessages.add(newDialog);
-        listView.smoothScrollToPosition(adapter.getItemCount()-1);
-        adapter.notifyDataSetChanged();
+    public void createNewComment(String message) {
+//        DialogInfo newDialog = new DialogInfo();
+//        newDialog.user_id = HomeActivity.getMainUser().getId();
+//        newDialog.message = message;
+//        newDialog.photo = HomeActivity.getMainUser().getUrl();
+//
+//        adapter.newItem = true;
+//        listMessages.add(newDialog);
+//        listView.smoothScrollToPosition(adapter.getItemCount() - 1);
+//        adapter.notifyDataSetChanged();
 //        listView.scrollToPosition(adapter.getItemCount()-1);
     }
 
-    public void addNewComment(){
-        DialogInfo dialogInfo = (DialogInfo) bundle.getSerializable("new_comment");
-        listMessages.add(dialogInfo);
-        listView.smoothScrollToPosition(adapter.getItemCount()-1);
-        adapter.notifyDataSetChanged();
-    }
-
-    private boolean isNetworkConnected() {
-        ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        return (cm != null && cm.getActiveNetworkInfo() != null) ;
+    public void addNewComment() {
+//        DialogInfo dialogInfo = (DialogInfo) bundle.getSerializable("new_comment");
+//        listMessages.add(dialogInfo);
+//        listView.smoothScrollToPosition(adapter.getItemCount() - 1);
+//        adapter.notifyDataSetChanged();
     }
 
 }

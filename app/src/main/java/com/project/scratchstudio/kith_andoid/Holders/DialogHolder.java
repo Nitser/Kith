@@ -1,16 +1,17 @@
 package com.project.scratchstudio.kith_andoid.Holders;
 
 import android.graphics.Color;
-import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.project.scratchstudio.kith_andoid.Adapters.DialogAdapter;
 import com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView;
-import com.project.scratchstudio.kith_andoid.Model.DialogInfo;
 import com.project.scratchstudio.kith_andoid.R;
+import com.project.scratchstudio.kith_andoid.network.model.comment.Comment;
+
+import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class DialogHolder extends RecyclerView.ViewHolder {
 
@@ -33,12 +34,11 @@ public class DialogHolder extends RecyclerView.ViewHolder {
         photo = itemView.findViewById(R.id.photo);
 
         cardView = itemView.findViewById(R.id.card_view);
-//        cardView.setCardBackgroundColor(Color.TRANSPARENT);
         cardView.setCardBackgroundColor(Color.parseColor("#eff1f2"));
         cardView.setCardElevation(0);
     }
 
-    public void bind(final DialogInfo item, final DialogAdapter.OnItemClickListener listener) {
+    public void bind(final Comment item, final DialogAdapter.OnItemClickListener listener) {
         itemView.setOnClickListener(v -> listener.onItemClick(item));
     }
 }

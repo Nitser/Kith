@@ -21,7 +21,7 @@ import com.project.scratchstudio.kith_andoid.Activities.ProfileActivity;
 import com.project.scratchstudio.kith_andoid.Model.AnnouncementInfo;
 import com.project.scratchstudio.kith_andoid.R;
 import com.project.scratchstudio.kith_andoid.network.ApiClient;
-import com.project.scratchstudio.kith_andoid.network.ApiService;
+import com.project.scratchstudio.kith_andoid.network.apiService.ApiService;
 import com.project.scratchstudio.kith_andoid.network.model.favorite.FavoriteResponse;
 import com.project.scratchstudio.kith_andoid.network.model.user.UserResponse;
 import com.squareup.picasso.MemoryPolicy;

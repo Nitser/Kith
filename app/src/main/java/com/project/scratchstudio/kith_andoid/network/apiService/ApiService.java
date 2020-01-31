@@ -1,4 +1,4 @@
-package com.project.scratchstudio.kith_andoid.network;
+package com.project.scratchstudio.kith_andoid.network.apiService;
 
 import com.project.scratchstudio.kith_andoid.network.model.board.BoardsResponse;
 import com.project.scratchstudio.kith_andoid.network.model.favorite.FavoriteResponse;
