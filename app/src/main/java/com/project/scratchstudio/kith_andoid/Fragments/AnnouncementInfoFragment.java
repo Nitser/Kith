@@ -18,11 +18,13 @@ import android.widget.Toast;
 
 import com.project.scratchstudio.kith_andoid.Activities.HomeActivity;
 import com.project.scratchstudio.kith_andoid.Activities.ProfileActivity;
-import com.project.scratchstudio.kith_andoid.Model.AnnouncementInfo;
 import com.project.scratchstudio.kith_andoid.R;
+import com.project.scratchstudio.kith_andoid.UI.Board.BoardsFragment;
 import com.project.scratchstudio.kith_andoid.UI.Comments.DialogFragment;
 import com.project.scratchstudio.kith_andoid.network.ApiClient;
-import com.project.scratchstudio.kith_andoid.network.apiService.ApiService;
+import com.project.scratchstudio.kith_andoid.network.apiService.BoardApi;
+import com.project.scratchstudio.kith_andoid.network.apiService.UserApi;
+import com.project.scratchstudio.kith_andoid.network.model.board.Board;
 import com.project.scratchstudio.kith_andoid.network.model.favorite.FavoriteResponse;
 import com.project.scratchstudio.kith_andoid.network.model.user.UserResponse;
 import com.squareup.picasso.MemoryPolicy;
@@ -42,8 +44,9 @@ public class AnnouncementInfoFragment extends Fragment {
 
     private Bundle bundle;
     private int boardListId;
-    private AnnouncementInfo info;
-    private ApiService apiService;
+    private Board info;
+    private BoardApi boardApi;
+    private UserApi userApi;
     private CompositeDisposable disposable = new CompositeDisposable();
 
     public void setIsJoin(boolean bol) {
@@ -64,7 +67,7 @@ public class AnnouncementInfoFragment extends Fragment {
         bundle.putBoolean("is_edit", false);
         if (bundle != null) {
             boardListId = bundle.getInt("board_list_id");
-            info = AnnouncementFragment.getListAnn().get(boardListId);
+            info = BoardsFragment.getListAnn().get(boardListId);
         }
         return inflater.inflate(R.layout.fragment_announcement_information, container, false);
     }
@@ -152,7 +155,8 @@ public class AnnouncementInfoFragment extends Fragment {
             setIsJoin(true);
         }
 
-        apiService = ApiClient.getClient(getContext()).create(ApiService.class);
+        userApi = ApiClient.getClient(getContext()).create(UserApi.class);
+        boardApi = ApiClient.getClient(getContext()).create(BoardApi.class);
     }
 
     private void setButtonsListener() {
@@ -177,7 +181,7 @@ public class AnnouncementInfoFragment extends Fragment {
     void onClickProfile(View view) {
         view.setEnabled(false);
         disposable.add(
-                apiService.getUser(info.organizerId)
+                userApi.getUser(info.organizerId)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeWith(new DisposableSingleObserver<UserResponse>() {
@@ -226,12 +230,12 @@ public class AnnouncementInfoFragment extends Fragment {
 
     public void onClickBack(View view) {
         HomeActivity homeActivity = (HomeActivity) getActivity();
-        homeActivity.loadFragment(AnnouncementFragment.newInstance(bundle));
+        homeActivity.loadFragment(BoardsFragment.newInstance(bundle));
     }
 
     public boolean onBackPressed() {
         HomeActivity homeActivity = (HomeActivity) getActivity();
-        homeActivity.loadFragment(AnnouncementFragment.newInstance(bundle));
+        homeActivity.loadFragment(BoardsFragment.newInstance(bundle));
         return true;
     }
 
@@ -251,9 +255,9 @@ public class AnnouncementInfoFragment extends Fragment {
         }
     }
 
-    public void subscribeAnnouncement(int user_id, AnnouncementInfo board, CheckBox favorite) {
+    public void subscribeAnnouncement(int user_id, Board board, CheckBox favorite) {
         disposable.add(
-                apiService.subscribeAnnouncement(String.valueOf(user_id), String.valueOf(board.id))
+                boardApi.subscribeAnnouncement(String.valueOf(user_id), String.valueOf(board.id))
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeWith(new DisposableSingleObserver<FavoriteResponse>() {
@@ -271,7 +275,7 @@ public class AnnouncementInfoFragment extends Fragment {
 
                             @Override
                             public void onError(Throwable e) {
-                                Log.e("AnnouncementFragment", "onError: " + e.getMessage());
+                                Log.e("BoardsFragment", "onError: " + e.getMessage());
                                 Toast.makeText(getContext(), "Ошибка отправки запроса", Toast.LENGTH_SHORT).show();
                                 favorite.setChecked(!favorite.isChecked());
                                 favorite.setEnabled(true);
@@ -280,9 +284,9 @@ public class AnnouncementInfoFragment extends Fragment {
         );
     }
 
-    public void unsubscribeAnnouncement(int user_id, AnnouncementInfo board, CheckBox favorite) {
+    public void unsubscribeAnnouncement(int user_id, Board board, CheckBox favorite) {
         disposable.add(
-                apiService.unsubscribeAnnouncement(String.valueOf(user_id), String.valueOf(board.id))
+                boardApi.unsubscribeAnnouncement(String.valueOf(user_id), String.valueOf(board.id))
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeWith(new DisposableSingleObserver<FavoriteResponse>() {
@@ -300,7 +304,7 @@ public class AnnouncementInfoFragment extends Fragment {
 
                             @Override
                             public void onError(Throwable e) {
-                                Log.e("AnnouncementFragment", "onError: " + e.getMessage());
+                                Log.e("BoardsFragment", "onError: " + e.getMessage());
                                 Toast.makeText(getContext(), "Ошибка отправки запроса", Toast.LENGTH_SHORT).show();
                                 favorite.setChecked(!favorite.isChecked());
                                 favorite.setEnabled(true);

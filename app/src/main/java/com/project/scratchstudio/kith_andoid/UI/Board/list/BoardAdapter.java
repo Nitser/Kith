@@ -1,56 +1,60 @@
-package com.project.scratchstudio.kith_andoid.Adapters;
+package com.project.scratchstudio.kith_andoid.UI.Board.list;
 
 import android.app.Activity;
 import android.icu.text.DateFormat;
 import android.icu.text.SimpleDateFormat;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.project.scratchstudio.kith_andoid.Activities.HomeActivity;
-import com.project.scratchstudio.kith_andoid.Fragments.AnnouncementFragment;
-import com.project.scratchstudio.kith_andoid.Holders.AnnouncementHolder;
-import com.project.scratchstudio.kith_andoid.Model.AnnouncementInfo;
 import com.project.scratchstudio.kith_andoid.R;
+import com.project.scratchstudio.kith_andoid.UI.Board.BoardsFragment;
+import com.project.scratchstudio.kith_andoid.network.model.board.Board;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class AnnouncementAdapter extends RecyclerView.Adapter<AnnouncementHolder> {
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+public class BoardAdapter extends RecyclerView.Adapter<BoardHolder> {
 
     public interface OnItemClickListener {
-        void onItemClick(AnnouncementInfo item, int id);
+        void onItemClick(Board item, int id);
     }
 
-    private List<AnnouncementInfo> annList;
+    private List<Board> annList = new ArrayList<>();
     private final OnItemClickListener listener;
-    private final AnnouncementFragment fragment;
+    private final BoardsFragment fragment;
     private Activity activity;
 
-    public AnnouncementAdapter(Activity activity, List<AnnouncementInfo> annInfos, OnItemClickListener listener, AnnouncementFragment fragment) {
+    public void setAnnList(List<Board> annList) {
+        this.annList = annList;
+    }
+
+    public BoardAdapter(Activity activity, OnItemClickListener listener, BoardsFragment fragment) {
         this.activity = activity;
-        this.annList = annInfos;
         this.listener = listener;
         this.fragment = fragment;
     }
 
     @NonNull
     @Override
-    public AnnouncementHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+    public BoardHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View itemView = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.card_list_item_layout, viewGroup, false);
-        return new AnnouncementHolder(itemView);
+        return new BoardHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull AnnouncementHolder holder, int i) {
-        AnnouncementInfo annInfo = annList.get(i);
-        holder.title.setText(annInfo.title);
-        if (annInfo.subscriptionOnBoard == 1) {
+    public void onBindViewHolder(@NonNull BoardHolder holder, int i) {
+        Board board = annList.get(i);
+        holder.title.setText(board.title);
+        if (board.subscriptionOnBoard == 1) {
             holder.favorite.setChecked(true);
         }
 
@@ -59,19 +63,19 @@ public class AnnouncementAdapter extends RecyclerView.Adapter<AnnouncementHolder
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
                 inputFormat = new SimpleDateFormat("yyyy-MM-dd");
                 DateFormat outputFormat = new SimpleDateFormat("dd.MM.yyyy");
-                Date date = inputFormat.parse(annInfo.endDate.replaceAll("\\s.*$", ""));
+                Date date = inputFormat.parse(board.endDate.replaceAll("\\s.*$", ""));
                 String outputDateStr = outputFormat.format(date);
                 holder.date.setText(outputDateStr);
             } else {
-                holder.date.setText(annInfo.endDate.replaceAll("\\s.*$", ""));
+                holder.date.setText(board.endDate.replaceAll("\\s.*$", ""));
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        if (annInfo.url != null && !annInfo.url.equals("null") && !annInfo.url.equals("")) {
-            Picasso.with(activity).load(annInfo.url)
+        if (board.url != null && !board.url.equals("null") && !board.url.equals("")) {
+            Picasso.with(activity).load(board.url)
                     .error(R.drawable.newspaper)
                     .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
                     .into(holder.image);
@@ -80,14 +84,14 @@ public class AnnouncementAdapter extends RecyclerView.Adapter<AnnouncementHolder
 
         holder.favorite.setOnClickListener(l -> {
             holder.favorite.setEnabled(false);
-            if (annInfo.subscriptionOnBoard != 1) {
-                fragment.subscribeAnnouncement(HomeActivity.getMainUser().getId(), annInfo, holder.favorite);
+            if (board.subscriptionOnBoard != 1) {
+                fragment.subscribeAnnouncement(HomeActivity.getMainUser().getId(), board, holder.favorite);
             } else {
-                fragment.unsubscribeAnnouncement(HomeActivity.getMainUser().getId(), annInfo, holder.favorite);
+                fragment.unsubscribeAnnouncement(HomeActivity.getMainUser().getId(), board, holder.favorite);
             }
         });
 
-        holder.bind(annInfo, listener, i);
+        holder.bind(board, listener, i);
     }
 
 

@@ -1,4 +1,4 @@
-package com.project.scratchstudio.kith_andoid.Holders;
+package com.project.scratchstudio.kith_andoid.UI.Board.list;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -6,13 +6,12 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 
-import com.project.scratchstudio.kith_andoid.Adapters.AnnouncementAdapter;
 import com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView;
-import com.project.scratchstudio.kith_andoid.Model.AnnouncementInfo;
 import com.project.scratchstudio.kith_andoid.R;
+import com.project.scratchstudio.kith_andoid.network.model.board.Board;
 
 
-public class AnnouncementHolder extends RecyclerView.ViewHolder  {
+public class BoardHolder extends RecyclerView.ViewHolder  {
 
     public ImageView image;
     public View bluring;
@@ -20,7 +19,7 @@ public class AnnouncementHolder extends RecyclerView.ViewHolder  {
     public CustomFontTextView date;
     public CheckBox favorite;
 
-    public AnnouncementHolder(@NonNull View itemView){
+    public BoardHolder(@NonNull View itemView){
         super(itemView);
         image = itemView.findViewById(R.id.photo);
         bluring = itemView.findViewById(R.id.view);
@@ -29,7 +28,7 @@ public class AnnouncementHolder extends RecyclerView.ViewHolder  {
         favorite = itemView.findViewById(R.id.favorite);
     }
 
-    public void bind(final AnnouncementInfo item, final AnnouncementAdapter.OnItemClickListener listener, int id) {
+    public void bind(final Board item, final BoardAdapter.OnItemClickListener listener, int id) {
         itemView.setOnClickListener(v -> listener.onItemClick(item, id));
     }
 }

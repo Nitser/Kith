@@ -10,23 +10,45 @@ public class Board extends BaseResponse {
     @SerializedName("board_title")
     public String title;
 
-//    public int enabled;
-//    public int boardSubscription;
-//    public int subscriptionOnBoard;
-//
-//    public String startDate;
-//    public String endDate;
-//
-//    public String participants;
-//    public String needParticipants;
-//    public String url;
-//    public String description;
-//
-//    public int organizerId;
-//    public String organizerName;
-//    public String organizerLastName;
-//    public String organizerMiddleName;
-//    public String organizerLogin;
-//    public String organizerPhoto;
-//    public String organizerPhone;
+    @SerializedName("board_enabled")
+    public int enabled;
+
+    @SerializedName("subscription_on_board")
+    public int subscriptionOnBoard;
+
+    @SerializedName("board_date_created")
+    public String startDate;
+
+    @SerializedName("board_date_end")
+    public String endDate;
+
+    @SerializedName("board_current_subscriptions")
+    public String participants;
+
+    @SerializedName("board_needs_subscriptions")
+    public String needParticipants;
+
+    @SerializedName("board_photo")
+    public String url;
+
+    @SerializedName("board_description")
+    public String description;
+
+    @SerializedName("board_user_id")
+    public int organizerId;
+
+    @SerializedName("user_phone")
+    public String organizerPhone;
+
+    @SerializedName("board_subscriptions")
+    public int boardSubscription;
+
+    @SerializedName("owner_firstname")
+    public String organizerFirstName;
+
+    @SerializedName("owner_lastname")
+    public String organizerLastName;
+
+    public String organizerName;
+
 }

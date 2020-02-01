@@ -1,13 +1,6 @@
-package com.project.scratchstudio.kith_andoid.Fragments;
+package com.project.scratchstudio.kith_andoid.UI.Board;
 
-import android.content.Context;
-import android.net.ConnectivityManager;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,51 +11,56 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.project.scratchstudio.kith_andoid.Activities.HomeActivity;
-import com.project.scratchstudio.kith_andoid.Adapters.AnnouncementAdapter;
-import com.project.scratchstudio.kith_andoid.Model.AnnouncementInfo;
+import com.project.scratchstudio.kith_andoid.Fragments.AnnouncementInfoFragment;
+import com.project.scratchstudio.kith_andoid.Fragments.NewAnnouncementFragment;
+import com.project.scratchstudio.kith_andoid.Fragments.TreeFragment;
 import com.project.scratchstudio.kith_andoid.R;
-import com.project.scratchstudio.kith_andoid.Service.HttpService;
+import com.project.scratchstudio.kith_andoid.UI.Board.list.BoardAdapter;
 import com.project.scratchstudio.kith_andoid.network.ApiClient;
-import com.project.scratchstudio.kith_andoid.network.apiService.ApiService;
+import com.project.scratchstudio.kith_andoid.network.apiService.BoardApi;
+import com.project.scratchstudio.kith_andoid.network.model.board.Board;
+import com.project.scratchstudio.kith_andoid.network.model.board.BoardsResponse;
 import com.project.scratchstudio.kith_andoid.network.model.favorite.FavoriteResponse;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 
-public class AnnouncementFragment extends Fragment {
+public class BoardsFragment extends Fragment {
 
-    private String type = "all";
+    private BoardType type = BoardType.ALL;
     private Bundle bundle;
     private RecyclerView container;
-    private AnnouncementAdapter adapter;
+    private BoardAdapter adapter;
 
-    private ApiService apiService;
+    private BoardApi boardApi;
     private CompositeDisposable disposable = new CompositeDisposable();
 
-    public String getType() {
-        return type;
-    }
+    private static List<Board> listAnn = new ArrayList<>();
 
-    private static List<AnnouncementInfo> listAnn = new ArrayList<>();
-
-    public static List<AnnouncementInfo> getListAnn() {
+    public static List<Board> getListAnn() {
         return listAnn;
     }
 
-    public static void setListAnn(List<AnnouncementInfo> list) {
+    public static void setListAnn(List<Board> list) {
         listAnn = list;
     }
 
-    public AnnouncementFragment() {
+    public BoardsFragment() {
     }
 
-    public static AnnouncementFragment newInstance(Bundle bundle) {
-        AnnouncementFragment fragment = new AnnouncementFragment();
+    public static BoardsFragment newInstance(Bundle bundle) {
+        BoardsFragment fragment = new BoardsFragment();
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -75,42 +73,25 @@ public class AnnouncementFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        setButtonsListener();
+        boardApi = ApiClient.getClient(getContext()).create(BoardApi.class);
 
         if (bundle != null && bundle.containsKey("type")) {
-            type = bundle.getString("type");
+            type = (BoardType) bundle.getSerializable("type");
         }
 
-        if (isNetworkConnected()) {
-            HttpService httpService = new HttpService();
-            switch (type) {
-                case "sub":
-                    httpService.getSubscribedAnnouncement(getActivity(), HomeActivity.getMainUser(), this, false);
-                    break;
-                case "all":
-                    httpService.getAnnouncements(getActivity(), HomeActivity.getMainUser(), this);
-                    break;
-                case "my":
-                    httpService.getMyAnnouncement(getActivity(), HomeActivity.getMainUser(), this);
-                    break;
-            }
-            changeSelectedButton();
-        } else {
-            Toast.makeText(getActivity(), "Нет подключения к интернету", Toast.LENGTH_SHORT).show();
-        }
+        setButtonsListener();
+        loadBoards(type);
 
         container = getActivity().findViewById(R.id.listCards);
-
         LinearLayoutManager llm = new LinearLayoutManager(getContext());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         container.setLayoutManager(llm);
-
-        apiService = ApiClient.getClient(getContext()).create(ApiService.class);
+        setAdapter();
     }
 
-    public void subscribeAnnouncement(int user_id, AnnouncementInfo board, CheckBox favorite) {
+    public void subscribeAnnouncement(int user_id, Board board, CheckBox favorite) {
         disposable.add(
-                apiService.subscribeAnnouncement(String.valueOf(user_id), String.valueOf(board.id))
+                boardApi.subscribeAnnouncement(String.valueOf(user_id), String.valueOf(board.id))
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeWith(new DisposableSingleObserver<FavoriteResponse>() {
@@ -128,7 +109,7 @@ public class AnnouncementFragment extends Fragment {
 
                             @Override
                             public void onError(Throwable e) {
-                                Log.e("AnnouncementFragment", "onError: " + e.getMessage());
+                                Log.e("BoardsFragment", "onError: " + e.getMessage());
                                 Toast.makeText(getContext(), "Ошибка отправки запроса", Toast.LENGTH_SHORT).show();
                                 favorite.setChecked(!favorite.isChecked());
                                 favorite.setEnabled(true);
@@ -137,9 +118,9 @@ public class AnnouncementFragment extends Fragment {
         );
     }
 
-    public void unsubscribeAnnouncement(int user_id, AnnouncementInfo board, CheckBox favorite) {
+    public void unsubscribeAnnouncement(int user_id, Board board, CheckBox favorite) {
         disposable.add(
-                apiService.unsubscribeAnnouncement(String.valueOf(user_id), String.valueOf(board.id))
+                boardApi.unsubscribeAnnouncement(String.valueOf(user_id), String.valueOf(board.id))
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeWith(new DisposableSingleObserver<FavoriteResponse>() {
@@ -157,7 +138,7 @@ public class AnnouncementFragment extends Fragment {
 
                             @Override
                             public void onError(Throwable e) {
-                                Log.e("AnnouncementFragment", "onError: " + e.getMessage());
+                                Log.e("BoardsFragment", "onError: " + e.getMessage());
                                 Toast.makeText(getContext(), "Ошибка отправки запроса", Toast.LENGTH_SHORT).show();
                                 favorite.setChecked(!favorite.isChecked());
                                 favorite.setEnabled(true);
@@ -167,9 +148,9 @@ public class AnnouncementFragment extends Fragment {
     }
 
     public void setAdapter() {
-        adapter = new AnnouncementAdapter(getActivity(), listAnn, (item, id) -> {
+        adapter = new BoardAdapter(getActivity(), (item, id) -> {
             bundle.putSerializable("board_list_id", id);
-            bundle.putString("type", type);
+            bundle.putSerializable("type", type);
             ((HomeActivity) getContext()).loadFragment(AnnouncementInfoFragment.newInstance(bundle));
         }, this);
         container.setAdapter(adapter);
@@ -183,9 +164,9 @@ public class AnnouncementFragment extends Fragment {
         Button sub = getActivity().findViewById(R.id.sub);
         Button my = getActivity().findViewById(R.id.my);
 
-        all.setOnClickListener(this::onClickAll);
-        sub.setOnClickListener(this::onClickSub);
-        my.setOnClickListener(this::onClickMy);
+        all.setOnClickListener(v -> loadBoards(BoardType.ALL));
+        sub.setOnClickListener(v -> loadBoards(BoardType.SUB));
+        my.setOnClickListener(v -> loadBoards(BoardType.MY));
     }
 
     private void changeSelectedButton() {
@@ -193,17 +174,17 @@ public class AnnouncementFragment extends Fragment {
         Button sub = getActivity().findViewById(R.id.sub);
         Button my = getActivity().findViewById(R.id.my);
         switch (type) {
-            case "sub":
+            case SUB:
                 sub.setSelected(true);
                 all.setSelected(false);
                 my.setSelected(false);
                 break;
-            case "all":
+            case ALL:
                 sub.setSelected(false);
                 all.setSelected(true);
                 my.setSelected(false);
                 break;
-            case "my":
+            case MY:
                 sub.setSelected(false);
                 all.setSelected(false);
                 my.setSelected(true);
@@ -211,42 +192,81 @@ public class AnnouncementFragment extends Fragment {
         }
     }
 
-    public void onClickAll(View view) {
-        if (isNetworkConnected()) {
-            HttpService httpService = new HttpService();
-            httpService.getAnnouncements(getActivity(), HomeActivity.getMainUser(), this);
-        } else {
-            Toast.makeText(getActivity(), "Нет подключения к интернету", Toast.LENGTH_SHORT).show();
+    private void loadBoards(BoardType newType) {
+        Disposable dis;
+        switch (newType) {
+            case ALL: {
+                dis = boardApi.getBoards(HomeActivity.getMainUser().id)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(new DisposableSingleObserver<BoardsResponse>() {
+                            @Override
+                            public void onSuccess(BoardsResponse response) {
+                                changeBoardDate(newType, response.getBoards());
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                Log.e("GetAllBoard Resp", "onError: " + e.getMessage());
+                                Toast.makeText(getContext(), "Ошибка отправки запроса", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                break;
+            }
+            case SUB: {
+                dis = boardApi.getFavoriteBoards(HomeActivity.getMainUser().id)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(new DisposableSingleObserver<BoardsResponse>() {
+                            @Override
+                            public void onSuccess(BoardsResponse response) {
+                                changeBoardDate(newType, response.getBoards());
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                Log.e("GetAllBoard Resp", "onError: " + e.getMessage());
+                                Toast.makeText(getContext(), "Ошибка отправки запроса", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                break;
+            }
+            default: {
+                dis = boardApi.getMyBoards(HomeActivity.getMainUser().id)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(new DisposableSingleObserver<BoardsResponse>() {
+                            @Override
+                            public void onSuccess(BoardsResponse response) {
+                                changeBoardDate(newType, response.getBoards());
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                Log.e("GetAllBoard Resp", "onError: " + e.getMessage());
+                                Toast.makeText(getContext(), "Ошибка отправки запроса", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+            }
         }
-        type = "all";
-        changeSelectedButton();
+
+        disposable.add(dis);
     }
 
-    public void onClickSub(View view) {
-        if (isNetworkConnected()) {
-            HttpService httpService = new HttpService();
-            httpService.getSubscribedAnnouncement(getActivity(), HomeActivity.getMainUser(), this, false);
-        } else {
-            Toast.makeText(getActivity(), "Нет подключения к интернету", Toast.LENGTH_SHORT).show();
+    private void changeBoardDate(BoardType boardType, ArrayList<Board> boards) {
+        for (Board board : boards) {
+            board.organizerName = board.organizerFirstName + " " + board.organizerLastName;
+            board.url = board.url.replaceAll("\\/", "/");
         }
-        type = "sub";
+        type = boardType;
         changeSelectedButton();
+        adapter.setAnnList(boards);
+        adapter.notifyDataSetChanged();
     }
 
-    public void onClickMy(View view) {
-        if (isNetworkConnected()) {
-            HttpService httpService = new HttpService();
-            httpService.getMyAnnouncement(getActivity(), HomeActivity.getMainUser(), this);
-        } else {
-            Toast.makeText(getActivity(), "Нет подключения к интернету", Toast.LENGTH_SHORT).show();
-        }
-        type = "my";
-        changeSelectedButton();
-    }
-
-    public void onClickAdd(View view) {
+    private void onClickAdd(View view) {
         HomeActivity homeActivity = (HomeActivity) getActivity();
-        bundle.putString("type", type);
+        bundle.putSerializable("type", type);
         homeActivity.loadFragment(NewAnnouncementFragment.newInstance(bundle));
     }
 
@@ -262,10 +282,5 @@ public class AnnouncementFragment extends Fragment {
             homeActivity.setTreeNavigation();
         }
         return true;
-    }
-
-    public boolean isNetworkConnected() {
-        ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        return (cm != null && cm.getActiveNetworkInfo() != null);
     }
 }

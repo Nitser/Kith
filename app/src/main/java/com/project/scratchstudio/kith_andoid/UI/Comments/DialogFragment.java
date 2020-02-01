@@ -14,7 +14,7 @@ import com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView;
 import com.project.scratchstudio.kith_andoid.Fragments.AnnouncementInfoFragment;
 import com.project.scratchstudio.kith_andoid.R;
 import com.project.scratchstudio.kith_andoid.UI.Comments.list.DialogAdapter;
-import com.project.scratchstudio.kith_andoid.UI.Comments.list.EndlessRecyclerViewScrollListener;
+import com.project.scratchstudio.kith_andoid.CustomViews.EndlessRecyclerViewScrollListener;
 import com.project.scratchstudio.kith_andoid.UI.NewComment.NewCommentFragment;
 import com.project.scratchstudio.kith_andoid.network.ApiClient;
 import com.project.scratchstudio.kith_andoid.network.LiveDataHelper;

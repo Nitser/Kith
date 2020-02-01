@@ -19,10 +19,9 @@ import com.project.scratchstudio.kith_andoid.Activities.SignInActivity;
 import com.project.scratchstudio.kith_andoid.Activities.SmsActivity;
 import com.project.scratchstudio.kith_andoid.CustomViews.CustomFontEditText;
 import com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView;
-import com.project.scratchstudio.kith_andoid.Fragments.AnnouncementFragment;
+import com.project.scratchstudio.kith_andoid.UI.Board.BoardsFragment;
 import com.project.scratchstudio.kith_andoid.Fragments.MessagesFragment;
 import com.project.scratchstudio.kith_andoid.Fragments.NewAnnouncementFragment;
-import com.project.scratchstudio.kith_andoid.UI.NewComment.NewCommentFragment;
 import com.project.scratchstudio.kith_andoid.Fragments.TreeFragment;
 import com.project.scratchstudio.kith_andoid.Model.AnnouncementInfo;
 import com.project.scratchstudio.kith_andoid.Model.Cache;
@@ -30,6 +29,7 @@ import com.project.scratchstudio.kith_andoid.Model.SearchInfo;
 import com.project.scratchstudio.kith_andoid.R;
 import com.project.scratchstudio.kith_andoid.SetInternalData.ClearUserIdAndToken;
 import com.project.scratchstudio.kith_andoid.SetInternalData.SetCountData;
+import com.project.scratchstudio.kith_andoid.network.model.board.Board;
 import com.project.scratchstudio.kith_andoid.network.model.user.User;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
@@ -702,7 +702,7 @@ public class HttpService {
         httpPostRequest.execute("http://" + SERVER + "/api/users/edit/password");
     }
 
-    public void getAnnouncements(Activity activity, User user, AnnouncementFragment fragment) {
+    public void getAnnouncements(Activity activity, User user, BoardsFragment fragment) {
         String[] result_keys = {"status", "user_id", "user_firstname", "user_lastname", "user_photo", "user_middlename", "user_position",
                                 "user_description", "subscription_on_board", "user_phone"};
         String[] header_keys = {"Authorization"};
@@ -738,7 +738,7 @@ public class HttpService {
 
                                     list.add(newInfo);
                                 }
-                                AnnouncementFragment.setListAnn(list);
+//                                BoardsFragment.setListAnn(list);
                                 if (fragment != null) {
                                     fragment.setAdapter();
                                 }
@@ -754,6 +754,152 @@ public class HttpService {
                     }
                 }));
         httpPostRequest.execute("http://" + SERVER + "/api/boards/list");
+    }
+
+    public void getSubscribedAnnouncement(Activity activity, User user, Fragment fragment, boolean msgFrgm) {
+        String[] header_keys = {"Authorization"};
+        String[] header_data = {user.getToken()};
+        String[] result_keys = {"status", "boards"};
+
+        String[] board_keys = {"board_id", "board_title", "board_date_created", "board_date_end",
+                               "board_enabled", "board_description", "board_user_id", "board_subscriptions",
+                               "board_needs_subscriptions", "owner_lastname", "owner_firstname", "owner_middlename",
+                               "owner_login", "subscription_on_board", "board_current_subscriptions", "board_photo"};
+
+        HttpGetRequest httpGetRequest = new HttpGetRequest(activity, header_keys, header_data, ((output, resultJSON, code) -> {
+            if (output && resultJSON != null) {
+                try {
+                    JSONObject object = new JSONObject(resultJSON);
+                    if (object.has(result_keys[0]) && object.getBoolean(result_keys[0])) {
+                        JSONArray response = object.getJSONArray(result_keys[1]);
+                        List<AnnouncementInfo> list = new ArrayList<>();
+                        if (response.length() != 0 && !response.getJSONObject(0).has(result_keys[0])) {
+                            for (int i = 0; i < response.length(); i++) {
+                                JSONObject obj = response.getJSONObject(i);
+                                AnnouncementInfo board = new AnnouncementInfo();
+                                board.id = obj.getInt(board_keys[0]);
+                                board.title = obj.getString(board_keys[1]);
+                                board.startDate = obj.getString(board_keys[2]);
+                                board.endDate = obj.getString(board_keys[3]);
+                                board.enabled = obj.getInt(board_keys[4]);
+                                board.description = obj.getString(board_keys[5]);
+                                board.organizerId = obj.getInt(board_keys[6]);
+                                board.boardSubscription = obj.getInt(board_keys[7]);
+                                board.needParticipants = obj.getString(board_keys[8]);
+                                board.organizerLastName = obj.getString(board_keys[9]);
+                                board.organizerName = obj.getString(board_keys[10]);
+                                board.organizerMiddleName = obj.getString(board_keys[11]);
+                                board.organizerLogin = obj.getString(board_keys[12]);
+                                board.subscriptionOnBoard = obj.getInt(board_keys[13]);
+                                board.participants = obj.getString(board_keys[14]);
+                                board.organizerPhoto = obj.getString(board_keys[15]).replaceAll("\\/", "/");
+                                board.url = obj.getString("board_photo").replaceAll("\\/", "/");
+
+                                list.add(board);
+                            }
+
+                            HomeActivity.setBoardsList(list);
+                            MessagesFragment frgm;
+                            BoardsFragment frgmAn;
+                            if (msgFrgm && fragment != null) {
+                                frgm = (MessagesFragment) fragment;
+                                frgm.setAdapter();
+                            } else if (fragment != null) {
+                                frgmAn = (BoardsFragment) fragment;
+//                                BoardsFragment.setListAnn(list);
+                                frgmAn.setAdapter();
+                            }
+                        } else if (response.length() == 0) {
+                            HomeActivity.setBoardsList(list);
+                            MessagesFragment frgm;
+                            BoardsFragment frgmAn;
+                            if (msgFrgm && fragment != null) {
+                                frgm = (MessagesFragment) fragment;
+                                frgm.setAdapter();
+                            } else if (fragment != null) {
+                                frgmAn = (BoardsFragment) fragment;
+//                                BoardsFragment.setListAnn(list);
+                                frgmAn.setAdapter();
+                            }
+                        }
+                    }
+                } catch (JSONException e) {
+                    if (activity != null) {
+                        Toast.makeText(activity, getErrorMessage(code), Toast.LENGTH_SHORT).show();
+                    }
+                    e.printStackTrace();
+                }
+            } else if (activity != null) {
+                Toast.makeText(activity, getErrorMessage(code), Toast.LENGTH_SHORT).show();
+            }
+        }));
+        httpGetRequest.execute("http://" + SERVER + "/api/boards/getsubscribes/" + user.getId());
+    }
+
+    public void getMyAnnouncement(Activity activity, User user, BoardsFragment fragment) {
+        String[] header_keys = {"Authorization"};
+        String[] header_data = {user.getToken()};
+        String[] result_keys = {"status", "boards"};
+
+        String[] board_keys = {"board_id", "board_title", "board_date_created", "board_date_end",
+                               "board_enabled", "board_description", "board_user_id", "board_subscriptions",
+                               "board_needs_subscriptions", "owner_lastname", "owner_firstname", "owner_middlename",
+                               "owner_login", "subscription_on_board", "board_current_subscriptions", "board_photo"};
+
+        HttpGetRequest httpGetRequest = new HttpGetRequest(activity, header_keys, header_data, ((output, resultJSON, code) -> {
+            if (output && resultJSON != null) {
+                try {
+                    JSONObject object = new JSONObject(resultJSON);
+                    if (object.has(result_keys[0]) && object.getBoolean(result_keys[0])) {
+                        JSONArray response = object.getJSONArray(result_keys[1]);
+                        List<AnnouncementInfo> list = new ArrayList<>();
+                        if (response.length() != 0 && !response.getJSONObject(0).has(result_keys[0])) {
+                            for (int i = 0; i < response.length(); i++) {
+                                JSONObject obj = response.getJSONObject(i);
+                                AnnouncementInfo board = new AnnouncementInfo();
+                                board.id = obj.getInt(board_keys[0]);
+                                board.title = obj.getString(board_keys[1]);
+                                board.startDate = obj.getString(board_keys[2]);
+                                board.endDate = obj.getString(board_keys[3]);
+                                board.enabled = obj.getInt(board_keys[4]);
+                                board.description = obj.getString(board_keys[5]);
+                                board.organizerId = obj.getInt(board_keys[6]);
+                                board.boardSubscription = obj.getInt(board_keys[7]);
+                                board.needParticipants = obj.getString(board_keys[8]);
+                                board.organizerLastName = obj.getString(board_keys[9]);
+                                board.organizerName = obj.getString(board_keys[10]);
+                                board.organizerMiddleName = obj.getString(board_keys[11]);
+                                board.organizerLogin = obj.getString(board_keys[12]);
+                                board.subscriptionOnBoard = obj.getInt(board_keys[13]);
+                                board.participants = obj.getString(board_keys[14]);
+                                board.organizerPhoto = obj.getString(board_keys[15]).replaceAll("\\/", "/");
+                                board.url = obj.getString("board_photo").replaceAll("\\/", "/");
+
+                                list.add(board);
+                            }
+
+//                            BoardsFragment.setListAnn(list);
+                            if (fragment != null) {
+                                fragment.setAdapter();
+                            }
+                        } else if (response.length() == 0) {
+//                            BoardsFragment.setListAnn(list);
+                            if (fragment != null) {
+                                fragment.setAdapter();
+                            }
+                        }
+                    }
+                } catch (JSONException e) {
+                    if (activity != null) {
+                        Toast.makeText(activity, getErrorMessage(code), Toast.LENGTH_SHORT).show();
+                    }
+                    e.printStackTrace();
+                }
+            } else if (activity != null) {
+                Toast.makeText(activity, getErrorMessage(code), Toast.LENGTH_SHORT).show();
+            }
+        }));
+        httpGetRequest.execute("http://" + SERVER + "/api/boards/getuserboards/" + user.getId());
     }
 
     public void addAnnouncement(Activity activity, User user, NewAnnouncementFragment nFragment, AnnouncementInfo info, Bitmap photo) {
@@ -805,153 +951,7 @@ public class HttpService {
         httpPostRequest.execute("http://" + SERVER + "/api/boards/create");
     }
 
-    public void getSubscribedAnnouncement(Activity activity, User user, Fragment fragment, boolean msgFrgm) {
-        String[] header_keys = {"Authorization"};
-        String[] header_data = {user.getToken()};
-        String[] result_keys = {"status", "boards"};
-
-        String[] board_keys = {"board_id", "board_title", "board_date_created", "board_date_end",
-                               "board_enabled", "board_description", "board_user_id", "board_subscriptions",
-                               "board_needs_subscriptions", "owner_lastname", "owner_firstname", "owner_middlename",
-                               "owner_login", "subscription_on_board", "board_current_subscriptions", "board_photo"};
-
-        HttpGetRequest httpGetRequest = new HttpGetRequest(activity, header_keys, header_data, ((output, resultJSON, code) -> {
-            if (output && resultJSON != null) {
-                try {
-                    JSONObject object = new JSONObject(resultJSON);
-                    if (object.has(result_keys[0]) && object.getBoolean(result_keys[0])) {
-                        JSONArray response = object.getJSONArray(result_keys[1]);
-                        List<AnnouncementInfo> list = new ArrayList<>();
-                        if (response.length() != 0 && !response.getJSONObject(0).has(result_keys[0])) {
-                            for (int i = 0; i < response.length(); i++) {
-                                JSONObject obj = response.getJSONObject(i);
-                                AnnouncementInfo board = new AnnouncementInfo();
-                                board.id = obj.getInt(board_keys[0]);
-                                board.title = obj.getString(board_keys[1]);
-                                board.startDate = obj.getString(board_keys[2]);
-                                board.endDate = obj.getString(board_keys[3]);
-                                board.enabled = obj.getInt(board_keys[4]);
-                                board.description = obj.getString(board_keys[5]);
-                                board.organizerId = obj.getInt(board_keys[6]);
-                                board.boardSubscription = obj.getInt(board_keys[7]);
-                                board.needParticipants = obj.getString(board_keys[8]);
-                                board.organizerLastName = obj.getString(board_keys[9]);
-                                board.organizerName = obj.getString(board_keys[10]);
-                                board.organizerMiddleName = obj.getString(board_keys[11]);
-                                board.organizerLogin = obj.getString(board_keys[12]);
-                                board.subscriptionOnBoard = obj.getInt(board_keys[13]);
-                                board.participants = obj.getString(board_keys[14]);
-                                board.organizerPhoto = obj.getString(board_keys[15]).replaceAll("\\/", "/");
-                                board.url = obj.getString("board_photo").replaceAll("\\/", "/");
-
-                                list.add(board);
-                            }
-
-                            HomeActivity.setBoardsList(list);
-                            MessagesFragment frgm;
-                            AnnouncementFragment frgmAn;
-                            if (msgFrgm && fragment != null) {
-                                frgm = (MessagesFragment) fragment;
-                                frgm.setAdapter();
-                            } else if (fragment != null) {
-                                frgmAn = (AnnouncementFragment) fragment;
-                                AnnouncementFragment.setListAnn(list);
-                                frgmAn.setAdapter();
-                            }
-                        } else if (response.length() == 0) {
-                            HomeActivity.setBoardsList(list);
-                            MessagesFragment frgm;
-                            AnnouncementFragment frgmAn;
-                            if (msgFrgm && fragment != null) {
-                                frgm = (MessagesFragment) fragment;
-                                frgm.setAdapter();
-                            } else if (fragment != null) {
-                                frgmAn = (AnnouncementFragment) fragment;
-                                AnnouncementFragment.setListAnn(list);
-                                frgmAn.setAdapter();
-                            }
-                        }
-                    }
-                } catch (JSONException e) {
-                    if (activity != null) {
-                        Toast.makeText(activity, getErrorMessage(code), Toast.LENGTH_SHORT).show();
-                    }
-                    e.printStackTrace();
-                }
-            } else if (activity != null) {
-                Toast.makeText(activity, getErrorMessage(code), Toast.LENGTH_SHORT).show();
-            }
-        }));
-        httpGetRequest.execute("http://" + SERVER + "/api/boards/getsubscribes/" + user.getId());
-    }
-
-    public void getMyAnnouncement(Activity activity, User user, AnnouncementFragment fragment) {
-        String[] header_keys = {"Authorization"};
-        String[] header_data = {user.getToken()};
-        String[] result_keys = {"status", "boards"};
-
-        String[] board_keys = {"board_id", "board_title", "board_date_created", "board_date_end",
-                               "board_enabled", "board_description", "board_user_id", "board_subscriptions",
-                               "board_needs_subscriptions", "owner_lastname", "owner_firstname", "owner_middlename",
-                               "owner_login", "subscription_on_board", "board_current_subscriptions", "board_photo"};
-
-        HttpGetRequest httpGetRequest = new HttpGetRequest(activity, header_keys, header_data, ((output, resultJSON, code) -> {
-            if (output && resultJSON != null) {
-                try {
-                    JSONObject object = new JSONObject(resultJSON);
-                    if (object.has(result_keys[0]) && object.getBoolean(result_keys[0])) {
-                        JSONArray response = object.getJSONArray(result_keys[1]);
-                        List<AnnouncementInfo> list = new ArrayList<>();
-                        if (response.length() != 0 && !response.getJSONObject(0).has(result_keys[0])) {
-                            for (int i = 0; i < response.length(); i++) {
-                                JSONObject obj = response.getJSONObject(i);
-                                AnnouncementInfo board = new AnnouncementInfo();
-                                board.id = obj.getInt(board_keys[0]);
-                                board.title = obj.getString(board_keys[1]);
-                                board.startDate = obj.getString(board_keys[2]);
-                                board.endDate = obj.getString(board_keys[3]);
-                                board.enabled = obj.getInt(board_keys[4]);
-                                board.description = obj.getString(board_keys[5]);
-                                board.organizerId = obj.getInt(board_keys[6]);
-                                board.boardSubscription = obj.getInt(board_keys[7]);
-                                board.needParticipants = obj.getString(board_keys[8]);
-                                board.organizerLastName = obj.getString(board_keys[9]);
-                                board.organizerName = obj.getString(board_keys[10]);
-                                board.organizerMiddleName = obj.getString(board_keys[11]);
-                                board.organizerLogin = obj.getString(board_keys[12]);
-                                board.subscriptionOnBoard = obj.getInt(board_keys[13]);
-                                board.participants = obj.getString(board_keys[14]);
-                                board.organizerPhoto = obj.getString(board_keys[15]).replaceAll("\\/", "/");
-                                board.url = obj.getString("board_photo").replaceAll("\\/", "/");
-
-                                list.add(board);
-                            }
-
-                            AnnouncementFragment.setListAnn(list);
-                            if (fragment != null) {
-                                fragment.setAdapter();
-                            }
-                        } else if (response.length() == 0) {
-                            AnnouncementFragment.setListAnn(list);
-                            if (fragment != null) {
-                                fragment.setAdapter();
-                            }
-                        }
-                    }
-                } catch (JSONException e) {
-                    if (activity != null) {
-                        Toast.makeText(activity, getErrorMessage(code), Toast.LENGTH_SHORT).show();
-                    }
-                    e.printStackTrace();
-                }
-            } else if (activity != null) {
-                Toast.makeText(activity, getErrorMessage(code), Toast.LENGTH_SHORT).show();
-            }
-        }));
-        httpGetRequest.execute("http://" + SERVER + "/api/boards/getuserboards/" + user.getId());
-    }
-
-    public void editAnnouncement(Activity activity, User user, NewAnnouncementFragment nFragment, AnnouncementInfo old, AnnouncementInfo info,
+    public void editAnnouncement(Activity activity, User user, NewAnnouncementFragment nFragment, Board old, AnnouncementInfo info,
                                  Bitmap photo) {
         String[] result_keys = {"status"};
         String[] header_keys = {"Authorization"};

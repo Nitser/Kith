@@ -1,5 +1,6 @@
 package com.project.scratchstudio.kith_andoid.network;
 
+import com.project.scratchstudio.kith_andoid.network.model.board.Board;
 import com.project.scratchstudio.kith_andoid.network.model.comment.Comment;
 
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import androidx.lifecycle.MediatorLiveData;
 
 public class LiveDataHelper {
     private MediatorLiveData<List<Comment>> commentList = new MediatorLiveData<>();
+    private MediatorLiveData<List<Board>> boardList = new MediatorLiveData<>();
     private static LiveDataHelper liveDataHelper;
 
     public LiveDataHelper() {
@@ -39,5 +41,18 @@ public class LiveDataHelper {
         if (commentList.getValue() != null) {
             commentList.getValue().clear();
         }
+    }
+
+    public void updateBoardList(List<Board> newBoardList) {
+        List<Board> list = new ArrayList<>();
+        if (boardList.getValue() != null) {
+            list.addAll(boardList.getValue());
+        }
+        list.addAll(newBoardList);
+        boardList.postValue(list);
+    }
+
+    public LiveData<List<Board>> observeBoardList() {
+        return boardList;
     }
 }

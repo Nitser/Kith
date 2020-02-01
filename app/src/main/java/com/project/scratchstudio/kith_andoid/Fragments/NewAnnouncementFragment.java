@@ -12,10 +12,6 @@ import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.SystemClock;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -34,6 +30,8 @@ import com.project.scratchstudio.kith_andoid.R;
 import com.project.scratchstudio.kith_andoid.Service.HttpService;
 import com.project.scratchstudio.kith_andoid.Service.ImageFilePath;
 import com.project.scratchstudio.kith_andoid.Service.PhotoService;
+import com.project.scratchstudio.kith_andoid.UI.Board.BoardsFragment;
+import com.project.scratchstudio.kith_andoid.network.model.board.Board;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
@@ -41,6 +39,10 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.Calendar;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
 import br.com.sapereaude.maskedEditText.MaskedEditText;
 
 import static android.app.Activity.RESULT_OK;
@@ -52,7 +54,7 @@ public class NewAnnouncementFragment extends Fragment {
     private Bitmap photo;
     private boolean correctDate = false;
 
-    private AnnouncementInfo board;
+    private Board board;
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private static String[] PERMISSIONS_STORAGE = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
@@ -132,7 +134,7 @@ public class NewAnnouncementFragment extends Fragment {
 
         if(bundle.containsKey("is_edit") && bundle.getBoolean("is_edit")){
             int id =  bundle.getInt("board_list_id");
-            board = AnnouncementFragment.getListAnn().get(id);
+            board = BoardsFragment.getListAnn().get(id);
             fillFields();
         }
     }
@@ -172,7 +174,7 @@ public class NewAnnouncementFragment extends Fragment {
             homeActivity.loadFragment(AnnouncementInfoFragment.newInstance(bundle));
         } else {
             HomeActivity homeActivity = (HomeActivity) getActivity();
-            homeActivity.loadFragment(AnnouncementFragment.newInstance(bundle));
+            homeActivity.loadFragment(BoardsFragment.newInstance(bundle));
         }
     }
 
@@ -182,7 +184,7 @@ public class NewAnnouncementFragment extends Fragment {
             homeActivity.loadFragment(AnnouncementInfoFragment.newInstance(bundle));
         } else {
             HomeActivity homeActivity = (HomeActivity) getActivity();
-            homeActivity.loadFragment(AnnouncementFragment.newInstance(bundle));
+            homeActivity.loadFragment(BoardsFragment.newInstance(bundle));
         }
         return true;
     }
@@ -231,7 +233,7 @@ public class NewAnnouncementFragment extends Fragment {
             homeActivity.loadFragment(AnnouncementInfoFragment.newInstance(bundle));
         } else {
             HomeActivity homeActivity = (HomeActivity) getActivity();
-            homeActivity.loadFragment(AnnouncementFragment.newInstance(bundle));
+            homeActivity.loadFragment(BoardsFragment.newInstance(bundle));
         }
     }
 

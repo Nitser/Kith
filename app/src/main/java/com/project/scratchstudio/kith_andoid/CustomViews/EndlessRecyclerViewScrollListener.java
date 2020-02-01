@@ -1,4 +1,4 @@
-package com.project.scratchstudio.kith_andoid.UI.Comments.list;
+package com.project.scratchstudio.kith_andoid.CustomViews;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;

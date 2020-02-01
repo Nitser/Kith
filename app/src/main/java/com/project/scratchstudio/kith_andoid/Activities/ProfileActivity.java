@@ -21,7 +21,7 @@ import com.project.scratchstudio.kith_andoid.Service.PicassoCircleTransformation
 import com.project.scratchstudio.kith_andoid.SetInternalData.ClearUserIdAndToken;
 import com.project.scratchstudio.kith_andoid.app.Const;
 import com.project.scratchstudio.kith_andoid.network.ApiClient;
-import com.project.scratchstudio.kith_andoid.network.apiService.ApiService;
+import com.project.scratchstudio.kith_andoid.network.apiService.UserApi;
 import com.project.scratchstudio.kith_andoid.network.model.referral.ReferralResponse;
 import com.project.scratchstudio.kith_andoid.network.model.user.User;
 import com.squareup.picasso.MemoryPolicy;
@@ -46,7 +46,7 @@ public class ProfileActivity extends AppCompatActivity {
     private TextView phone;
     private TextView email;
 
-    private ApiService apiService;
+    private UserApi userApi;
     private CompositeDisposable disposable = new CompositeDisposable();
 
     @Override
@@ -57,7 +57,7 @@ public class ProfileActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         user = (User) bundle.getSerializable("user");
 
-        apiService = ApiClient.getClient(getApplication()).create(ApiService.class);
+        userApi = ApiClient.getClient(getApplication()).create(UserApi.class);
 
         if (user.getId() != HomeActivity.getMainUser().getId()) {
             ImageButton edit = findViewById(R.id.edit);
@@ -232,7 +232,7 @@ public class ProfileActivity extends AppCompatActivity {
         view.setEnabled(false);
         share = view;
         disposable.add(
-                apiService.getReferralCode(HomeActivity.getMainUser().id)
+                userApi.getReferralCode(HomeActivity.getMainUser().id)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeWith(new DisposableSingleObserver<ReferralResponse>() {

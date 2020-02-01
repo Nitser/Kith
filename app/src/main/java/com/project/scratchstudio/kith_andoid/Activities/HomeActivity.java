@@ -3,7 +3,7 @@ package com.project.scratchstudio.kith_andoid.Activities;
 import android.os.Bundle;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.project.scratchstudio.kith_andoid.Fragments.AnnouncementFragment;
+import com.project.scratchstudio.kith_andoid.UI.Board.BoardsFragment;
 import com.project.scratchstudio.kith_andoid.Fragments.AnnouncementInfoFragment;
 import com.project.scratchstudio.kith_andoid.UI.Comments.DialogFragment;
 import com.project.scratchstudio.kith_andoid.Fragments.MessagesFragment;
@@ -72,7 +72,7 @@ public class HomeActivity extends AppCompatActivity {
                 loadFragment(TreeFragment.newInstance(bundle));
                 return true;
             case R.id.navigation_announcements:
-                loadFragment(AnnouncementFragment.newInstance(bundle));
+                loadFragment(BoardsFragment.newInstance(bundle));
                 return true;
 //                    case R.id.navigation_messages:
 //                        loadFragment(MessagesFragment.newInstance(bundle));
@@ -147,8 +147,8 @@ public class HomeActivity extends AppCompatActivity {
                 if (handled) {
                     break;
                 }
-            } else if (f instanceof AnnouncementFragment) {
-                handled = ((AnnouncementFragment) f).onBackPressed();
+            } else if (f instanceof BoardsFragment) {
+                handled = ((BoardsFragment) f).onBackPressed();
                 if (handled) {
                     break;
                 }
