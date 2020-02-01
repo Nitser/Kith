@@ -2,6 +2,7 @@ package com.project.scratchstudio.kith_andoid.network;
 
 import com.project.scratchstudio.kith_andoid.network.model.comment.Comment;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import androidx.lifecycle.LiveData;
@@ -22,10 +23,21 @@ public class LiveDataHelper {
     }
 
     public void updateCommentList(List<Comment> newCommentList) {
-        commentList.postValue(newCommentList);
+        List<Comment> list = new ArrayList<>();
+        if (commentList.getValue() != null) {
+            list.addAll(commentList.getValue());
+        }
+        list.addAll(newCommentList);
+        commentList.postValue(list);
     }
 
     public LiveData<List<Comment>> observeCommentList() {
         return commentList;
+    }
+
+    public void clearCommentList() {
+        if (commentList.getValue() != null) {
+            commentList.getValue().clear();
+        }
     }
 }

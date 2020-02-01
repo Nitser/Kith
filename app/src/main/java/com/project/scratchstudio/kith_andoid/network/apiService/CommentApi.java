@@ -1,6 +1,7 @@
 package com.project.scratchstudio.kith_andoid.network.apiService;
 
 import com.project.scratchstudio.kith_andoid.network.model.comment.CommentResponse;
+import com.project.scratchstudio.kith_andoid.network.model.comment.SendCommentResponse;
 
 import io.reactivex.Single;
 import retrofit2.http.Field;
@@ -17,5 +18,5 @@ public interface CommentApi {
 
     @FormUrlEncoded
     @POST("api/boards/{board_id}/comment")
-    Single<CommentResponse> sendComment(@Path("board_id") int id, @Field("message") String message);
+    Single<SendCommentResponse> sendComment(@Path("board_id") int id, @Field("message") String message);
 }

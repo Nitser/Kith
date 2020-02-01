@@ -1,4 +1,4 @@
-package com.project.scratchstudio.kith_andoid.UI.Comments;
+package com.project.scratchstudio.kith_andoid.UI.Comments.list;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView;
 public abstract class EndlessRecyclerViewScrollListener extends RecyclerView.OnScrollListener {
     // The minimum amount of items to have below your current scroll position
     // before loading more.
-    private int visibleThreshold = 10;
+    private int visibleThreshold = 2;
     // The current offset index of data you have loaded
     private int currentPage = 0;
     // The total number of items in the dataset after the last load
@@ -15,6 +15,7 @@ public abstract class EndlessRecyclerViewScrollListener extends RecyclerView.OnS
     private boolean loading = true;
     // Sets the starting page index
     private int startingPageIndex = 0;
+    private final int loadSize = 10;
 
     LinearLayoutManager mLayoutManager;
 
@@ -66,7 +67,7 @@ public abstract class EndlessRecyclerViewScrollListener extends RecyclerView.OnS
         // threshold should reflect how many total columns there are too
         if (!loading && (lastVisibleItemPosition + visibleThreshold) > totalItemCount) {
             currentPage++;
-            onLoadMore(currentPage, totalItemCount, view);
+            onLoadMore(currentPage, loadSize, view);
             loading = true;
         }
 

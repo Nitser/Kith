@@ -10,17 +10,19 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.project.scratchstudio.kith_andoid.Activities.HomeActivity;
-import com.project.scratchstudio.kith_andoid.Fragments.AnnouncementInfoFragment;
-import com.project.scratchstudio.kith_andoid.Fragments.NewCommentFragment;
 import com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView;
+import com.project.scratchstudio.kith_andoid.Fragments.AnnouncementInfoFragment;
 import com.project.scratchstudio.kith_andoid.R;
+import com.project.scratchstudio.kith_andoid.UI.Comments.list.DialogAdapter;
+import com.project.scratchstudio.kith_andoid.UI.Comments.list.EndlessRecyclerViewScrollListener;
+import com.project.scratchstudio.kith_andoid.UI.NewComment.NewCommentFragment;
 import com.project.scratchstudio.kith_andoid.network.ApiClient;
 import com.project.scratchstudio.kith_andoid.network.LiveDataHelper;
 import com.project.scratchstudio.kith_andoid.network.apiService.CommentApi;
 import com.project.scratchstudio.kith_andoid.network.model.comment.Comment;
 import com.project.scratchstudio.kith_andoid.network.model.comment.CommentResponse;
 
-import java.util.Arrays;
+import java.util.Collections;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -64,8 +66,10 @@ public class DialogFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         liveDataHelper = LiveDataHelper.getInstance();
         LiveDataHelper.getInstance().observeCommentList().observe(this, commentList -> {
-            if(adapter.getItemCount() == 0)
+            if (adapter.getItemCount() == 0) {
                 adapter.setDialogList(commentList);
+            }
+            adapter.setDialogList(commentList);
             adapter.notifyDataSetChanged();
         });
 
@@ -93,7 +97,7 @@ public class DialogFragment extends Fragment {
 
     private void getComments(int page, int size) {
         disposable.add(
-                commentApi.getComments(boardId, String.valueOf(page), String.valueOf(size), "2019-06-22 22:22:22")
+                commentApi.getComments(boardId, String.valueOf(page), String.valueOf(size), "2030-06-22 22:22:22")
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeWith(new DisposableSingleObserver<CommentResponse>() {
@@ -102,12 +106,13 @@ public class DialogFragment extends Fragment {
                                 for (Comment comment : response.getComments()) {
                                     comment.getUser().photo = comment.getUser().photo.replaceAll("\\/", "/");
                                 }
-                                liveDataHelper.updateCommentList(Arrays.asList(response.getComments()));
+                                Collections.reverse(response.getComments());
+                                liveDataHelper.updateCommentList(response.getComments());
                             }
 
                             @Override
                             public void onError(Throwable e) {
-                                Log.e("BoardFragmentInfo", "onError: " + e.getMessage());
+                                Log.e("GetComment Resp", "onError: " + e.getMessage());
                                 Toast.makeText(getContext(), "Ошибка отправки запроса", Toast.LENGTH_SHORT).show();
                             }
                         })
@@ -142,24 +147,9 @@ public class DialogFragment extends Fragment {
         homeActivity.loadFragment(NewCommentFragment.newInstance(bundle));
     }
 
-    public void createNewComment(String message) {
-//        DialogInfo newDialog = new DialogInfo();
-//        newDialog.user_id = HomeActivity.getMainUser().getId();
-//        newDialog.message = message;
-//        newDialog.photo = HomeActivity.getMainUser().getUrl();
-//
-//        adapter.newItem = true;
-//        listMessages.add(newDialog);
-//        listView.smoothScrollToPosition(adapter.getItemCount() - 1);
-//        adapter.notifyDataSetChanged();
-//        listView.scrollToPosition(adapter.getItemCount()-1);
+    @Override
+    public void onDestroy() {
+        liveDataHelper.clearCommentList();
+        super.onDestroy();
     }
-
-    public void addNewComment() {
-//        DialogInfo dialogInfo = (DialogInfo) bundle.getSerializable("new_comment");
-//        listMessages.add(dialogInfo);
-//        listView.smoothScrollToPosition(adapter.getItemCount() - 1);
-//        adapter.notifyDataSetChanged();
-    }
-
 }

@@ -1,12 +1,9 @@
-package com.project.scratchstudio.kith_andoid.Fragments;
+package com.project.scratchstudio.kith_andoid.UI.NewComment;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
-import android.os.SystemClock;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,22 +14,35 @@ import com.project.scratchstudio.kith_andoid.Activities.HomeActivity;
 import com.project.scratchstudio.kith_andoid.CustomViews.CustomFontEditText;
 import com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView;
 import com.project.scratchstudio.kith_andoid.Model.DialogInfo;
-import com.project.scratchstudio.kith_andoid.UI.Comments.DialogFragment;
-import com.project.scratchstudio.kith_andoid.network.model.user.User;
 import com.project.scratchstudio.kith_andoid.R;
-import com.project.scratchstudio.kith_andoid.Service.HttpService;
 import com.project.scratchstudio.kith_andoid.Service.PicassoCircleTransformation;
+import com.project.scratchstudio.kith_andoid.UI.Comments.DialogFragment;
+import com.project.scratchstudio.kith_andoid.network.ApiClient;
+import com.project.scratchstudio.kith_andoid.network.apiService.CommentApi;
+import com.project.scratchstudio.kith_andoid.network.model.comment.SendCommentResponse;
+import com.project.scratchstudio.kith_andoid.network.model.user.User;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.util.Objects;
 
-public class NewCommentFragment  extends Fragment {
-    private static long buttonCount = 0;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.observers.DisposableSingleObserver;
+import io.reactivex.schedulers.Schedulers;
+
+public class NewCommentFragment extends Fragment {
     private Bundle bundle;
     private int boardId;
 
-    public NewCommentFragment() {}
+    private CommentApi commentApi;
+    private CompositeDisposable disposable = new CompositeDisposable();
+
+    public NewCommentFragment() {
+    }
 
     public static NewCommentFragment newInstance(Bundle bundle) {
         NewCommentFragment fragment = new NewCommentFragment();
@@ -49,11 +59,12 @@ public class NewCommentFragment  extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        commentApi = ApiClient.getClient(getContext()).create(CommentApi.class);
         setButtonsListener();
         init();
     }
 
-    private void init(){
+    private void init() {
         CustomFontTextView name = getActivity().findViewById(R.id.name);
         CustomFontTextView position = getActivity().findViewById(R.id.position);
         ImageView photo = getActivity().findViewById(R.id.photo);
@@ -69,7 +80,7 @@ public class NewCommentFragment  extends Fragment {
                 .into(photo);
     }
 
-    private void setButtonsListener(){
+    private void setButtonsListener() {
         CustomFontTextView cancel = getActivity().findViewById(R.id.cancel);
         cancel.setOnClickListener(this::onClickBack);
         CustomFontTextView send = getActivity().findViewById(R.id.done);
@@ -87,27 +98,39 @@ public class NewCommentFragment  extends Fragment {
         return true;
     }
 
-    public void onClickSend(View view){
-        if (SystemClock.elapsedRealtime() - buttonCount < 1000){
-            return;
+    private void onClickSend(View view) {
+        CustomFontEditText user_message = getActivity().findViewById(R.id.comment);
+        String message = Objects.requireNonNull(user_message.getText()).toString();
+        if (message.trim().length() > 0) {
+            CustomFontTextView send = getActivity().findViewById(R.id.done);
+            send.setEnabled(false);
+            disposable.add(
+                    commentApi.sendComment(boardId, message)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribeWith(new DisposableSingleObserver<SendCommentResponse>() {
+                                @Override
+                                public void onSuccess(SendCommentResponse response) {
+                                    if (response.getStatus()) {
+                                        onClickBack(null);
+                                    } else {
+                                        Toast.makeText(getContext(), "Ошибка отправки запроса", Toast.LENGTH_SHORT).show();
+                                        send.setEnabled(true);
+                                    }
+                                }
+
+                                @Override
+                                public void onError(Throwable e) {
+                                    Log.e("SendComment Resp", "onError: " + e.getMessage());
+                                    Toast.makeText(getContext(), "Ошибка отправки запроса", Toast.LENGTH_SHORT).show();
+                                    send.setEnabled(true);
+                                }
+                            })
+            );
         }
-        buttonCount = SystemClock.elapsedRealtime();
-        if(isNetworkConnected()) {
-            CustomFontEditText user_message = getActivity().findViewById(R.id.comment);
-            String message = Objects.requireNonNull(user_message.getText()).toString();
-            if (message.length() > 0 ) {
-                if(isNetworkConnected()) {
-                    CustomFontTextView send = getActivity().findViewById(R.id.done);
-                    send.setEnabled(false);
-                    HttpService httpService = new HttpService();
-                    httpService.sendComment(getActivity(), HomeActivity.getMainUser(), this, boardId, message);
-                    user_message.setText("");
-                } else Toast.makeText(getActivity(), "Нет подключения к интернету", Toast.LENGTH_SHORT).show();
-            }
-        } else Toast.makeText(getActivity(), "Нет подключения к интернету", Toast.LENGTH_SHORT).show();
     }
 
-    public void createNewComment(String message){
+    public void createNewComment(String message) {
         CustomFontTextView send = getActivity().findViewById(R.id.done);
         send.setEnabled(true);
         DialogInfo newDialog = new DialogInfo();
@@ -121,7 +144,7 @@ public class NewCommentFragment  extends Fragment {
 
     private boolean isNetworkConnected() {
         ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        return (cm != null && cm.getActiveNetworkInfo() != null) ;
+        return (cm != null && cm.getActiveNetworkInfo() != null);
     }
 
 }

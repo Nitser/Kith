@@ -1,10 +1,10 @@
-package com.project.scratchstudio.kith_andoid.UI.Comments;
+package com.project.scratchstudio.kith_andoid.UI.Comments.list;
 
 import android.graphics.Color;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.project.scratchstudio.kith_andoid.UI.Comments.DialogAdapter;
+import com.project.scratchstudio.kith_andoid.UI.Comments.list.DialogAdapter;
 import com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView;
 import com.project.scratchstudio.kith_andoid.R;
 import com.project.scratchstudio.kith_andoid.network.model.comment.Comment;

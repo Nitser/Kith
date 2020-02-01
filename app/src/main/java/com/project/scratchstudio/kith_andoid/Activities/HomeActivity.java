@@ -8,7 +8,7 @@ import com.project.scratchstudio.kith_andoid.Fragments.AnnouncementInfoFragment;
 import com.project.scratchstudio.kith_andoid.UI.Comments.DialogFragment;
 import com.project.scratchstudio.kith_andoid.Fragments.MessagesFragment;
 import com.project.scratchstudio.kith_andoid.Fragments.NewAnnouncementFragment;
-import com.project.scratchstudio.kith_andoid.Fragments.NewCommentFragment;
+import com.project.scratchstudio.kith_andoid.UI.NewComment.NewCommentFragment;
 import com.project.scratchstudio.kith_andoid.Fragments.TreeFragment;
 import com.project.scratchstudio.kith_andoid.Model.AnnouncementInfo;
 import com.project.scratchstudio.kith_andoid.R;

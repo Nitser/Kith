@@ -22,7 +22,7 @@ import com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView;
 import com.project.scratchstudio.kith_andoid.Fragments.AnnouncementFragment;
 import com.project.scratchstudio.kith_andoid.Fragments.MessagesFragment;
 import com.project.scratchstudio.kith_andoid.Fragments.NewAnnouncementFragment;
-import com.project.scratchstudio.kith_andoid.Fragments.NewCommentFragment;
+import com.project.scratchstudio.kith_andoid.UI.NewComment.NewCommentFragment;
 import com.project.scratchstudio.kith_andoid.Fragments.TreeFragment;
 import com.project.scratchstudio.kith_andoid.Model.AnnouncementInfo;
 import com.project.scratchstudio.kith_andoid.Model.Cache;
@@ -949,34 +949,6 @@ public class HttpService {
             }
         }));
         httpGetRequest.execute("http://" + SERVER + "/api/boards/getuserboards/" + user.getId());
-    }
-
-    public void sendComment(Activity activity, User user, NewCommentFragment fragment, int boardId, String message) {
-        String[] result_keys = {"status"};
-        String[] header_keys = {"Authorization"};
-        String[] body_keys = {"message"};
-        String[] header_data = {user.getToken()};
-        String[] body_data = {message};
-
-        HttpPostRequest httpPostRequest = new HttpPostRequest(activity, header_keys, body_keys, header_data, body_data,
-                ((output, resultJSON, code) -> {
-                    if (output && resultJSON != null) {
-                        try {
-                            JSONObject json = new JSONObject(resultJSON);
-                            if (json.has(result_keys[0]) && json.getBoolean(result_keys[0]) && fragment != null) {
-                                fragment.createNewComment(message);
-                            }
-                        } catch (JSONException e) {
-                            if (activity != null) {
-                                Toast.makeText(activity, getErrorMessage(code), Toast.LENGTH_SHORT).show();
-                            }
-                            e.printStackTrace();
-                        }
-                    } else if (activity != null) {
-                        Toast.makeText(activity, getErrorMessage(code), Toast.LENGTH_SHORT).show();
-                    }
-                }));
-        httpPostRequest.execute("http://" + SERVER + "/api/boards/" + boardId + "/comment");
     }
 
     public void editAnnouncement(Activity activity, User user, NewAnnouncementFragment nFragment, AnnouncementInfo old, AnnouncementInfo info,

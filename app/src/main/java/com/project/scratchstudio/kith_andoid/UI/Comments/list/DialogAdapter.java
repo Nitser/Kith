@@ -1,4 +1,4 @@
-package com.project.scratchstudio.kith_andoid.UI.Comments;
+package com.project.scratchstudio.kith_andoid.UI.Comments.list;
 
 import android.app.Activity;
 import android.icu.text.DateFormat;
@@ -28,7 +28,6 @@ public class DialogAdapter extends RecyclerView.Adapter<DialogHolder> {
     }
 
     private List<Comment> dialogList = new ArrayList<>();
-    private DialogAdapter.OnItemClickListener listener;
     private Activity activity;
 
     public DialogAdapter(Activity activity) {
@@ -40,6 +39,7 @@ public class DialogAdapter extends RecyclerView.Adapter<DialogHolder> {
     }
 
     //TODO: for active comments
+//    private DialogAdapter.OnItemClickListener listener;
 //    public DialogAdapter(Activity activity, List<Comment> annInfos, DialogAdapter.OnItemClickListener listener) {
 //        this.activity = activity;
 //        dialogList = annInfos;
@@ -82,18 +82,14 @@ public class DialogAdapter extends RecyclerView.Adapter<DialogHolder> {
         Picasso.with(activity).load(comment.getUser().photo.replaceAll("@[0-9]*", ""))
                 .transform(new PicassoCircleTransformation())
                 .error(com.project.scratchstudio.kith_andoid.R.mipmap.person)
-                .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
+                .memoryPolicy(MemoryPolicy.NO_STORE)
                 .into(holder.photo);
-        holder.bind(comment, listener);
+//        holder.bind(comment, listener);
     }
 
     @Override
     public int getItemCount() {
         return dialogList.size();
-    }
-
-    public long getItemId(int position) {
-        return position;
     }
 
 }
