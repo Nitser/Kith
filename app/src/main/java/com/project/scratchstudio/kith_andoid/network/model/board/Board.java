@@ -3,7 +3,9 @@ package com.project.scratchstudio.kith_andoid.network.model.board;
 import com.google.gson.annotations.SerializedName;
 import com.project.scratchstudio.kith_andoid.network.model.BaseResponse;
 
-public class Board extends BaseResponse {
+import java.io.Serializable;
+
+public class Board extends BaseResponse implements Serializable {
     @SerializedName("board_id")
     public int id;
 

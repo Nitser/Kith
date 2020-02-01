@@ -133,8 +133,7 @@ public class NewAnnouncementFragment extends Fragment {
         });
 
         if(bundle.containsKey("is_edit") && bundle.getBoolean("is_edit")){
-            int id =  bundle.getInt("board_list_id");
-            board = BoardsFragment.getListAnn().get(id);
+            board = (Board) bundle.getSerializable("board");
             fillFields();
         }
     }

@@ -46,16 +46,6 @@ public class BoardsFragment extends Fragment {
     private BoardApi boardApi;
     private CompositeDisposable disposable = new CompositeDisposable();
 
-    private static List<Board> listAnn = new ArrayList<>();
-
-    public static List<Board> getListAnn() {
-        return listAnn;
-    }
-
-    public static void setListAnn(List<Board> list) {
-        listAnn = list;
-    }
-
     public BoardsFragment() {
     }
 
@@ -149,7 +139,7 @@ public class BoardsFragment extends Fragment {
 
     public void setAdapter() {
         adapter = new BoardAdapter(getActivity(), (item, id) -> {
-            bundle.putSerializable("board_list_id", id);
+            bundle.putSerializable("board", item);
             bundle.putSerializable("type", type);
             ((HomeActivity) getContext()).loadFragment(AnnouncementInfoFragment.newInstance(bundle));
         }, this);

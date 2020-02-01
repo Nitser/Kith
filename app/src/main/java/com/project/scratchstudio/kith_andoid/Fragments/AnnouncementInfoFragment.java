@@ -43,7 +43,6 @@ import io.reactivex.schedulers.Schedulers;
 public class AnnouncementInfoFragment extends Fragment {
 
     private Bundle bundle;
-    private int boardListId;
     private Board info;
     private BoardApi boardApi;
     private UserApi userApi;
@@ -66,8 +65,7 @@ public class AnnouncementInfoFragment extends Fragment {
         bundle = getArguments();
         bundle.putBoolean("is_edit", false);
         if (bundle != null) {
-            boardListId = bundle.getInt("board_list_id");
-            info = BoardsFragment.getListAnn().get(boardListId);
+            info = (Board) bundle.getSerializable("board");
         }
         return inflater.inflate(R.layout.fragment_announcement_information, container, false);
     }
@@ -133,9 +131,6 @@ public class AnnouncementInfoFragment extends Fragment {
             phone.setVisibility(View.GONE);
         }
 
-        if (info.needParticipants.equals("null") || info.needParticipants.equals("")) {
-            info.needParticipants = "-";
-        }
         description.setText(info.description);
         if (info.url != null && !info.url.equals("null") && !info.url.equals("")) {
             Picasso.with(getActivity()).load(info.url.replaceAll("@[0-9]*", ""))
@@ -224,7 +219,7 @@ public class AnnouncementInfoFragment extends Fragment {
     void onClickEdit(View view) {
         HomeActivity homeActivity = (HomeActivity) getActivity();
         bundle.putBoolean("is_edit", true);
-        bundle.putSerializable("board_list_id", boardListId);
+        bundle.putSerializable("board", info);
         homeActivity.loadFragment(NewAnnouncementFragment.newInstance(bundle));
     }
 
