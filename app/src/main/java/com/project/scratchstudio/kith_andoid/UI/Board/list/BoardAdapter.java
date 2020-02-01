@@ -56,6 +56,8 @@ public class BoardAdapter extends RecyclerView.Adapter<BoardHolder> {
         holder.title.setText(board.title);
         if (board.subscriptionOnBoard == 1) {
             holder.favorite.setChecked(true);
+        } else {
+            holder.favorite.setChecked(false);
         }
 
         try {
