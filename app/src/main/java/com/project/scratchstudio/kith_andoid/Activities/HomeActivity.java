@@ -3,17 +3,15 @@ package com.project.scratchstudio.kith_andoid.Activities;
 import android.os.Bundle;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.project.scratchstudio.kith_andoid.Fragments.AnnouncementInfoFragment;
-import com.project.scratchstudio.kith_andoid.Fragments.MessagesFragment;
-import com.project.scratchstudio.kith_andoid.Fragments.NewAnnouncementFragment;
 import com.project.scratchstudio.kith_andoid.Fragments.TreeFragment;
 import com.project.scratchstudio.kith_andoid.Model.AnnouncementInfo;
 import com.project.scratchstudio.kith_andoid.R;
 import com.project.scratchstudio.kith_andoid.Service.InternalStorageService;
 import com.project.scratchstudio.kith_andoid.SetInternalData.SetUserIdAndToken;
-import com.project.scratchstudio.kith_andoid.UI.Board.BoardsFragment;
-import com.project.scratchstudio.kith_andoid.UI.Comments.DialogFragment;
+import com.project.scratchstudio.kith_andoid.UI.BoardInfo.BoardInfoFragment;
+import com.project.scratchstudio.kith_andoid.UI.BoardList.BoardsFragment;
 import com.project.scratchstudio.kith_andoid.UI.NewComment.NewCommentFragment;
+import com.project.scratchstudio.kith_andoid.UI.NewEditBoard.NewEditBoardFragment;
 import com.project.scratchstudio.kith_andoid.network.model.user.User;
 
 import java.util.ArrayList;
@@ -26,6 +24,7 @@ import androidx.fragment.app.FragmentTransaction;
 public class HomeActivity extends AppCompatActivity {
 
     private Bundle bundle;
+    private FragmentTransaction fragmentTransaction;
     private static User mainUser;
     private static List<User> invitedUsers = new ArrayList<>();
     private static List<Bundle> stackBundles = new ArrayList<>();
@@ -74,12 +73,18 @@ public class HomeActivity extends AppCompatActivity {
         return false;
     };
 
-    public void addFragment(Fragment fragment) {
-        getSupportFragmentManager()
-                .beginTransaction()
-                .add(R.id.container, fragment)
-                .addToBackStack(null)
-                .commit();
+    public void addFragment(Fragment fragment, String tag) {
+        fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        fragmentTransaction.add(R.id.container, fragment, tag);
+        fragmentTransaction.addToBackStack(tag);
+        fragmentTransaction.commit();
+    }
+
+    public void backFragment() {
+        if (getSupportFragmentManager().getBackStackEntryCount() >= 0) {
+            getSupportFragmentManager().popBackStack();
+        }
     }
 
     public void setTreeNavigation() {
@@ -121,30 +126,13 @@ public class HomeActivity extends AppCompatActivity {
                 if (handled) {
                     break;
                 }
-            }
-//            else if(f instanceof SearchFragment){
-//                handled = ((SearchFragment)f).onBackPressed();
-//                if(handled) {
-//                    break;
-//                }
-//            }
-            else if (f instanceof NewAnnouncementFragment) {
-                handled = ((NewAnnouncementFragment) f).onBackPressed();
+            } else if (f instanceof NewEditBoardFragment) {
+                handled = ((NewEditBoardFragment) f).onBackPressed();
                 if (handled) {
                     break;
                 }
-            } else if (f instanceof MessagesFragment) {
-                handled = ((MessagesFragment) f).onBackPressed();
-                if (handled) {
-                    break;
-                }
-            } else if (f instanceof DialogFragment) {
-                handled = ((DialogFragment) f).onBackPressed();
-                if (handled) {
-                    break;
-                }
-            } else if (f instanceof AnnouncementInfoFragment) {
-                handled = ((AnnouncementInfoFragment) f).onBackPressed();
+            } else if (f instanceof BoardInfoFragment) {
+                handled = ((BoardInfoFragment) f).onBackPressed();
                 if (handled) {
                     break;
                 }

@@ -16,7 +16,7 @@ import com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView;
 import com.project.scratchstudio.kith_andoid.Model.DialogInfo;
 import com.project.scratchstudio.kith_andoid.R;
 import com.project.scratchstudio.kith_andoid.Service.PicassoCircleTransformation;
-import com.project.scratchstudio.kith_andoid.UI.Comments.DialogFragment;
+import com.project.scratchstudio.kith_andoid.UI.Comments.CommentListFragment;
 import com.project.scratchstudio.kith_andoid.network.ApiClient;
 import com.project.scratchstudio.kith_andoid.network.apiService.CommentApi;
 import com.project.scratchstudio.kith_andoid.network.model.comment.SendCommentResponse;
@@ -65,9 +65,9 @@ public class NewCommentFragment extends Fragment {
     }
 
     private void init() {
-        CustomFontTextView name = getActivity().findViewById(R.id.name);
-        CustomFontTextView position = getActivity().findViewById(R.id.position);
-        ImageView photo = getActivity().findViewById(R.id.photo);
+        CustomFontTextView name = getActivity().findViewById(R.id.new_comment_name);
+        CustomFontTextView position = getActivity().findViewById(R.id.new_comment_position);
+        ImageView photo = getActivity().findViewById(R.id.new_comment_photo);
         User mainUser = HomeActivity.getMainUser();
 
         name.setText(mainUser.getFirstName());
@@ -81,28 +81,26 @@ public class NewCommentFragment extends Fragment {
     }
 
     private void setButtonsListener() {
-        CustomFontTextView cancel = getActivity().findViewById(R.id.cancel);
+        CustomFontTextView cancel = getActivity().findViewById(R.id.new_comment_cancel);
         cancel.setOnClickListener(this::onClickBack);
-        CustomFontTextView send = getActivity().findViewById(R.id.done);
+        CustomFontTextView send = getActivity().findViewById(R.id.new_comment_done);
         send.setOnClickListener(this::onClickSend);
     }
 
     public void onClickBack(View view) {
-        HomeActivity homeActivity = (HomeActivity) getActivity();
-        homeActivity.replaceFragment(DialogFragment.newInstance(bundle));
+        ((HomeActivity)getActivity()).backFragment();
     }
 
     public boolean onBackPressed() {
-        HomeActivity homeActivity = (HomeActivity) getActivity();
-        homeActivity.replaceFragment(DialogFragment.newInstance(bundle));
+        ((HomeActivity)getActivity()).backFragment();
         return true;
     }
 
     private void onClickSend(View view) {
-        CustomFontEditText user_message = getActivity().findViewById(R.id.comment);
+        CustomFontEditText user_message = getActivity().findViewById(R.id.new_comment_message);
         String message = Objects.requireNonNull(user_message.getText()).toString();
         if (message.trim().length() > 0) {
-            CustomFontTextView send = getActivity().findViewById(R.id.done);
+            CustomFontTextView send = getActivity().findViewById(R.id.new_comment_done);
             send.setEnabled(false);
             disposable.add(
                     commentApi.sendComment(boardId, message)
@@ -140,11 +138,6 @@ public class NewCommentFragment extends Fragment {
 
         bundle.putSerializable("new_comment", newDialog);
         onClickBack(null);
-    }
-
-    private boolean isNetworkConnected() {
-        ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        return (cm != null && cm.getActiveNetworkInfo() != null);
     }
 
 }

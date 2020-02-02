@@ -1,4 +1,4 @@
-package com.project.scratchstudio.kith_andoid.UI.Board.list;
+package com.project.scratchstudio.kith_andoid.UI.BoardList.list;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;

@@ -1,4 +1,4 @@
-package com.project.scratchstudio.kith_andoid.UI.Board.list;
+package com.project.scratchstudio.kith_andoid.UI.BoardList.list;
 
 import android.app.Activity;
 import android.icu.text.DateFormat;
@@ -11,7 +11,7 @@ import android.widget.ImageView;
 
 import com.project.scratchstudio.kith_andoid.Activities.HomeActivity;
 import com.project.scratchstudio.kith_andoid.R;
-import com.project.scratchstudio.kith_andoid.UI.Board.BoardsFragment;
+import com.project.scratchstudio.kith_andoid.UI.BoardList.BoardsFragment;
 import com.project.scratchstudio.kith_andoid.network.model.board.Board;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;

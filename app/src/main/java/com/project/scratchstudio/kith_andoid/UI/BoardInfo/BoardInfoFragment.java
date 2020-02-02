@@ -1,4 +1,4 @@
-package com.project.scratchstudio.kith_andoid.Fragments;
+package com.project.scratchstudio.kith_andoid.UI.BoardInfo;
 
 import android.content.Intent;
 import android.icu.text.DateFormat;
@@ -19,7 +19,8 @@ import android.widget.Toast;
 import com.project.scratchstudio.kith_andoid.Activities.HomeActivity;
 import com.project.scratchstudio.kith_andoid.Activities.ProfileActivity;
 import com.project.scratchstudio.kith_andoid.R;
-import com.project.scratchstudio.kith_andoid.UI.Comments.DialogFragment;
+import com.project.scratchstudio.kith_andoid.UI.Comments.CommentListFragment;
+import com.project.scratchstudio.kith_andoid.UI.NewEditBoard.NewEditBoardFragment;
 import com.project.scratchstudio.kith_andoid.network.ApiClient;
 import com.project.scratchstudio.kith_andoid.network.apiService.BoardApi;
 import com.project.scratchstudio.kith_andoid.network.apiService.UserApi;
@@ -34,13 +35,12 @@ import java.util.Date;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 
-public class AnnouncementInfoFragment extends Fragment {
+public class BoardInfoFragment extends Fragment {
 
     private Bundle bundle;
     private Board info;
@@ -54,8 +54,8 @@ public class AnnouncementInfoFragment extends Fragment {
         favorite.setEnabled(true);
     }
 
-    public static AnnouncementInfoFragment newInstance(Bundle bundle) {
-        AnnouncementInfoFragment fragment = new AnnouncementInfoFragment();
+    public static BoardInfoFragment newInstance(Bundle bundle) {
+        BoardInfoFragment fragment = new BoardInfoFragment();
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -211,23 +211,22 @@ public class AnnouncementInfoFragment extends Fragment {
     void onClickEdit(View view) {
         bundle.putBoolean("is_edit", true);
         bundle.putSerializable("board", info);
-        ((HomeActivity) getActivity()).addFragment(NewAnnouncementFragment.newInstance(bundle));
+        ((HomeActivity) getActivity()).addFragment(NewEditBoardFragment.newInstance(bundle), "BOARD_INFO");
     }
 
     public void onClickBack(View view) {
-        getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        ((HomeActivity) getActivity()).backFragment();
     }
 
     public boolean onBackPressed() {
-        getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        ((HomeActivity) getActivity()).backFragment();
         return true;
     }
 
     public void onClickComments(View view) {
         bundle.putInt("board_id", info.id);
         bundle.putString("board_title", info.title);
-        HomeActivity homeActivity = (HomeActivity) getActivity();
-        homeActivity.replaceFragment(DialogFragment.newInstance(bundle));
+        ((HomeActivity) getContext()).addFragment(CommentListFragment.newInstance(bundle), "BOARD_INFO");
     }
 
     public void onClickJoin(View view) {

@@ -1,4 +1,4 @@
-package com.project.scratchstudio.kith_andoid.Fragments;
+package com.project.scratchstudio.kith_andoid.UI.NewEditBoard;
 
 import android.Manifest;
 import android.app.Activity;
@@ -44,7 +44,7 @@ import br.com.sapereaude.maskedEditText.MaskedEditText;
 
 import static android.app.Activity.RESULT_OK;
 
-public class NewAnnouncementFragment extends Fragment {
+public class NewEditBoardFragment extends Fragment {
 
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private static long buttonCount = 0;
@@ -62,8 +62,8 @@ public class NewAnnouncementFragment extends Fragment {
         }
     }
 
-    public static NewAnnouncementFragment newInstance(Bundle bundle) {
-        NewAnnouncementFragment fragment = new NewAnnouncementFragment();
+    public static NewEditBoardFragment newInstance(Bundle bundle) {
+        NewEditBoardFragment fragment = new NewEditBoardFragment();
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -162,7 +162,10 @@ public class NewAnnouncementFragment extends Fragment {
     }
 
     public boolean onBackPressed() {
-        getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        if (bundle.containsKey("is_edit") && bundle.getBoolean("is_edit")) {
+            editBoard();
+        }
+        ((HomeActivity) getActivity()).backFragment();
         return true;
     }
 
@@ -207,7 +210,7 @@ public class NewAnnouncementFragment extends Fragment {
         if (bundle.containsKey("is_edit") && bundle.getBoolean("is_edit")) {
             editBoard();
         }
-        getFragmentManager().popBackStackImmediate();
+        ((HomeActivity) getActivity()).backFragment();
     }
 
     private void editBoard() {

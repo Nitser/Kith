@@ -19,9 +19,8 @@ import com.project.scratchstudio.kith_andoid.Activities.SignInActivity;
 import com.project.scratchstudio.kith_andoid.Activities.SmsActivity;
 import com.project.scratchstudio.kith_andoid.CustomViews.CustomFontEditText;
 import com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView;
-import com.project.scratchstudio.kith_andoid.Fragments.NewAnnouncementFragment;
+import com.project.scratchstudio.kith_andoid.UI.NewEditBoard.NewEditBoardFragment;
 import com.project.scratchstudio.kith_andoid.Fragments.TreeFragment;
-import com.project.scratchstudio.kith_andoid.Model.AnnouncementInfo;
 import com.project.scratchstudio.kith_andoid.Model.Cache;
 import com.project.scratchstudio.kith_andoid.Model.SearchInfo;
 import com.project.scratchstudio.kith_andoid.R;
@@ -699,7 +698,7 @@ public class HttpService {
         httpPostRequest.execute("http://" + SERVER + "/api/users/edit/password");
     }
 
-    public void addAnnouncement(Activity activity, User user, NewAnnouncementFragment nFragment, Board info, Bitmap photo) {
+    public void addAnnouncement(Activity activity, User user, NewEditBoardFragment nFragment, Board info, Bitmap photo) {
         String[] result_keys = {"status"};
         String[] header_keys = {"Authorization"};
         String[] header_data = {user.getToken()};
@@ -734,6 +733,8 @@ public class HttpService {
                             if (json.getBoolean(result_keys[0]) && activity != null && nFragment != null) {
                                 Toast.makeText(activity, "Объявление создано", Toast.LENGTH_SHORT).show();
                                 nFragment.onClickClose(null);
+                            } else {
+                                Toast.makeText(activity, "Ошибка отправки запроса", Toast.LENGTH_SHORT).show();
                             }
                         } catch (JSONException e) {
                             if (activity != null) {
@@ -748,7 +749,7 @@ public class HttpService {
         httpPostRequest.execute("http://" + SERVER + "/api/boards/create");
     }
 
-    public void editAnnouncement(Activity activity, User user, NewAnnouncementFragment nFragment, Board old, Board info,
+    public void editAnnouncement(Activity activity, User user, NewEditBoardFragment nFragment, Board old, Board info,
                                  Bitmap photo) {
         String[] result_keys = {"status"};
         String[] header_keys = {"Authorization"};
@@ -785,6 +786,8 @@ public class HttpService {
                             if (json.getBoolean(result_keys[0]) && activity != null && nFragment != null) {
                                 Toast.makeText(activity, "Объявление изменено", Toast.LENGTH_SHORT).show();
                                 nFragment.onClickClose(null);
+                            } else {
+                                Toast.makeText(activity, "Ошибка отправки запроса", Toast.LENGTH_SHORT).show();
                             }
                         } catch (JSONException e) {
                             if (activity != null) {

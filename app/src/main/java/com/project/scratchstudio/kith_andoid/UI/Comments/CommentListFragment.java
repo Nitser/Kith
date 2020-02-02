@@ -11,10 +11,9 @@ import android.widget.Toast;
 
 import com.project.scratchstudio.kith_andoid.Activities.HomeActivity;
 import com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView;
-import com.project.scratchstudio.kith_andoid.Fragments.AnnouncementInfoFragment;
+import com.project.scratchstudio.kith_andoid.CustomViews.EndlessRecyclerViewScrollListener;
 import com.project.scratchstudio.kith_andoid.R;
 import com.project.scratchstudio.kith_andoid.UI.Comments.list.DialogAdapter;
-import com.project.scratchstudio.kith_andoid.CustomViews.EndlessRecyclerViewScrollListener;
 import com.project.scratchstudio.kith_andoid.UI.NewComment.NewCommentFragment;
 import com.project.scratchstudio.kith_andoid.network.ApiClient;
 import com.project.scratchstudio.kith_andoid.network.LiveDataHelper;
@@ -27,6 +26,7 @@ import java.util.Collections;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -34,7 +34,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 
-public class DialogFragment extends Fragment {
+public class CommentListFragment extends Fragment {
     private Bundle bundle;
     private int boardId;
     private String boardTitle;
@@ -45,11 +45,11 @@ public class DialogFragment extends Fragment {
     private CompositeDisposable disposable = new CompositeDisposable();
     private LiveDataHelper liveDataHelper;
 
-    public DialogFragment() {
+    public CommentListFragment() {
     }
 
-    public static DialogFragment newInstance(Bundle bundle) {
-        DialogFragment fragment = new DialogFragment();
+    public static CommentListFragment newInstance(Bundle bundle) {
+        CommentListFragment fragment = new CommentListFragment();
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -125,26 +125,30 @@ public class DialogFragment extends Fragment {
     }
 
     private void setButtonsListener() {
-        ImageButton back = getActivity().findViewById(R.id.back);
+        ImageButton back = getActivity().findViewById(R.id.back_comment);
         back.setOnClickListener(this::onClickBack);
         LinearLayout send = getActivity().findViewById(R.id.new_c);
         send.setOnClickListener(this::onClickSend);
     }
 
     public void onClickBack(View view) {
-        HomeActivity homeActivity = (HomeActivity) getActivity();
-        homeActivity.replaceFragment(AnnouncementInfoFragment.newInstance(bundle));
+        FragmentManager fragmentManager = getFragmentManager();
+        if (fragmentManager.getBackStackEntryCount() >= 0) {
+            Log.i("Fragment", fragmentManager.getBackStackEntryCount() + "");
+            ((HomeActivity) getActivity()).backFragment();
+        } else {
+            Log.i("Fragment", "Back press");
+            getActivity().onBackPressed();
+        }
     }
 
     public boolean onBackPressed() {
-        HomeActivity homeActivity = (HomeActivity) getActivity();
-        homeActivity.replaceFragment(AnnouncementInfoFragment.newInstance(bundle));
+        ((HomeActivity) getActivity()).backFragment();
         return true;
     }
 
     public void onClickSend(View view) {
-        HomeActivity homeActivity = (HomeActivity) getActivity();
-        homeActivity.replaceFragment(NewCommentFragment.newInstance(bundle));
+        ((HomeActivity) getActivity()).addFragment(NewCommentFragment.newInstance(bundle), "COMMENT_LIST");
     }
 
     @Override

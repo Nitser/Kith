@@ -1,4 +1,4 @@
-package com.project.scratchstudio.kith_andoid.UI.Board;
+package com.project.scratchstudio.kith_andoid.UI.BoardList;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -11,11 +11,11 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.project.scratchstudio.kith_andoid.Activities.HomeActivity;
-import com.project.scratchstudio.kith_andoid.Fragments.AnnouncementInfoFragment;
-import com.project.scratchstudio.kith_andoid.Fragments.NewAnnouncementFragment;
 import com.project.scratchstudio.kith_andoid.Fragments.TreeFragment;
 import com.project.scratchstudio.kith_andoid.R;
-import com.project.scratchstudio.kith_andoid.UI.Board.list.BoardAdapter;
+import com.project.scratchstudio.kith_andoid.UI.BoardInfo.BoardInfoFragment;
+import com.project.scratchstudio.kith_andoid.UI.BoardList.list.BoardAdapter;
+import com.project.scratchstudio.kith_andoid.UI.NewEditBoard.NewEditBoardFragment;
 import com.project.scratchstudio.kith_andoid.network.ApiClient;
 import com.project.scratchstudio.kith_andoid.network.apiService.BoardApi;
 import com.project.scratchstudio.kith_andoid.network.model.board.Board;
@@ -140,7 +140,7 @@ public class BoardsFragment extends Fragment {
         adapter = new BoardAdapter(getActivity(), (item, id) -> {
             bundle.putSerializable("board", item);
             bundle.putSerializable("type", type);
-            ((HomeActivity) getContext()).addFragment(AnnouncementInfoFragment.newInstance(bundle));
+            ((HomeActivity) getContext()).addFragment(BoardInfoFragment.newInstance(bundle), "BOARD_LIST");
         }, this);
         container.setAdapter(adapter);
     }
@@ -256,7 +256,7 @@ public class BoardsFragment extends Fragment {
     private void onClickAdd(View view) {
         HomeActivity homeActivity = (HomeActivity) getActivity();
         bundle.putSerializable("type", type);
-        homeActivity.addFragment(NewAnnouncementFragment.newInstance(bundle));
+        homeActivity.addFragment(NewEditBoardFragment.newInstance(bundle), "BOARD_LIST");
     }
 
     public boolean onBackPressed() {

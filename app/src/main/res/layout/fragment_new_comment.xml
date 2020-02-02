@@ -22,7 +22,7 @@
         tools:layout_editor_absoluteY="16dp">
 
         <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
-            android:id="@+id/cancel"
+            android:id="@+id/new_comment_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
@@ -49,7 +49,7 @@
             customAttrs:customFont="intro_regular" />
 
         <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
-            android:id="@+id/done"
+            android:id="@+id/new_comment_done"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
@@ -85,7 +85,7 @@
             android:layout_marginBottom="20dp">
 
             <ImageView
-                android:id="@+id/photo"
+                android:id="@+id/new_comment_photo"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_gravity="center_vertical"
@@ -93,10 +93,10 @@
                 android:src="@mipmap/person" />
 
             <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontEditText
-                android:id="@+id/comment"
+                android:id="@+id/new_comment_message"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/position"
+                android:layout_below="@+id/new_comment_position"
                 android:layout_marginTop="20dp"
                 android:background="@drawable/entry_field"
                 android:gravity="start"
@@ -108,24 +108,24 @@
                 customAttrs:customFont="intro_regular" />
 
             <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
-                android:id="@+id/position"
+                android:id="@+id/new_comment_position"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/name"
+                android:layout_below="@+id/new_comment_name"
                 android:layout_marginStart="5dp"
-                android:layout_toEndOf="@+id/photo"
+                android:layout_toEndOf="@+id/new_comment_photo"
                 android:text="IOS developer"
                 android:textColor="@color/colorBlack"
                 android:textSize="14sp"
                 customAttrs:customFont="intro_regular" />
 
             <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
-                android:id="@+id/name"
+                android:id="@+id/new_comment_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:layout_marginBottom="5dp"
-                android:layout_toEndOf="@+id/photo"
+                android:layout_toEndOf="@+id/new_comment_photo"
                 android:text="Max Wright"
                 android:textColor="@color/colorBlack"
                 android:textSize="14sp"
