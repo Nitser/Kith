@@ -110,7 +110,7 @@ public class TreeService {
                             bundle.putBoolean("another_user", true);
                             bundle.putSerializable("user", user);
                             HomeActivity.getStackBundles().add(bundle);
-                            homeActivity.loadFragment(TreeFragment.newInstance(bundle));
+                            homeActivity.replaceFragment(TreeFragment.newInstance(bundle));
                             view.setEnabled(true);
                     });
                     id++;

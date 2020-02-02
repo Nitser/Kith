@@ -89,12 +89,12 @@ public class NewCommentFragment extends Fragment {
 
     public void onClickBack(View view) {
         HomeActivity homeActivity = (HomeActivity) getActivity();
-        homeActivity.loadFragment(DialogFragment.newInstance(bundle));
+        homeActivity.replaceFragment(DialogFragment.newInstance(bundle));
     }
 
     public boolean onBackPressed() {
         HomeActivity homeActivity = (HomeActivity) getActivity();
-        homeActivity.loadFragment(DialogFragment.newInstance(bundle));
+        homeActivity.replaceFragment(DialogFragment.newInstance(bundle));
         return true;
     }
 

@@ -23,7 +23,6 @@ import com.project.scratchstudio.kith_andoid.network.model.board.BoardsResponse;
 import com.project.scratchstudio.kith_andoid.network.model.favorite.FavoriteResponse;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -141,7 +140,7 @@ public class BoardsFragment extends Fragment {
         adapter = new BoardAdapter(getActivity(), (item, id) -> {
             bundle.putSerializable("board", item);
             bundle.putSerializable("type", type);
-            ((HomeActivity) getContext()).loadFragment(AnnouncementInfoFragment.newInstance(bundle));
+            ((HomeActivity) getContext()).addFragment(AnnouncementInfoFragment.newInstance(bundle));
         }, this);
         container.setAdapter(adapter);
     }
@@ -257,18 +256,18 @@ public class BoardsFragment extends Fragment {
     private void onClickAdd(View view) {
         HomeActivity homeActivity = (HomeActivity) getActivity();
         bundle.putSerializable("type", type);
-        homeActivity.loadFragment(NewAnnouncementFragment.newInstance(bundle));
+        homeActivity.addFragment(NewAnnouncementFragment.newInstance(bundle));
     }
 
     public boolean onBackPressed() {
         if (HomeActivity.getStackBundles().size() == 1) {
             HomeActivity homeActivity = (HomeActivity) getActivity();
-            homeActivity.loadFragment(TreeFragment.newInstance(bundle));
+            homeActivity.replaceFragment(TreeFragment.newInstance(bundle));
             homeActivity.setTreeNavigation();
         } else {
             Bundle bundle = HomeActivity.getStackBundles().get(HomeActivity.getStackBundles().size() - 1);
             HomeActivity homeActivity = (HomeActivity) getActivity();
-            homeActivity.loadFragment(TreeFragment.newInstance(bundle));
+            homeActivity.replaceFragment(TreeFragment.newInstance(bundle));
             homeActivity.setTreeNavigation();
         }
         return true;

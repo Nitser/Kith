@@ -19,7 +19,6 @@ import android.widget.Toast;
 import com.project.scratchstudio.kith_andoid.Activities.HomeActivity;
 import com.project.scratchstudio.kith_andoid.Activities.ProfileActivity;
 import com.project.scratchstudio.kith_andoid.R;
-import com.project.scratchstudio.kith_andoid.UI.Board.BoardsFragment;
 import com.project.scratchstudio.kith_andoid.UI.Comments.DialogFragment;
 import com.project.scratchstudio.kith_andoid.network.ApiClient;
 import com.project.scratchstudio.kith_andoid.network.apiService.BoardApi;
@@ -35,6 +34,7 @@ import java.util.Date;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.observers.DisposableSingleObserver;
@@ -83,28 +83,20 @@ public class AnnouncementInfoFragment extends Fragment {
         ImageView photo = view.findViewById(R.id.photo);
 
         title.setText(info.title);
-        if (info.endDate.equals("null")) {
-            info.endDate = "Неограниченно";
-        }
 
         try {
             DateFormat inputFormat;
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
                 inputFormat = new SimpleDateFormat("yyyy-MM-dd");
                 DateFormat outputFormat = new SimpleDateFormat("dd.MM.yyyy");
-                Date newDateFormat;
                 Date newCreationDateFormat = null;
-                newDateFormat = inputFormat.parse(info.endDate.replaceAll("\\s.*$", ""));
                 if (info.startDate.equals("null")) {
                     creationDate.setVisibility(View.GONE);
                 } else {
                     newCreationDateFormat = inputFormat.parse(info.startDate.replaceAll("\\s.*$", ""));
                 }
-                String outputDateStr = outputFormat.format(newDateFormat);
-                date.setText(outputDateStr);
                 creationDate.setText(getString(R.string.create_date, outputFormat.format(newCreationDateFormat)));
             } else {
-                date.setText(info.endDate.replaceAll("\\s.*$", ""));
                 String errDate = "Создано: " + info.startDate.replaceAll("\\s.*$", "");
                 creationDate.setText(errDate);
             }
@@ -217,20 +209,17 @@ public class AnnouncementInfoFragment extends Fragment {
     }
 
     void onClickEdit(View view) {
-        HomeActivity homeActivity = (HomeActivity) getActivity();
         bundle.putBoolean("is_edit", true);
         bundle.putSerializable("board", info);
-        homeActivity.loadFragment(NewAnnouncementFragment.newInstance(bundle));
+        ((HomeActivity) getActivity()).addFragment(NewAnnouncementFragment.newInstance(bundle));
     }
 
     public void onClickBack(View view) {
-        HomeActivity homeActivity = (HomeActivity) getActivity();
-        homeActivity.loadFragment(BoardsFragment.newInstance(bundle));
+        getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     }
 
     public boolean onBackPressed() {
-        HomeActivity homeActivity = (HomeActivity) getActivity();
-        homeActivity.loadFragment(BoardsFragment.newInstance(bundle));
+        getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         return true;
     }
 
@@ -238,7 +227,7 @@ public class AnnouncementInfoFragment extends Fragment {
         bundle.putInt("board_id", info.id);
         bundle.putString("board_title", info.title);
         HomeActivity homeActivity = (HomeActivity) getActivity();
-        homeActivity.loadFragment(DialogFragment.newInstance(bundle));
+        homeActivity.replaceFragment(DialogFragment.newInstance(bundle));
     }
 
     public void onClickJoin(View view) {

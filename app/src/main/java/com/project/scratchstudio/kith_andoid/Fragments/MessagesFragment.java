@@ -54,7 +54,7 @@ public class MessagesFragment extends Fragment {
 
         if(HomeActivity.getBoardsList().size() == 0) {
             HttpService httpService = new HttpService();
-            httpService.getSubscribedAnnouncement(getActivity(), HomeActivity.getMainUser(), this, true);
+//            httpService.getSubscribedAnnouncement(getActivity(), HomeActivity.getMainUser(), this, true);
         } else
             setAdapter();
 
@@ -93,7 +93,7 @@ public class MessagesFragment extends Fragment {
             bundle.putString("board_title", item.title);
 //            HomeActivity.getStackBundles().add(bundle);
             HomeActivity homeActivity = (HomeActivity) getActivity();
-            homeActivity.loadFragment(DialogFragment.newInstance(bundle));
+            homeActivity.replaceFragment(DialogFragment.newInstance(bundle));
 
 //            view.setEnabled(true);
         });

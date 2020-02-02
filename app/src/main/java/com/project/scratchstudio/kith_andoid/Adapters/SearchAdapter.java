@@ -39,6 +39,11 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchHolder> implements
         this.listener = listener;
     }
 
+    public void clearData(){
+        searchList = null;
+        filteredData = null;
+    }
+
     @NonNull
     @Override
     public SearchHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {

@@ -3,17 +3,17 @@ package com.project.scratchstudio.kith_andoid.Activities;
 import android.os.Bundle;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.project.scratchstudio.kith_andoid.UI.Board.BoardsFragment;
 import com.project.scratchstudio.kith_andoid.Fragments.AnnouncementInfoFragment;
-import com.project.scratchstudio.kith_andoid.UI.Comments.DialogFragment;
 import com.project.scratchstudio.kith_andoid.Fragments.MessagesFragment;
 import com.project.scratchstudio.kith_andoid.Fragments.NewAnnouncementFragment;
-import com.project.scratchstudio.kith_andoid.UI.NewComment.NewCommentFragment;
 import com.project.scratchstudio.kith_andoid.Fragments.TreeFragment;
 import com.project.scratchstudio.kith_andoid.Model.AnnouncementInfo;
 import com.project.scratchstudio.kith_andoid.R;
 import com.project.scratchstudio.kith_andoid.Service.InternalStorageService;
 import com.project.scratchstudio.kith_andoid.SetInternalData.SetUserIdAndToken;
+import com.project.scratchstudio.kith_andoid.UI.Board.BoardsFragment;
+import com.project.scratchstudio.kith_andoid.UI.Comments.DialogFragment;
+import com.project.scratchstudio.kith_andoid.UI.NewComment.NewCommentFragment;
 import com.project.scratchstudio.kith_andoid.network.model.user.User;
 
 import java.util.ArrayList;
@@ -45,10 +45,6 @@ public class HomeActivity extends AppCompatActivity {
         return boardsList;
     }
 
-    public static void setBoardsList(List<AnnouncementInfo> list) {
-        boardsList = list;
-    }
-
     public void setInvitedUsers(List<User> list) {
         invitedUsers = list;
     }
@@ -69,23 +65,28 @@ public class HomeActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.navigation_tree:
                 bundle = stackBundles.get(stackBundles.size() - 1);
-                loadFragment(TreeFragment.newInstance(bundle));
+                replaceFragment(TreeFragment.newInstance(bundle));
                 return true;
             case R.id.navigation_announcements:
-                loadFragment(BoardsFragment.newInstance(bundle));
+                replaceFragment(BoardsFragment.newInstance(bundle));
                 return true;
-//                    case R.id.navigation_messages:
-//                        loadFragment(MessagesFragment.newInstance(bundle));
-//                        return true;
         }
         return false;
     };
+
+    public void addFragment(Fragment fragment) {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.container, fragment)
+                .addToBackStack(null)
+                .commit();
+    }
 
     public void setTreeNavigation() {
         navigationView.getMenu().getItem(0).setChecked(true);
     }
 
-    public void loadFragment(Fragment fragment) {
+    public void replaceFragment(Fragment fragment) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.container, fragment);
         ft.commit();
@@ -102,7 +103,7 @@ public class HomeActivity extends AppCompatActivity {
 
         bundle = getIntent().getExtras();
         stackBundles.add(bundle);
-        loadFragment(TreeFragment.newInstance(bundle));
+        replaceFragment(TreeFragment.newInstance(bundle));
 
         navigationView = findViewById(R.id.navigation);
         navigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);

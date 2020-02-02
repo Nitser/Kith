@@ -3,6 +3,7 @@ package com.project.scratchstudio.kith_andoid.UI.Board.list;
 import android.app.Activity;
 import android.icu.text.DateFormat;
 import android.icu.text.SimpleDateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,23 +25,19 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class BoardAdapter extends RecyclerView.Adapter<BoardHolder> {
 
-    public interface OnItemClickListener {
-        void onItemClick(Board item, int id);
-    }
-
-    private List<Board> annList = new ArrayList<>();
     private final OnItemClickListener listener;
     private final BoardsFragment fragment;
+    private List<Board> annList = new ArrayList<>();
     private Activity activity;
-
-    public void setAnnList(List<Board> annList) {
-        this.annList = annList;
-    }
 
     public BoardAdapter(Activity activity, OnItemClickListener listener, BoardsFragment fragment) {
         this.activity = activity;
         this.listener = listener;
         this.fragment = fragment;
+    }
+
+    public void setAnnList(List<Board> annList) {
+        this.annList = annList;
     }
 
     @NonNull
@@ -71,12 +68,12 @@ public class BoardAdapter extends RecyclerView.Adapter<BoardHolder> {
             } else {
                 holder.date.setText(board.endDate.replaceAll("\\s.*$", ""));
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         if (board.url != null && !board.url.equals("null") && !board.url.equals("")) {
+            Log.i("URL", "yep");
             Picasso.with(activity).load(board.url)
                     .error(R.drawable.newspaper)
                     .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
@@ -96,10 +93,14 @@ public class BoardAdapter extends RecyclerView.Adapter<BoardHolder> {
         holder.bind(board, listener, i);
     }
 
-
     @Override
     public int getItemCount() {
         return annList.size();
+    }
+
+
+    public interface OnItemClickListener {
+        void onItemClick(Board item, int id);
     }
 
 }

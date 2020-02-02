@@ -133,18 +133,18 @@ public class DialogFragment extends Fragment {
 
     public void onClickBack(View view) {
         HomeActivity homeActivity = (HomeActivity) getActivity();
-        homeActivity.loadFragment(AnnouncementInfoFragment.newInstance(bundle));
+        homeActivity.replaceFragment(AnnouncementInfoFragment.newInstance(bundle));
     }
 
     public boolean onBackPressed() {
         HomeActivity homeActivity = (HomeActivity) getActivity();
-        homeActivity.loadFragment(AnnouncementInfoFragment.newInstance(bundle));
+        homeActivity.replaceFragment(AnnouncementInfoFragment.newInstance(bundle));
         return true;
     }
 
     public void onClickSend(View view) {
         HomeActivity homeActivity = (HomeActivity) getActivity();
-        homeActivity.loadFragment(NewCommentFragment.newInstance(bundle));
+        homeActivity.replaceFragment(NewCommentFragment.newInstance(bundle));
     }
 
     @Override

@@ -8,12 +8,6 @@ import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -34,15 +28,22 @@ import com.project.scratchstudio.kith_andoid.Adapters.SearchAdapter;
 import com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView;
 import com.project.scratchstudio.kith_andoid.Holders.TreeHolder;
 import com.project.scratchstudio.kith_andoid.Model.SearchInfo;
-import com.project.scratchstudio.kith_andoid.network.model.user.User;
 import com.project.scratchstudio.kith_andoid.R;
 import com.project.scratchstudio.kith_andoid.Service.HttpService;
 import com.project.scratchstudio.kith_andoid.Service.PicassoCircleTransformation;
+import com.project.scratchstudio.kith_andoid.network.model.user.User;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 public class TreeFragment extends Fragment {
 
@@ -56,11 +57,14 @@ public class TreeFragment extends Fragment {
     private SwipeRefreshLayout mySwipeRefreshLayout;
     private User currentUser;
 
-    private static List<SearchInfo> listPersons  = new ArrayList<>();
+    private static List<SearchInfo> listPersons = new ArrayList<>();
 
-    public static void setListPersons(List<SearchInfo> list) { listPersons = list; }
+    public static void setListPersons(List<SearchInfo> list) {
+        listPersons = list;
+    }
 
-    public TreeFragment() {}
+    public TreeFragment() {
+    }
 
     public static TreeFragment newInstance(Bundle bundle) {
         TreeFragment treeFragment = new TreeFragment();
@@ -82,18 +86,20 @@ public class TreeFragment extends Fragment {
         User mainUser = HomeActivity.getMainUser();
         String userName = "";
 
-        if(bundle!= null && bundle.containsKey("another_user") && !bundle.getBoolean("another_user")){
+        if (bundle != null && bundle.containsKey("another_user") && !bundle.getBoolean("another_user")) {
             currentUser = mainUser;
-            if(currentUser.getFirstName() == null ){
-                if(isNetworkConnected())
+            if (currentUser.getFirstName() == null) {
+                if (isNetworkConnected()) {
                     httpService.getUser(getActivity(), false);
-                else Toast.makeText(getActivity(), "Нет подключения к интернету", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getActivity(), "Нет подключения к интернету", Toast.LENGTH_SHORT).show();
+                }
             } else {
                 userName = currentUser.getFirstName() + " " + currentUser.getLastName();
             }
             HomeActivity.createInvitedUsers();
-        } else if(bundle != null && bundle.containsKey("user")){
-            currentUser = (User)bundle.getSerializable("user");
+        } else if (bundle != null && bundle.containsKey("user")) {
+            currentUser = (User) bundle.getSerializable("user");
             userName = currentUser.getFirstName() + " " + currentUser.getLastName();
 
             ImageButton back = getActivity().findViewById(R.id.back);
@@ -101,29 +107,31 @@ public class TreeFragment extends Fragment {
         }
 
         init(userName);
-        if(isNetworkConnected()) {
+        if (isNetworkConnected()) {
             httpService.referralCount(getActivity(), currentUser, false);
             httpService.referralCount(getActivity(), currentUser, true);
             httpService.getInvitedUsers(getActivity(), currentUser, this);
-        } else
+        } else {
             Toast.makeText(getActivity(), "Нет подключения к интернету", Toast.LENGTH_SHORT).show();
+        }
 
         mySwipeRefreshLayout = getActivity().findViewById(R.id.swiperefresh);
         mySwipeRefreshLayout.setOnRefreshListener(this::myUpdateOperation);
 
     }
 
-    private void init(String str_name){
+    private void init(String str_name) {
         CustomFontTextView name = getActivity().findViewById(R.id.name);
         CustomFontTextView position = getActivity().findViewById(R.id.position);
         ImageView photo = getActivity().findViewById(R.id.photo);
-        if(currentUser.getUrl() != null )
+        if (currentUser.getUrl() != null) {
             Picasso.with(getActivity()).load(currentUser.getUrl().replaceAll("@[0-9]*", ""))
                     .placeholder(R.mipmap.person)
                     .error(R.mipmap.person)
                     .transform(new PicassoCircleTransformation())
                     .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
                     .into(photo);
+        }
         name.setText(str_name);
         position.setText(currentUser.getPosition());
 
@@ -134,7 +142,7 @@ public class TreeFragment extends Fragment {
     public void setInvitedUsersList(List<User> invitedUsers) {
         cleanUsers();
         for (int i = 0; i < invitedUsers.size(); i++) {
-            LayoutInflater inflater = (LayoutInflater) getContext().getSystemService( Context.LAYOUT_INFLATER_SERVICE );
+            LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View itemView = inflater.inflate(R.layout.list_item_layout, null);
             linearLayout.addView(itemView, i);
             TreeHolder holder = new TreeHolder(itemView);
@@ -165,25 +173,25 @@ public class TreeFragment extends Fragment {
                 bundle.putSerializable("user", user);
                 HomeActivity.getStackBundles().add(bundle);
                 HomeActivity homeActivity = (HomeActivity) getActivity();
-                homeActivity.loadFragment(TreeFragment.newInstance(bundle));
+                homeActivity.replaceFragment(TreeFragment.newInstance(bundle));
 //            view.setEnabled(true);
             });
         }
     }
 
-    private void cleanUsers(){
+    private void cleanUsers() {
         linearLayout.removeAllViews();
     }
 
-    private void myUpdateOperation(){
+    private void myUpdateOperation() {
         Activity activity = getActivity();
 
-        if(isNetworkConnected()){
+        if (isNetworkConnected()) {
             User mainUser = HomeActivity.getMainUser();
             new Handler().post(() -> {
-                if( bundle!= null && bundle.containsKey("another_user") && !bundle.getBoolean("another_user")){
-                    httpService.referralCount(activity, mainUser,false);
-                    httpService.referralCount(activity, mainUser,true);
+                if (bundle != null && bundle.containsKey("another_user") && !bundle.getBoolean("another_user")) {
+                    httpService.referralCount(activity, mainUser, false);
+                    httpService.referralCount(activity, mainUser, true);
 
                     HomeActivity.createInvitedUsers();
                     httpService.refreshInvitedUsers(activity, mainUser.getId(), true, mySwipeRefreshLayout, this);
@@ -191,9 +199,9 @@ public class TreeFragment extends Fragment {
                     refreshUser();
 
                 } else {
-                    User user = (User)bundle.getSerializable("user");
-                    httpService.referralCount(activity, user,true);
-                    httpService.referralCount(getActivity(), user,false);
+                    User user = (User) bundle.getSerializable("user");
+                    httpService.referralCount(activity, user, true);
+                    httpService.referralCount(getActivity(), user, false);
                     httpService.refreshInvitedUsers(activity, user.getId(), false, mySwipeRefreshLayout, this);
                 }
             });
@@ -203,7 +211,7 @@ public class TreeFragment extends Fragment {
         }
     }
 
-    public void refreshUser(){
+    public void refreshUser() {
         ImageView photo = getActivity().findViewById(R.id.photo);
         CustomFontTextView name = getActivity().findViewById(R.id.name);
         CustomFontTextView position = getActivity().findViewById(R.id.position);
@@ -223,10 +231,10 @@ public class TreeFragment extends Fragment {
     @SuppressLint("MissingPermission")
     private boolean isNetworkConnected() {
         ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        return (cm != null && cm.getActiveNetworkInfo() != null) ;
+        return (cm != null && cm.getActiveNetworkInfo() != null);
     }
 
-    private void setButtonsListener(){
+    private void setButtonsListener() {
         ImageButton back = getActivity().findViewById(R.id.back);
         back.setOnClickListener(this::onClickBack);
         ImageButton search = getActivity().findViewById(R.id.search);
@@ -240,10 +248,10 @@ public class TreeFragment extends Fragment {
     }
 
     public void onClickBack(View view) {
-        HomeActivity.getStackBundles().remove(HomeActivity.getStackBundles().size()-1);
-        Bundle bundle = HomeActivity.getStackBundles().get(HomeActivity.getStackBundles().size()-1);
+        HomeActivity.getStackBundles().remove(HomeActivity.getStackBundles().size() - 1);
+        Bundle bundle = HomeActivity.getStackBundles().get(HomeActivity.getStackBundles().size() - 1);
         HomeActivity homeActivity = (HomeActivity) getActivity();
-        homeActivity.loadFragment(TreeFragment.newInstance(bundle));
+        homeActivity.replaceFragment(TreeFragment.newInstance(bundle));
     }
 
     public boolean onBackPressed() {
@@ -254,13 +262,13 @@ public class TreeFragment extends Fragment {
             HomeActivity.getStackBundles().remove(HomeActivity.getStackBundles().size() - 1);
             Bundle bundle = HomeActivity.getStackBundles().get(HomeActivity.getStackBundles().size() - 1);
             HomeActivity homeActivity = (HomeActivity) getActivity();
-            homeActivity.loadFragment(TreeFragment.newInstance(bundle));
+            homeActivity.replaceFragment(TreeFragment.newInstance(bundle));
             return true;
         }
     }
 
     public void onClickCode(View view) {
-        if (SystemClock.elapsedRealtime() - buttonCount < 1000){
+        if (SystemClock.elapsedRealtime() - buttonCount < 1000) {
             return;
         }
         buttonCount = SystemClock.elapsedRealtime();
@@ -275,15 +283,16 @@ public class TreeFragment extends Fragment {
         layout.setVisibility(View.VISIBLE);
         LinearLayout linearLayout = getActivity().findViewById(R.id.paper_search);
 //        linearLayout.setVisibility(View.VISIBLE);
-        EditText editText= getActivity().findViewById(R.id.filter);
+        EditText editText = getActivity().findViewById(R.id.filter);
         editText.requestFocus();
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
 
-        if(isNetworkConnected())
+        if (isNetworkConnected()) {
             httpService.searchUsers(getActivity(), HomeActivity.getMainUser(), this);
-        else
+        } else {
             Toast.makeText(getActivity(), "Нет подключения к интернету", Toast.LENGTH_SHORT).show();
+        }
 
         list = getActivity().findViewById(R.id.listPerson);
         EditText filter = getActivity().findViewById(R.id.filter);
@@ -295,10 +304,11 @@ public class TreeFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(s.length()>0)
+                if (s.length() > 0) {
                     linearLayout.setVisibility(View.VISIBLE);
-                else
+                } else {
                     linearLayout.setVisibility(View.INVISIBLE);
+                }
                 (TreeFragment.this).searchAdapter.getFilter().filter(s);
             }
 
@@ -314,19 +324,19 @@ public class TreeFragment extends Fragment {
 
     }
 
-    public void onClickBackSearch(View view){
+    public void onClickBackSearch(View view) {
         RelativeLayout layout = getActivity().findViewById(R.id.search_header);
         layout.setVisibility(View.INVISIBLE);
         LinearLayout linearLayout = getActivity().findViewById(R.id.paper_search);
         linearLayout.setVisibility(View.INVISIBLE);
-        EditText editText= getActivity().findViewById(R.id.filter);
+        EditText editText = getActivity().findViewById(R.id.filter);
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
     }
 
-    public void setSearchAdapter(){
+    public void setSearchAdapter() {
         searchAdapter = new SearchAdapter(getActivity(), listPersons, item -> {
-            if (SystemClock.elapsedRealtime() - buttonCount < 1000){
+            if (SystemClock.elapsedRealtime() - buttonCount < 1000) {
                 return;
             }
             buttonCount = SystemClock.elapsedRealtime();
@@ -348,24 +358,24 @@ public class TreeFragment extends Fragment {
             bundle.putSerializable("user", user);
             HomeActivity.getStackBundles().add(bundle);
             HomeActivity homeActivity = (HomeActivity) getActivity();
-            homeActivity.loadFragment(TreeFragment.newInstance(bundle));
+            homeActivity.replaceFragment(TreeFragment.newInstance(bundle));
 //            view.setEnabled(true);
         });
         list.setAdapter(searchAdapter);
     }
 
     public void onClickProfileButton(View view) {
-        if (SystemClock.elapsedRealtime() - buttonCount < 1000){
+        if (SystemClock.elapsedRealtime() - buttonCount < 1000) {
             return;
         }
         buttonCount = SystemClock.elapsedRealtime();
         view.setEnabled(false);
         Intent intent = new Intent(getContext(), ProfileActivity.class);
         intent.putExtra("another_user", true);
-        if(bundle!= null && bundle.containsKey("another_user") && !bundle.getBoolean("another_user")){
+        if (bundle != null && bundle.containsKey("another_user") && !bundle.getBoolean("another_user")) {
             intent.putExtra("user", HomeActivity.getMainUser());
-        } else if(bundle != null && bundle.containsKey("user")){
-            User user = (User)bundle.getSerializable("user");
+        } else if (bundle != null && bundle.containsKey("user")) {
+            User user = (User) bundle.getSerializable("user");
             intent.putExtra("user", user);
         }
 

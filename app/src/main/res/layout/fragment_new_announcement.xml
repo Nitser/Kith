@@ -71,7 +71,7 @@
                 android:layout_height="wrap_content">
 
             <ImageView
-                android:id="@+id/photo"
+                android:id="@+id/new_photo"
                 android:layout_width="match_parent"
                 android:layout_height="242dp"
                 android:scaleType="center"
@@ -219,7 +219,7 @@
                 customAttrs:customFont="intro_regular" />
 
             <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontEditText
-                android:id="@+id/description"
+                android:id="@+id/change_description"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
                 android:layout_marginTop="10dp"
