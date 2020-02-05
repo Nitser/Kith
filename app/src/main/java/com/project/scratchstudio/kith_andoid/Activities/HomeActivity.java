@@ -10,8 +10,6 @@ import com.project.scratchstudio.kith_andoid.Service.InternalStorageService;
 import com.project.scratchstudio.kith_andoid.SetInternalData.SetUserIdAndToken;
 import com.project.scratchstudio.kith_andoid.UI.BoardInfo.BoardInfoFragment;
 import com.project.scratchstudio.kith_andoid.UI.BoardList.BoardsFragment;
-import com.project.scratchstudio.kith_andoid.UI.NewComment.NewCommentFragment;
-import com.project.scratchstudio.kith_andoid.UI.NewEditBoard.NewEditBoardFragment;
 import com.project.scratchstudio.kith_andoid.app.FragmentType;
 import com.project.scratchstudio.kith_andoid.network.model.user.User;
 
@@ -87,10 +85,12 @@ public class HomeActivity extends AppCompatActivity {
         fragmentTransaction.commit();
     }
 
-    public void backFragment() {
+    public boolean backFragment() {
         if (getSupportFragmentManager().getBackStackEntryCount() >= 0) {
             getSupportFragmentManager().popBackStack();
+            return true;
         }
+        return false;
     }
 
     public void setTreeNavigation() {
@@ -100,7 +100,6 @@ public class HomeActivity extends AppCompatActivity {
     public void replaceFragment(Fragment fragment, String tag) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.container, fragment);
-        ft.addToBackStack(tag);
         ft.commit();
     }
 
@@ -121,41 +120,58 @@ public class HomeActivity extends AppCompatActivity {
         navigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
 
+//    @Override
+//    public void onBackPressed() {
+//        List<Fragment> fragmentList = getSupportFragmentManager().getFragments();
+//
+//        boolean handled = false;
+//        for (Fragment f : fragmentList) {
+//            if (f instanceof TreeFragment) {
+//                handled = ((TreeFragment) f).onBackPressed();
+//                if (handled) {
+//                    break;
+//                }
+//            } else if (f instanceof NewEditBoardFragment) {
+//                handled = ((NewEditBoardFragment) f).onBackPressed();
+//                if (handled) {
+//                    break;
+//                }
+//            } else if (f instanceof BoardInfoFragment) {
+//                handled = ((BoardInfoFragment) f).onBackPressed();
+//                if (handled) {
+//                    break;
+//                }
+//            } else if (f instanceof BoardsFragment) {
+//                handled = ((BoardsFragment) f).onBackPressed();
+//                if (handled) {
+//                    break;
+//                }
+//            } else if (f instanceof NewCommentFragment) {
+//                handled = ((NewCommentFragment) f).onBackPressed();
+//                if (handled) {
+//                    break;
+//                }
+//            } else if (f instanceof CommentListFragment) {
+//                Log.i("BACK_FR", "COMMENT");
+//                handled = ((CommentListFragment) f).onBackPressed();
+//                if (handled) {
+//                    break;
+//                }
+//            }
+//        }
+//        if (!handled) {
+//            super.onBackPressed();
+//        }
+//    }
+
     @Override
     public void onBackPressed() {
-        List<Fragment> fragmentList = getSupportFragmentManager().getFragments();
+        int count = getSupportFragmentManager().getBackStackEntryCount();
 
-        boolean handled = false;
-        for (Fragment f : fragmentList) {
-            if (f instanceof TreeFragment) {
-                handled = ((TreeFragment) f).onBackPressed();
-                if (handled) {
-                    break;
-                }
-            } else if (f instanceof NewEditBoardFragment) {
-                handled = ((NewEditBoardFragment) f).onBackPressed();
-                if (handled) {
-                    break;
-                }
-            } else if (f instanceof BoardInfoFragment) {
-                handled = ((BoardInfoFragment) f).onBackPressed();
-                if (handled) {
-                    break;
-                }
-            } else if (f instanceof BoardsFragment) {
-                handled = ((BoardsFragment) f).onBackPressed();
-                if (handled) {
-                    break;
-                }
-            } else if (f instanceof NewCommentFragment) {
-                handled = ((NewCommentFragment) f).onBackPressed();
-                if (handled) {
-                    break;
-                }
-            }
-        }
-        if (!handled) {
+        if (count == 0) {
             super.onBackPressed();
+        } else {
+            backFragment();
         }
     }
 

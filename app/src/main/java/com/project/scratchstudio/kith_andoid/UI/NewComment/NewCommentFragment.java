@@ -1,7 +1,5 @@
 package com.project.scratchstudio.kith_andoid.UI.NewComment;
 
-import android.content.Context;
-import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,7 +14,7 @@ import com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView;
 import com.project.scratchstudio.kith_andoid.Model.DialogInfo;
 import com.project.scratchstudio.kith_andoid.R;
 import com.project.scratchstudio.kith_andoid.Service.PicassoCircleTransformation;
-import com.project.scratchstudio.kith_andoid.UI.Comments.CommentListFragment;
+import com.project.scratchstudio.kith_andoid.app.BaseFragment;
 import com.project.scratchstudio.kith_andoid.network.ApiClient;
 import com.project.scratchstudio.kith_andoid.network.apiService.CommentApi;
 import com.project.scratchstudio.kith_andoid.network.model.comment.SendCommentResponse;
@@ -28,13 +26,12 @@ import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 
-public class NewCommentFragment extends Fragment {
+public class NewCommentFragment extends BaseFragment {
     private Bundle bundle;
     private int boardId;
 
@@ -88,12 +85,7 @@ public class NewCommentFragment extends Fragment {
     }
 
     public void onClickBack(View view) {
-        ((HomeActivity)getActivity()).backFragment();
-    }
-
-    public boolean onBackPressed() {
-        ((HomeActivity)getActivity()).backFragment();
-        return true;
+        ((HomeActivity) getActivity()).backFragment();
     }
 
     private void onClickSend(View view) {

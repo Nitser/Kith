@@ -15,6 +15,7 @@ import com.project.scratchstudio.kith_andoid.CustomViews.EndlessRecyclerViewScro
 import com.project.scratchstudio.kith_andoid.R;
 import com.project.scratchstudio.kith_andoid.UI.Comments.list.DialogAdapter;
 import com.project.scratchstudio.kith_andoid.UI.NewComment.NewCommentFragment;
+import com.project.scratchstudio.kith_andoid.app.BaseFragment;
 import com.project.scratchstudio.kith_andoid.app.FragmentType;
 import com.project.scratchstudio.kith_andoid.network.ApiClient;
 import com.project.scratchstudio.kith_andoid.network.LiveDataHelper;
@@ -26,8 +27,6 @@ import java.util.Collections;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -35,7 +34,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 
-public class CommentListFragment extends Fragment {
+public class CommentListFragment extends BaseFragment {
     private Bundle bundle;
     private int boardId;
     private String boardTitle;
@@ -134,11 +133,6 @@ public class CommentListFragment extends Fragment {
 
     public void onClickBack(View view) {
         ((HomeActivity) getActivity()).backFragment();
-    }
-
-    public boolean onBackPressed() {
-        ((HomeActivity) getActivity()).backFragment();
-        return true;
     }
 
     public void onClickSend(View view) {

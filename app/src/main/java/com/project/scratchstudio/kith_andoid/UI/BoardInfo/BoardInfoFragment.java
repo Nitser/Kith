@@ -20,8 +20,9 @@ import com.project.scratchstudio.kith_andoid.Activities.HomeActivity;
 import com.project.scratchstudio.kith_andoid.Activities.ProfileActivity;
 import com.project.scratchstudio.kith_andoid.R;
 import com.project.scratchstudio.kith_andoid.UI.Comments.CommentListFragment;
-import com.project.scratchstudio.kith_andoid.app.FragmentType;
 import com.project.scratchstudio.kith_andoid.UI.NewEditBoard.NewEditBoardFragment;
+import com.project.scratchstudio.kith_andoid.app.BaseFragment;
+import com.project.scratchstudio.kith_andoid.app.FragmentType;
 import com.project.scratchstudio.kith_andoid.network.ApiClient;
 import com.project.scratchstudio.kith_andoid.network.apiService.BoardApi;
 import com.project.scratchstudio.kith_andoid.network.apiService.UserApi;
@@ -35,13 +36,12 @@ import java.util.Date;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 
-public class BoardInfoFragment extends Fragment {
+public class BoardInfoFragment extends BaseFragment {
 
     private Bundle bundle;
     private Board info;
@@ -230,11 +230,6 @@ public class BoardInfoFragment extends Fragment {
         ((HomeActivity) getActivity()).backFragment();
     }
 
-    public boolean onBackPressed() {
-        ((HomeActivity) getActivity()).backFragment();
-        return true;
-    }
-
     private void onClickComments(View view) {
         bundle.putInt("board_id", info.id);
         bundle.putString("board_title", info.title);
@@ -306,5 +301,10 @@ public class BoardInfoFragment extends Fragment {
                             }
                         })
         );
+    }
+
+    @Override
+    public boolean onBackPressed() {
+        return ((HomeActivity) getActivity()).backFragment();
     }
 }

@@ -28,6 +28,7 @@ import com.project.scratchstudio.kith_andoid.R;
 import com.project.scratchstudio.kith_andoid.Service.HttpService;
 import com.project.scratchstudio.kith_andoid.Service.PhotoService;
 import com.project.scratchstudio.kith_andoid.UI.BoardInfo.BoardInfoFragment;
+import com.project.scratchstudio.kith_andoid.app.BaseFragment;
 import com.project.scratchstudio.kith_andoid.app.FragmentType;
 import com.project.scratchstudio.kith_andoid.network.model.board.Board;
 import com.squareup.picasso.MemoryPolicy;
@@ -45,7 +46,7 @@ import br.com.sapereaude.maskedEditText.MaskedEditText;
 
 import static android.app.Activity.RESULT_OK;
 
-public class NewEditBoardFragment extends Fragment {
+public class NewEditBoardFragment extends BaseFragment {
 
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private static long buttonCount = 0;
@@ -162,12 +163,12 @@ public class NewEditBoardFragment extends Fragment {
         done.setOnClickListener(this::onClickDone);
     }
 
+    @Override
     public boolean onBackPressed() {
         if (bundle.containsKey("is_edit") && bundle.getBoolean("is_edit")) {
             editBoard();
         }
-        ((HomeActivity) getActivity()).backFragment();
-        return true;
+       return super.onBackPressed();
     }
 
     public void onClickDoneClose() {
