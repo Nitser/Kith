@@ -276,6 +276,10 @@ public class BoardsFragment extends BaseFragment {
         homeActivity.addFragment(NewEditBoardFragment.newInstance(bundle), FragmentType.BOARD_NEW_EDIT.name());
     }
 
+    public void reloadBoards() {
+        loadBoards(type);
+    }
+
     @Override
     public boolean onBackPressed() {
         if (HomeActivity.getStackBundles().size() == 1) {

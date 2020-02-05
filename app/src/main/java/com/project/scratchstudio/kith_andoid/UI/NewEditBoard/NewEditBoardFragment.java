@@ -51,6 +51,8 @@ public class NewEditBoardFragment extends BaseFragment {
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private static long buttonCount = 0;
     private static String[] PERMISSIONS_STORAGE = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+    private CustomFontEditText need;
+    private MaskedEditText endDate;
 
     private static void verifyStoragePermissions(Activity activity) {
         int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
@@ -137,8 +139,8 @@ public class NewEditBoardFragment extends BaseFragment {
     private void fillFields() {
         CustomFontEditText title = getActivity().findViewById(R.id.title_text);
         CustomFontEditText description = getActivity().findViewById(R.id.change_description);
-        MaskedEditText endDate = getActivity().findViewById(R.id.date_text);
-        CustomFontEditText need = getActivity().findViewById(R.id.need_text);
+        endDate = getActivity().findViewById(R.id.date_text);
+        need = getActivity().findViewById(R.id.need_text);
         ImageView photo = getActivity().findViewById(R.id.new_photo);
 
         title.setText(board.title);
@@ -198,6 +200,7 @@ public class NewEditBoardFragment extends BaseFragment {
                     HttpService httpService = new HttpService();
 
                     if (board == null) {
+                        title.clearFocus(); description.clearFocus(); need.clearFocus(); endDate.clearFocus();
                         httpService.addAnnouncement(getActivity(), HomeActivity.getMainUser(), this, info, photo);
                     } else {
                         httpService.editAnnouncement(getActivity(), HomeActivity.getMainUser(), this, board, info, photo);

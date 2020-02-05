@@ -194,9 +194,16 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     public void updateComments() {
-        CommentListFragment commentListFragment = (CommentListFragment) getSupportFragmentManager().findFragmentByTag(FragmentType.COMMENT_LIST.name());
-        if(commentListFragment != null) {
+        CommentListFragment commentListFragment = (CommentListFragment) getSupportFragmentManager()
+                .findFragmentByTag(FragmentType.COMMENT_LIST.name());
+        if (commentListFragment != null) {
             commentListFragment.reloadComments();
+        }
+    }
+
+    public void updateBoards() {
+        if (boardsFragment != null) {
+            boardsFragment.reloadBoards();
         }
     }
 
