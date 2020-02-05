@@ -785,7 +785,7 @@ public class HttpService {
                             JSONObject json = new JSONObject(resultJSON);
                             if (json.getBoolean(result_keys[0]) && activity != null && nFragment != null) {
                                 Toast.makeText(activity, "Объявление изменено", Toast.LENGTH_SHORT).show();
-                                nFragment.onClickClose(null);
+                                nFragment.onClickDoneClose();
                             } else {
                                 Toast.makeText(activity, "Ошибка отправки запроса", Toast.LENGTH_SHORT).show();
                             }

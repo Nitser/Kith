@@ -15,6 +15,7 @@ import com.project.scratchstudio.kith_andoid.CustomViews.EndlessRecyclerViewScro
 import com.project.scratchstudio.kith_andoid.R;
 import com.project.scratchstudio.kith_andoid.UI.Comments.list.DialogAdapter;
 import com.project.scratchstudio.kith_andoid.UI.NewComment.NewCommentFragment;
+import com.project.scratchstudio.kith_andoid.app.FragmentType;
 import com.project.scratchstudio.kith_andoid.network.ApiClient;
 import com.project.scratchstudio.kith_andoid.network.LiveDataHelper;
 import com.project.scratchstudio.kith_andoid.network.apiService.CommentApi;
@@ -132,14 +133,7 @@ public class CommentListFragment extends Fragment {
     }
 
     public void onClickBack(View view) {
-        FragmentManager fragmentManager = getFragmentManager();
-        if (fragmentManager.getBackStackEntryCount() >= 0) {
-            Log.i("Fragment", fragmentManager.getBackStackEntryCount() + "");
-            ((HomeActivity) getActivity()).backFragment();
-        } else {
-            Log.i("Fragment", "Back press");
-            getActivity().onBackPressed();
-        }
+        ((HomeActivity) getActivity()).backFragment();
     }
 
     public boolean onBackPressed() {
@@ -148,7 +142,7 @@ public class CommentListFragment extends Fragment {
     }
 
     public void onClickSend(View view) {
-        ((HomeActivity) getActivity()).addFragment(NewCommentFragment.newInstance(bundle), "COMMENT_LIST");
+        ((HomeActivity) getActivity()).addFragment(NewCommentFragment.newInstance(bundle), FragmentType.NEW_COMMENT.name());
     }
 
     @Override

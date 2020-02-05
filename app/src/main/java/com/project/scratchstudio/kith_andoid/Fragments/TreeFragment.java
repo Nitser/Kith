@@ -31,6 +31,7 @@ import com.project.scratchstudio.kith_andoid.Model.SearchInfo;
 import com.project.scratchstudio.kith_andoid.R;
 import com.project.scratchstudio.kith_andoid.Service.HttpService;
 import com.project.scratchstudio.kith_andoid.Service.PicassoCircleTransformation;
+import com.project.scratchstudio.kith_andoid.app.FragmentType;
 import com.project.scratchstudio.kith_andoid.network.model.user.User;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
@@ -66,7 +67,7 @@ public class TreeFragment extends Fragment {
     public TreeFragment() {
     }
 
-    public static TreeFragment newInstance(Bundle bundle) {
+    public static TreeFragment newInstance(Bundle bundle, String title) {
         TreeFragment treeFragment = new TreeFragment();
         treeFragment.setArguments(bundle);
         return treeFragment;
@@ -173,7 +174,7 @@ public class TreeFragment extends Fragment {
                 bundle.putSerializable("user", user);
                 HomeActivity.getStackBundles().add(bundle);
                 HomeActivity homeActivity = (HomeActivity) getActivity();
-                homeActivity.replaceFragment(TreeFragment.newInstance(bundle));
+                homeActivity.replaceFragment(TreeFragment.newInstance(bundle, FragmentType.TREE.name()), FragmentType.TREE.name());
 //            view.setEnabled(true);
             });
         }
@@ -251,7 +252,7 @@ public class TreeFragment extends Fragment {
         HomeActivity.getStackBundles().remove(HomeActivity.getStackBundles().size() - 1);
         Bundle bundle = HomeActivity.getStackBundles().get(HomeActivity.getStackBundles().size() - 1);
         HomeActivity homeActivity = (HomeActivity) getActivity();
-        homeActivity.replaceFragment(TreeFragment.newInstance(bundle));
+        homeActivity.replaceFragment(TreeFragment.newInstance(bundle, FragmentType.TREE.name()), FragmentType.TREE.name());
     }
 
     public boolean onBackPressed() {
@@ -262,7 +263,7 @@ public class TreeFragment extends Fragment {
             HomeActivity.getStackBundles().remove(HomeActivity.getStackBundles().size() - 1);
             Bundle bundle = HomeActivity.getStackBundles().get(HomeActivity.getStackBundles().size() - 1);
             HomeActivity homeActivity = (HomeActivity) getActivity();
-            homeActivity.replaceFragment(TreeFragment.newInstance(bundle));
+            homeActivity.replaceFragment(TreeFragment.newInstance(bundle, FragmentType.TREE.name()), FragmentType.TREE.name());
             return true;
         }
     }
@@ -358,7 +359,7 @@ public class TreeFragment extends Fragment {
             bundle.putSerializable("user", user);
             HomeActivity.getStackBundles().add(bundle);
             HomeActivity homeActivity = (HomeActivity) getActivity();
-            homeActivity.replaceFragment(TreeFragment.newInstance(bundle));
+            homeActivity.replaceFragment(TreeFragment.newInstance(bundle, FragmentType.TREE.name()), FragmentType.TREE.name());
 //            view.setEnabled(true);
         });
         list.setAdapter(searchAdapter);

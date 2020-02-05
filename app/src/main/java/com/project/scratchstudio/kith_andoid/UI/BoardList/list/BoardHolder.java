@@ -29,6 +29,6 @@ public class BoardHolder extends RecyclerView.ViewHolder  {
     }
 
     public void bind(final Board item, final BoardAdapter.OnItemClickListener listener, int id) {
-        itemView.setOnClickListener(v -> listener.onItemClick(item, id));
+        itemView.setOnClickListener(v -> listener.onItemClick(item, id, this));
     }
 }

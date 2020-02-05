@@ -27,6 +27,8 @@ import com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView;
 import com.project.scratchstudio.kith_andoid.R;
 import com.project.scratchstudio.kith_andoid.Service.HttpService;
 import com.project.scratchstudio.kith_andoid.Service.PhotoService;
+import com.project.scratchstudio.kith_andoid.UI.BoardInfo.BoardInfoFragment;
+import com.project.scratchstudio.kith_andoid.app.FragmentType;
 import com.project.scratchstudio.kith_andoid.network.model.board.Board;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
@@ -39,7 +41,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import br.com.sapereaude.maskedEditText.MaskedEditText;
 
 import static android.app.Activity.RESULT_OK;
@@ -167,6 +168,12 @@ public class NewEditBoardFragment extends Fragment {
         }
         ((HomeActivity) getActivity()).backFragment();
         return true;
+    }
+
+    public void onClickDoneClose() {
+        ((HomeActivity)getActivity()).changedBoardPhoto();
+
+        onClickClose(null);
     }
 
     private void onClickDone(View view) {

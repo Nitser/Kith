@@ -20,6 +20,7 @@ import com.project.scratchstudio.kith_andoid.Activities.HomeActivity;
 import com.project.scratchstudio.kith_andoid.Activities.ProfileActivity;
 import com.project.scratchstudio.kith_andoid.R;
 import com.project.scratchstudio.kith_andoid.UI.Comments.CommentListFragment;
+import com.project.scratchstudio.kith_andoid.app.FragmentType;
 import com.project.scratchstudio.kith_andoid.UI.NewEditBoard.NewEditBoardFragment;
 import com.project.scratchstudio.kith_andoid.network.ApiClient;
 import com.project.scratchstudio.kith_andoid.network.apiService.BoardApi;
@@ -48,9 +49,11 @@ public class BoardInfoFragment extends Fragment {
     private UserApi userApi;
     private CompositeDisposable disposable = new CompositeDisposable();
 
-    public void setIsJoin(boolean bol) {
+    private ImageView photo;
+
+    private void setIsJoin() {
         CheckBox favorite = getActivity().findViewById(R.id.heart);
-        favorite.setChecked(bol);
+        favorite.setChecked(true);
         favorite.setEnabled(true);
     }
 
@@ -75,12 +78,11 @@ public class BoardInfoFragment extends Fragment {
         setButtonsListener();
 
         TextView title = view.findViewById(R.id.title);
-        TextView date = view.findViewById(R.id.date);
         TextView description = view.findViewById(R.id.description);
         TextView owner = view.findViewById(R.id.owner);
         TextView phone = view.findViewById(R.id.phone);
         TextView creationDate = view.findViewById(R.id.creationDate);
-        ImageView photo = view.findViewById(R.id.photo);
+        photo = view.findViewById(R.id.photo);
 
         title.setText(info.title);
 
@@ -139,11 +141,21 @@ public class BoardInfoFragment extends Fragment {
         }
 
         if (info.subscriptionOnBoard == 1) {
-            setIsJoin(true);
+            setIsJoin();
         }
 
         userApi = ApiClient.getClient(getContext()).create(UserApi.class);
         boardApi = ApiClient.getClient(getContext()).create(BoardApi.class);
+    }
+
+    public void reloadPhoto() {
+        if (info.url != null && !info.url.equals("null") && !info.url.equals("")) {
+            Picasso.with(getActivity()).load(info.url.replaceAll("@[0-9]*", ""))
+                    .error(R.drawable.newspaper)
+                    .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
+                    .into(photo);
+            photo.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        }
     }
 
     private void setButtonsListener() {
@@ -165,7 +177,7 @@ public class BoardInfoFragment extends Fragment {
         startActivity(intent);
     }
 
-    void onClickProfile(View view) {
+    private void onClickProfile(View view) {
         view.setEnabled(false);
         disposable.add(
                 userApi.getUser(info.organizerId)
@@ -208,10 +220,10 @@ public class BoardInfoFragment extends Fragment {
         );
     }
 
-    void onClickEdit(View view) {
+    private void onClickEdit(View view) {
         bundle.putBoolean("is_edit", true);
         bundle.putSerializable("board", info);
-        ((HomeActivity) getActivity()).addFragment(NewEditBoardFragment.newInstance(bundle), "BOARD_INFO");
+        ((HomeActivity) getActivity()).addFragment(NewEditBoardFragment.newInstance(bundle), FragmentType.BOARD_NEW_EDIT.name());
     }
 
     public void onClickBack(View view) {
@@ -223,13 +235,13 @@ public class BoardInfoFragment extends Fragment {
         return true;
     }
 
-    public void onClickComments(View view) {
+    private void onClickComments(View view) {
         bundle.putInt("board_id", info.id);
         bundle.putString("board_title", info.title);
-        ((HomeActivity) getContext()).addFragment(CommentListFragment.newInstance(bundle), "BOARD_INFO");
+        ((HomeActivity) getContext()).addFragment(CommentListFragment.newInstance(bundle), FragmentType.COMMENT_LIST.name());
     }
 
-    public void onClickJoin(View view) {
+    private void onClickJoin(View view) {
         view.setEnabled(false);
         if (info.subscriptionOnBoard != 1) {
             subscribeAnnouncement(HomeActivity.getMainUser().getId(), info, (CheckBox) view);
@@ -238,7 +250,7 @@ public class BoardInfoFragment extends Fragment {
         }
     }
 
-    public void subscribeAnnouncement(int user_id, Board board, CheckBox favorite) {
+    private void subscribeAnnouncement(int user_id, Board board, CheckBox favorite) {
         disposable.add(
                 boardApi.subscribeAnnouncement(String.valueOf(user_id), String.valueOf(board.id))
                         .subscribeOn(Schedulers.io())
@@ -267,7 +279,7 @@ public class BoardInfoFragment extends Fragment {
         );
     }
 
-    public void unsubscribeAnnouncement(int user_id, Board board, CheckBox favorite) {
+    private void unsubscribeAnnouncement(int user_id, Board board, CheckBox favorite) {
         disposable.add(
                 boardApi.unsubscribeAnnouncement(String.valueOf(user_id), String.valueOf(board.id))
                         .subscribeOn(Schedulers.io())

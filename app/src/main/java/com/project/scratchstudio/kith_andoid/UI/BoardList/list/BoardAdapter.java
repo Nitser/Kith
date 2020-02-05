@@ -3,7 +3,6 @@ package com.project.scratchstudio.kith_andoid.UI.BoardList.list;
 import android.app.Activity;
 import android.icu.text.DateFormat;
 import android.icu.text.SimpleDateFormat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,6 +39,10 @@ public class BoardAdapter extends RecyclerView.Adapter<BoardHolder> {
         this.annList = annList;
     }
 
+    public List<Board> getAnnList() {
+        return annList;
+    }
+
     @NonNull
     @Override
     public BoardHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
@@ -73,7 +76,6 @@ public class BoardAdapter extends RecyclerView.Adapter<BoardHolder> {
         }
 
         if (board.url != null && !board.url.equals("null") && !board.url.equals("")) {
-            Log.i("URL", "yep");
             Picasso.with(activity).load(board.url)
                     .error(R.drawable.newspaper)
                     .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
@@ -100,7 +102,7 @@ public class BoardAdapter extends RecyclerView.Adapter<BoardHolder> {
 
 
     public interface OnItemClickListener {
-        void onItemClick(Board item, int id);
+        void onItemClick(Board item, int id, BoardHolder boardHolder);
     }
 
 }

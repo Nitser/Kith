@@ -14,29 +14,30 @@ import android.widget.RelativeLayout;
 import com.project.scratchstudio.kith_andoid.Activities.CodeActivity;
 import com.project.scratchstudio.kith_andoid.Activities.HomeActivity;
 import com.project.scratchstudio.kith_andoid.Fragments.TreeFragment;
-import com.project.scratchstudio.kith_andoid.network.model.user.User;
 import com.project.scratchstudio.kith_andoid.R;
+import com.project.scratchstudio.kith_andoid.app.FragmentType;
+import com.project.scratchstudio.kith_andoid.network.model.user.User;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 public class TreeService {
 
-    private int[] buttonIndex ;
-    private int[] imageIndex ;
+    private int[] buttonIndex;
+    private int[] imageIndex;
     private static long buttonCount = 0;
 
-    private RelativeLayout addSmallTree(Context context){
-       LayoutInflater inflater = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
-       RelativeLayout relativeLayout = (RelativeLayout) inflater.inflate(R.layout.tree1_layout, null);
-       buttonIndex = new int[]{2, 4, 6};
-       imageIndex = new int[]{1, 3, 5};
-       setButtonListener(relativeLayout);
-       return relativeLayout;
+    private RelativeLayout addSmallTree(Context context) {
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        RelativeLayout relativeLayout = (RelativeLayout) inflater.inflate(R.layout.tree1_layout, null);
+        buttonIndex = new int[]{2, 4, 6};
+        imageIndex = new int[]{1, 3, 5};
+        setButtonListener(relativeLayout);
+        return relativeLayout;
     }
 
-    private RelativeLayout addMediumTree(Context context){
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
+    private RelativeLayout addMediumTree(Context context) {
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         RelativeLayout relativeLayout = (RelativeLayout) inflater.inflate(R.layout.tree2_layout, null);
         buttonIndex = new int[]{2, 4, 6, 8, 10, 12, 14, 16, 18};
         imageIndex = new int[]{1, 3, 5, 7, 9, 11, 13, 15, 17};
@@ -44,8 +45,8 @@ public class TreeService {
         return relativeLayout;
     }
 
-    private RelativeLayout addBigTree(Context context){
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
+    private RelativeLayout addBigTree(Context context) {
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         RelativeLayout relativeLayout = (RelativeLayout) inflater.inflate(R.layout.tree3_layout, null);
         buttonIndex = new int[]{2, 4, 6, 8, 10, 12, 14, 16, 18};
         imageIndex = new int[]{1, 3, 5, 7, 9, 11, 13, 15, 17};
@@ -53,11 +54,11 @@ public class TreeService {
         return relativeLayout;
     }
 
-    private void setButtonListener(RelativeLayout layout){
-        for(int index : buttonIndex){
+    private void setButtonListener(RelativeLayout layout) {
+        for (int index : buttonIndex) {
             Button button = (Button) layout.getChildAt(index);
-            button.setOnClickListener(view ->{
-                if (SystemClock.elapsedRealtime() - buttonCount < 1000){
+            button.setOnClickListener(view -> {
+                if (SystemClock.elapsedRealtime() - buttonCount < 1000) {
                     return;
                 }
                 buttonCount = SystemClock.elapsedRealtime();
@@ -70,26 +71,27 @@ public class TreeService {
         }
     }
 
-    public void makeTree(LinearLayout parentLayout, List<User> list, boolean owner){
+    public void makeTree(LinearLayout parentLayout, List<User> list, boolean owner) {
         HomeActivity homeActivity = (HomeActivity) parentLayout.getContext();
-        int bitmapIndex=0;
+        int bitmapIndex = 0;
         int id = 0;
         int treeIndex = 4;
-        int treeCount = (list.size()-3)/9 + 8;
+        int treeCount = (list.size() - 3) / 9 + 8;
 
-        while (treeIndex < treeCount){
+        while (treeIndex < treeCount) {
             RelativeLayout newLayout;
-            if(treeIndex == 4)
+            if (treeIndex == 4) {
                 newLayout = addSmallTree(parentLayout.getContext());
-            else if(treeIndex == 5)
+            } else if (treeIndex == 5) {
                 newLayout = addMediumTree(parentLayout.getContext());
-            else
+            } else {
                 newLayout = addBigTree(parentLayout.getContext());
+            }
             parentLayout.addView(newLayout);
 
-            for(int index : imageIndex){
+            for (int index : imageIndex) {
                 ImageView imageView = (ImageView) newLayout.getChildAt(index);
-                if(bitmapIndex < list.size()){
+                if (bitmapIndex < list.size()) {
                     Picasso.with(parentLayout.getContext()).load(list.get(bitmapIndex).getUrl())
                             .placeholder(R.mipmap.person)
                             .error(R.mipmap.person)
@@ -98,26 +100,26 @@ public class TreeService {
                     imageView.setTag(new Count(id));
                     imageView.setOnClickListener(view -> {
 
-                        if (SystemClock.elapsedRealtime() - buttonCount < 1000){
+                        if (SystemClock.elapsedRealtime() - buttonCount < 1000) {
                             return;
                         }
                         buttonCount = SystemClock.elapsedRealtime();
-                            view.setEnabled(false);
-                            Count count = (Count) view.getTag();
-                            User user = list.get(count.getIndex());
+                        view.setEnabled(false);
+                        Count count = (Count) view.getTag();
+                        User user = list.get(count.getIndex());
 
-                            Bundle bundle = new Bundle();
-                            bundle.putBoolean("another_user", true);
-                            bundle.putSerializable("user", user);
-                            HomeActivity.getStackBundles().add(bundle);
-                            homeActivity.replaceFragment(TreeFragment.newInstance(bundle));
-                            view.setEnabled(true);
+                        Bundle bundle = new Bundle();
+                        bundle.putBoolean("another_user", true);
+                        bundle.putSerializable("user", user);
+                        HomeActivity.getStackBundles().add(bundle);
+                        homeActivity.replaceFragment(TreeFragment.newInstance(bundle, FragmentType.TREE.name()), FragmentType.TREE.name());
+                        view.setEnabled(true);
                     });
                     id++;
                     bitmapIndex++;
-                } else if (owner){
+                } else if (owner) {
                     newLayout.getChildAt(index + 1).setVisibility(View.VISIBLE);
-                    return ;
+                    return;
                 } else {
                     return;
                 }
@@ -127,10 +129,12 @@ public class TreeService {
 
     }
 
-    private class Count{
+    private class Count {
         private int index;
 
-        Count(int i){ index = i; }
+        Count(int i) {
+            index = i;
+        }
 
         int getIndex() {
             return index;

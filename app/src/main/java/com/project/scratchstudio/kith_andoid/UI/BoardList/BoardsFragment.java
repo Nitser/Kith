@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.project.scratchstudio.kith_andoid.Activities.HomeActivity;
@@ -16,11 +17,14 @@ import com.project.scratchstudio.kith_andoid.R;
 import com.project.scratchstudio.kith_andoid.UI.BoardInfo.BoardInfoFragment;
 import com.project.scratchstudio.kith_andoid.UI.BoardList.list.BoardAdapter;
 import com.project.scratchstudio.kith_andoid.UI.NewEditBoard.NewEditBoardFragment;
+import com.project.scratchstudio.kith_andoid.app.FragmentType;
 import com.project.scratchstudio.kith_andoid.network.ApiClient;
 import com.project.scratchstudio.kith_andoid.network.apiService.BoardApi;
 import com.project.scratchstudio.kith_andoid.network.model.board.Board;
 import com.project.scratchstudio.kith_andoid.network.model.board.BoardsResponse;
 import com.project.scratchstudio.kith_andoid.network.model.favorite.FavoriteResponse;
+import com.squareup.picasso.MemoryPolicy;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -48,7 +52,7 @@ public class BoardsFragment extends Fragment {
     public BoardsFragment() {
     }
 
-    public static BoardsFragment newInstance(Bundle bundle) {
+    public static BoardsFragment newInstance(Bundle bundle, String title) {
         BoardsFragment fragment = new BoardsFragment();
         fragment.setArguments(bundle);
         return fragment;
@@ -136,11 +140,24 @@ public class BoardsFragment extends Fragment {
         );
     }
 
+    private ImageView clickPhoto;
+    private String clickUrl;
+
+    public void reloadPhotoById() {
+        Log.i("RELOAD", "IN BOARD OK");
+        Picasso.with(getContext()).load(clickUrl)
+                .error(R.drawable.newspaper)
+                .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
+                .into(clickPhoto);
+    }
+
     public void setAdapter() {
-        adapter = new BoardAdapter(getActivity(), (item, id) -> {
+        adapter = new BoardAdapter(getActivity(), (item, id, holder) -> {
             bundle.putSerializable("board", item);
             bundle.putSerializable("type", type);
-            ((HomeActivity) getContext()).addFragment(BoardInfoFragment.newInstance(bundle), "BOARD_LIST");
+            clickPhoto = holder.image;
+            clickUrl = item.url;
+            ((HomeActivity) getContext()).addFragment(BoardInfoFragment.newInstance(bundle), FragmentType.BOARD_INFO.name());
         }, this);
         container.setAdapter(adapter);
     }
@@ -256,18 +273,18 @@ public class BoardsFragment extends Fragment {
     private void onClickAdd(View view) {
         HomeActivity homeActivity = (HomeActivity) getActivity();
         bundle.putSerializable("type", type);
-        homeActivity.addFragment(NewEditBoardFragment.newInstance(bundle), "BOARD_LIST");
+        homeActivity.addFragment(NewEditBoardFragment.newInstance(bundle), FragmentType.BOARD_NEW_EDIT.name());
     }
 
     public boolean onBackPressed() {
         if (HomeActivity.getStackBundles().size() == 1) {
             HomeActivity homeActivity = (HomeActivity) getActivity();
-            homeActivity.replaceFragment(TreeFragment.newInstance(bundle));
+            homeActivity.replaceFragment(TreeFragment.newInstance(bundle, FragmentType.TREE.name()), FragmentType.TREE.name());
             homeActivity.setTreeNavigation();
         } else {
             Bundle bundle = HomeActivity.getStackBundles().get(HomeActivity.getStackBundles().size() - 1);
             HomeActivity homeActivity = (HomeActivity) getActivity();
-            homeActivity.replaceFragment(TreeFragment.newInstance(bundle));
+            homeActivity.replaceFragment(TreeFragment.newInstance(bundle, FragmentType.TREE.name()), FragmentType.TREE.name());
             homeActivity.setTreeNavigation();
         }
         return true;
