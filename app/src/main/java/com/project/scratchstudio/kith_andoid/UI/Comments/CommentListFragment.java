@@ -140,8 +140,13 @@ public class CommentListFragment extends BaseFragment {
     }
 
     @Override
-    public void onDestroy() {
+    public void onDestroyView() {
         liveDataHelper.clearCommentList();
-        super.onDestroy();
+        super.onDestroyView();
+    }
+
+    public void reloadComments() {
+        liveDataHelper.clearCommentList();
+        getComments(0, 10);
     }
 }

@@ -11,7 +11,6 @@ import android.widget.Toast;
 import com.project.scratchstudio.kith_andoid.Activities.HomeActivity;
 import com.project.scratchstudio.kith_andoid.CustomViews.CustomFontEditText;
 import com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView;
-import com.project.scratchstudio.kith_andoid.Model.DialogInfo;
 import com.project.scratchstudio.kith_andoid.R;
 import com.project.scratchstudio.kith_andoid.Service.PicassoCircleTransformation;
 import com.project.scratchstudio.kith_andoid.app.BaseFragment;
@@ -102,6 +101,8 @@ public class NewCommentFragment extends BaseFragment {
                                 @Override
                                 public void onSuccess(SendCommentResponse response) {
                                     if (response.getStatus()) {
+                                        ((HomeActivity) getActivity()).updateComments();
+                                        user_message.clearFocus();
                                         onClickBack(null);
                                     } else {
                                         Toast.makeText(getContext(), "Ошибка отправки запроса", Toast.LENGTH_SHORT).show();
@@ -118,18 +119,6 @@ public class NewCommentFragment extends BaseFragment {
                             })
             );
         }
-    }
-
-    public void createNewComment(String message) {
-        CustomFontTextView send = getActivity().findViewById(R.id.done);
-        send.setEnabled(true);
-        DialogInfo newDialog = new DialogInfo();
-        newDialog.user_id = HomeActivity.getMainUser().getId();
-        newDialog.message = message;
-        newDialog.photo = HomeActivity.getMainUser().getUrl();
-
-        bundle.putSerializable("new_comment", newDialog);
-        onClickBack(null);
     }
 
 }

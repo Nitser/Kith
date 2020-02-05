@@ -10,6 +10,7 @@ import com.project.scratchstudio.kith_andoid.Service.InternalStorageService;
 import com.project.scratchstudio.kith_andoid.SetInternalData.SetUserIdAndToken;
 import com.project.scratchstudio.kith_andoid.UI.BoardInfo.BoardInfoFragment;
 import com.project.scratchstudio.kith_andoid.UI.BoardList.BoardsFragment;
+import com.project.scratchstudio.kith_andoid.UI.Comments.CommentListFragment;
 import com.project.scratchstudio.kith_andoid.app.FragmentType;
 import com.project.scratchstudio.kith_andoid.network.model.user.User;
 
@@ -189,6 +190,13 @@ public class HomeActivity extends AppCompatActivity {
             boardsFragment.reloadPhotoById();
         } else {
             Log.i("RELOAD", "BOARD_LIST IS NULL");
+        }
+    }
+
+    public void updateComments() {
+        CommentListFragment commentListFragment = (CommentListFragment) getSupportFragmentManager().findFragmentByTag(FragmentType.COMMENT_LIST.name());
+        if(commentListFragment != null) {
+            commentListFragment.reloadComments();
         }
     }
 
