@@ -341,61 +341,6 @@ public class HttpService {
         httpPostRequest.execute("http://" + SERVER + "/api/users/referral");
     }
 
-    public void getInvitedUsers(Activity activity, User user, TreeFragment fragment) {
-
-        String[] result_keys = {"status", "user_id", "user_firstname", "user_lastname", "photo", "user_middlename", "user_position",
-                                "user_description"};
-        String[] header_keys = {"Authorization"};
-        String[] body_keys = {"user_id", "page", "size"};
-        String[] header_data = {HomeActivity.getMainUser().getToken()};
-        String[] body_data = {String.valueOf(user.getId()), "0", "50"};
-
-        HttpPostRequest httpPostRequest = new HttpPostRequest(activity, header_keys, body_keys, header_data, body_data,
-                ((output, resultJSON, code) -> {
-                    if (output && resultJSON != null) {
-                        try {
-                            JSONArray response = new JSONArray(resultJSON);
-                            List<User> list = new ArrayList<>();
-                            if (response.length() != 0 && !response.getJSONObject(0).has(result_keys[0])) {
-                                for (int i = 0; i < response.length(); i++) {
-                                    JSONObject obj = response.getJSONObject(i);
-                                    User invitedUser = new User();
-                                    invitedUser.setId(obj.getInt(result_keys[1]));
-                                    invitedUser.setFirstName(obj.getString(result_keys[2]));
-                                    invitedUser.setLastName(obj.getString(result_keys[3]));
-                                    invitedUser.setMiddleName(obj.getString(result_keys[5]));
-                                    invitedUser.setUrl(obj.getString(result_keys[4]).replaceAll("\\/", "/"));
-                                    invitedUser.setPosition(obj.getString(result_keys[6]));
-                                    invitedUser.setDescription(obj.getString(result_keys[7]));
-                                    invitedUser.setEmail(obj.getString("user_email"));
-                                    invitedUser.setPhone(obj.getString("user_phone"));
-
-                                    list.add(invitedUser);
-                                }
-                            }
-                            try {
-                                if (user.getId() == HomeActivity.getMainUser().getId() && activity != null) {
-                                    HomeActivity homeActivity = (HomeActivity) activity;
-                                    homeActivity.setInvitedUsers(list);
-                                }
-                                if (fragment != null) {
-                                    fragment.setInvitedUsersList(list);
-                                }
-                            } catch (NullPointerException ignored) {
-                            }
-                        } catch (JSONException e) {
-                            if (activity != null) {
-                                Toast.makeText(activity, getErrorMessage(code), Toast.LENGTH_SHORT).show();
-                            }
-                            e.printStackTrace();
-                        }
-                    } else if (activity != null) {
-                        Toast.makeText(activity, getErrorMessage(code), Toast.LENGTH_SHORT).show();
-                    }
-                }));
-        httpPostRequest.execute("http://" + SERVER + "/api/users/referral_users");
-    }
-
     public void checkReferral(CheckInActivity activity, String referralCode, View view) {
         String[] result_keys = {"user_id", "status"};
         String[] body_keys = {"user_referral"};

@@ -1,5 +1,6 @@
 package com.project.scratchstudio.kith_andoid.Fragments;
 
+import android.accounts.NetworkErrorException;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -31,6 +32,7 @@ import com.project.scratchstudio.kith_andoid.Holders.TreeHolder;
 import com.project.scratchstudio.kith_andoid.R;
 import com.project.scratchstudio.kith_andoid.Service.HttpService;
 import com.project.scratchstudio.kith_andoid.Service.PicassoCircleTransformation;
+import com.project.scratchstudio.kith_andoid.UserPresenter;
 import com.project.scratchstudio.kith_andoid.app.FragmentType;
 import com.project.scratchstudio.kith_andoid.network.ApiClient;
 import com.project.scratchstudio.kith_andoid.network.apiService.UserApi;
@@ -41,6 +43,7 @@ import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -68,6 +71,7 @@ public class TreeFragment extends Fragment {
 
     private UserApi userApi;
     private CompositeDisposable disposable = new CompositeDisposable();
+    private UserPresenter userPresenter;
 
     private static List<User> listPersons = new ArrayList<>();
 
@@ -92,6 +96,7 @@ public class TreeFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        userPresenter = new UserPresenter(getContext());
         userApi = ApiClient.getClient(getContext()).create(UserApi.class);
 
         setButtonsListener();
@@ -123,7 +128,24 @@ public class TreeFragment extends Fragment {
         if (isNetworkConnected()) {
             httpService.referralCount(getActivity(), currentUser, false);
             httpService.referralCount(getActivity(), currentUser, true);
-            httpService.getInvitedUsers(getActivity(), currentUser, this);
+
+            userPresenter.getInvitedUsers(new UserPresenter.GetUserListCallback() {
+                @Override
+                public void onSuccess(final User[] userResponse) {
+                    List<User> response = new ArrayList<>(Arrays.asList(userResponse));
+                    for (User user : response) {
+                        if (user.photo != null) {
+                            user.photo.replaceAll("\\/", "/");
+                        }
+                    }
+                    setInvitedUsersList(response);
+                }
+
+                @Override
+                public void onError(final NetworkErrorException networkError) {
+                    Toast.makeText(getContext(), "Ошибка отправки запроса", Toast.LENGTH_SHORT).show();
+                }
+            }, HomeActivity.getMainUser().id);
         } else {
             Toast.makeText(getActivity(), "Нет подключения к интернету", Toast.LENGTH_SHORT).show();
         }
@@ -181,12 +203,7 @@ public class TreeFragment extends Fragment {
                 buttonCount = SystemClock.elapsedRealtime();
 //            view.setEnabled(false);
 
-                Bundle bundle = new Bundle();
-                bundle.putBoolean("another_user", true);
-                bundle.putSerializable("user", user);
-                HomeActivity.getStackBundles().add(bundle);
-                HomeActivity homeActivity = (HomeActivity) getActivity();
-                homeActivity.replaceFragment(TreeFragment.newInstance(bundle, FragmentType.TREE.name()), FragmentType.TREE.name());
+                openProfile(user);
 //            view.setEnabled(true);
             });
         }
@@ -265,19 +282,6 @@ public class TreeFragment extends Fragment {
         Bundle bundle = HomeActivity.getStackBundles().get(HomeActivity.getStackBundles().size() - 1);
         HomeActivity homeActivity = (HomeActivity) getActivity();
         homeActivity.replaceFragment(TreeFragment.newInstance(bundle, FragmentType.TREE.name()), FragmentType.TREE.name());
-    }
-
-    public boolean onBackPressed() {
-        if (HomeActivity.getStackBundles().size() == 1) {
-            getActivity().finish();
-            return true;
-        } else {
-            HomeActivity.getStackBundles().remove(HomeActivity.getStackBundles().size() - 1);
-            Bundle bundle = HomeActivity.getStackBundles().get(HomeActivity.getStackBundles().size() - 1);
-            HomeActivity homeActivity = (HomeActivity) getActivity();
-            homeActivity.replaceFragment(TreeFragment.newInstance(bundle, FragmentType.TREE.name()), FragmentType.TREE.name());
-            return true;
-        }
     }
 
     public void onClickCode(View view) {
@@ -367,50 +371,34 @@ public class TreeFragment extends Fragment {
     }
 
     public void setSearchAdapter(View view) {
-        searchAdapter = new SearchAdapter(getActivity(), listPersons, item -> onClickProfile(view, item.id));
+        searchAdapter = new SearchAdapter(getActivity(), listPersons, item -> getProfile(view, item.id));
         list.setAdapter(searchAdapter);
     }
 
-    private void onClickProfile(View view, int newUserId) {
+    private void getProfile(View view, int newUserId) {
         view.setEnabled(false);
-        disposable.add(
-                userApi.getUser(newUserId)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribeWith(new DisposableSingleObserver<UserResponse>() {
-                            @Override
-                            public void onSuccess(UserResponse response) {
-                                if (response.getStatus()) {
-                                    response.getUser().setId(newUserId);
-                                    if (response.getUser().photo != null) {
-                                        response.getUser().setUrl(response.getUser().photo.replaceAll("\\/", "/"));
-                                    }
-                                    Bundle bundle = new Bundle();
-                                    bundle.putBoolean("another_user", true);
-                                    Intent intent = new Intent(getContext(), ProfileActivity.class);
-                                    intent.putExtra("user", response.getUser());
+        userPresenter.getUser(new UserPresenter.GetUserCallback() {
+            @Override
+            public void onSuccess(final UserResponse userResponse) {
+                if (userResponse.getStatus()) {
+                    userResponse.getUser().setId(newUserId);
+                    if (userResponse.getUser().photo != null) {
+                        userResponse.getUser().setUrl(userResponse.getUser().photo.replaceAll("\\/", "/"));
+                    }
+                    openProfile(userResponse.getUser());
+                } else {
+                    Toast.makeText(getContext(), "Ошибка отправки запроса", Toast.LENGTH_SHORT).show();
+                }
+                view.setEnabled(true);
+            }
 
-                                    if (response.getUser().id != HomeActivity.getMainUser().id) {
-                                        intent.putExtra("another_user", true);
-                                    } else {
-                                        intent.putExtra("another_user", false);
-                                    }
-
-                                    startActivity(intent);
-                                } else {
-                                    Toast.makeText(getContext(), "Ошибка отправки запроса", Toast.LENGTH_SHORT).show();
-                                }
-                                view.setEnabled(true);
-                            }
-
-                            @Override
-                            public void onError(Throwable e) {
-                                Log.e("TreeFragmentInfo", "onError: " + e.getMessage());
-                                Toast.makeText(getContext(), "Ошибка отправки запроса", Toast.LENGTH_SHORT).show();
-                                view.setEnabled(true);
-                            }
-                        })
-        );
+            @Override
+            public void onError(final NetworkErrorException networkError) {
+                Log.e("TreeFragmentInfo", "onError: " + networkError.getMessage());
+                Toast.makeText(getContext(), "Ошибка отправки запроса", Toast.LENGTH_SHORT).show();
+                view.setEnabled(true);
+            }
+        }, newUserId);
     }
 
     public void onClickProfileButton(View view) {
@@ -419,17 +407,23 @@ public class TreeFragment extends Fragment {
         }
         buttonCount = SystemClock.elapsedRealtime();
         view.setEnabled(false);
+        openProfile(HomeActivity.getMainUser());
+        view.setEnabled(true);
+    }
+
+    private void openProfile(User user) {
+        Bundle bundle = new Bundle();
         Intent intent = new Intent(getContext(), ProfileActivity.class);
-        intent.putExtra("another_user", true);
-        if (bundle != null && bundle.containsKey("another_user") && !bundle.getBoolean("another_user")) {
+
+        if (user.id == HomeActivity.getMainUser().id) {
+            bundle.putBoolean("another_user", true);
+            intent.putExtra("another_user", false);
             intent.putExtra("user", HomeActivity.getMainUser());
-        } else if (bundle != null && bundle.containsKey("user")) {
-            User user = (User) bundle.getSerializable("user");
+        } else {
             intent.putExtra("user", user);
         }
 
         startActivity(intent);
-        view.setEnabled(true);
     }
 
 }

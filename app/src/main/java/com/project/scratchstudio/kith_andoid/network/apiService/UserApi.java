@@ -1,6 +1,7 @@
 package com.project.scratchstudio.kith_andoid.network.apiService;
 
 import com.project.scratchstudio.kith_andoid.network.model.referral.ReferralResponse;
+import com.project.scratchstudio.kith_andoid.network.model.user.User;
 import com.project.scratchstudio.kith_andoid.network.model.user.UserListResponse;
 import com.project.scratchstudio.kith_andoid.network.model.user.UserResponse;
 
@@ -24,4 +25,9 @@ public interface UserApi {
     @POST("api/users/search")
     Single<UserListResponse> searchUsers(@Field("user_id") int id, @Field("search") String search, @Field("page") String page,
                                          @Field("size") String size);
+
+    @FormUrlEncoded
+    @POST("api/users/referral_users")
+    Single<User[]> getInvitedUsers(@Field("user_id") int id, @Field("page") String page,
+                                   @Field("size") String size);
 }
