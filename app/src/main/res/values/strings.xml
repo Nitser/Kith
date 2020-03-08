@@ -47,4 +47,5 @@
 
     <string name="create_date">Создано: %1$s</string>
     <string name="organizer_phone">Телефон: %1$s</string>
+    <string name="search">Поиск</string>
 </resources>
