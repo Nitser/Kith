@@ -203,7 +203,7 @@ public class TreeFragment extends Fragment {
                 buttonCount = SystemClock.elapsedRealtime();
 //            view.setEnabled(false);
 
-                openProfile(user);
+                userPresenter.openProfile(user);
 //            view.setEnabled(true);
             });
         }
@@ -385,7 +385,7 @@ public class TreeFragment extends Fragment {
                     if (userResponse.getUser().photo != null) {
                         userResponse.getUser().setUrl(userResponse.getUser().photo.replaceAll("\\/", "/"));
                     }
-                    openProfile(userResponse.getUser());
+                    userPresenter.openProfile(userResponse.getUser());
                 } else {
                     Toast.makeText(getContext(), "Ошибка отправки запроса", Toast.LENGTH_SHORT).show();
                 }
@@ -407,23 +407,8 @@ public class TreeFragment extends Fragment {
         }
         buttonCount = SystemClock.elapsedRealtime();
         view.setEnabled(false);
-        openProfile(HomeActivity.getMainUser());
+        userPresenter.openProfile(HomeActivity.getMainUser());
         view.setEnabled(true);
-    }
-
-    private void openProfile(User user) {
-        Bundle bundle = new Bundle();
-        Intent intent = new Intent(getContext(), ProfileActivity.class);
-
-        if (user.id == HomeActivity.getMainUser().id) {
-            bundle.putBoolean("another_user", true);
-            intent.putExtra("another_user", false);
-            intent.putExtra("user", HomeActivity.getMainUser());
-        } else {
-            intent.putExtra("user", user);
-        }
-
-        startActivity(intent);
     }
 
 }

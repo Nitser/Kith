@@ -2,11 +2,14 @@ package com.project.scratchstudio.kith_andoid;
 
 import android.accounts.NetworkErrorException;
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 
+import com.project.scratchstudio.kith_andoid.Activities.HomeActivity;
+import com.project.scratchstudio.kith_andoid.Activities.ProfileActivity;
 import com.project.scratchstudio.kith_andoid.network.ApiClient;
 import com.project.scratchstudio.kith_andoid.network.apiService.UserApi;
 import com.project.scratchstudio.kith_andoid.network.model.user.User;
-import com.project.scratchstudio.kith_andoid.network.model.user.UserListResponse;
 import com.project.scratchstudio.kith_andoid.network.model.user.UserResponse;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -18,9 +21,26 @@ public class UserPresenter {
 
     private static UserApi userApi;
     private static CompositeDisposable disposable = new CompositeDisposable();
+    private Context context;
 
     public UserPresenter(Context context) {
+        this.context = context;
         userApi = ApiClient.getClient(context).create(UserApi.class);
+    }
+
+    public void openProfile(User user) {
+        Bundle bundle = new Bundle();
+        Intent intent = new Intent(context, ProfileActivity.class);
+
+        if (user.id == HomeActivity.getMainUser().id) {
+            bundle.putBoolean("another_user", true);
+            intent.putExtra("another_user", false);
+            intent.putExtra("user", HomeActivity.getMainUser());
+        } else {
+            intent.putExtra("user", user);
+        }
+
+        context.startActivity(intent);
     }
 
     public void getUser(final GetUserCallback callback, int userId) {

@@ -1,5 +1,6 @@
 package com.project.scratchstudio.kith_andoid.UI.BoardInfo;
 
+import android.accounts.NetworkErrorException;
 import android.content.Intent;
 import android.icu.text.DateFormat;
 import android.icu.text.SimpleDateFormat;
@@ -17,10 +18,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.project.scratchstudio.kith_andoid.Activities.HomeActivity;
-import com.project.scratchstudio.kith_andoid.Activities.ProfileActivity;
 import com.project.scratchstudio.kith_andoid.R;
 import com.project.scratchstudio.kith_andoid.UI.Comments.CommentListFragment;
 import com.project.scratchstudio.kith_andoid.UI.NewEditBoard.NewEditBoardFragment;
+import com.project.scratchstudio.kith_andoid.UserPresenter;
 import com.project.scratchstudio.kith_andoid.app.BaseFragment;
 import com.project.scratchstudio.kith_andoid.app.FragmentType;
 import com.project.scratchstudio.kith_andoid.network.ApiClient;
@@ -48,6 +49,7 @@ public class BoardInfoFragment extends BaseFragment {
     private BoardApi boardApi;
     private UserApi userApi;
     private CompositeDisposable disposable = new CompositeDisposable();
+    private UserPresenter userPresenter;
 
     private ImageView photo;
 
@@ -75,6 +77,7 @@ public class BoardInfoFragment extends BaseFragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        userPresenter = new UserPresenter(getContext());
         setButtonsListener();
 
         TextView title = view.findViewById(R.id.title);
@@ -179,45 +182,29 @@ public class BoardInfoFragment extends BaseFragment {
 
     private void onClickProfile(View view) {
         view.setEnabled(false);
-        disposable.add(
-                userApi.getUser(info.organizerId)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribeWith(new DisposableSingleObserver<UserResponse>() {
-                            @Override
-                            public void onSuccess(UserResponse response) {
-                                if (response.getStatus()) {
-                                    Log.i("Get User Resp", response.toString());
-                                    response.getUser().setId(info.organizerId);
-                                    if (response.getUser().photo != null) {
-                                        response.getUser().setUrl(response.getUser().photo.replaceAll("\\/", "/"));
-                                    }
-                                    Bundle bundle = new Bundle();
-                                    bundle.putBoolean("another_user", true);
-                                    Intent intent = new Intent(getContext(), ProfileActivity.class);
-                                    intent.putExtra("user", response.getUser());
+        userPresenter.getUser(new UserPresenter.GetUserCallback() {
+            @Override
+            public void onSuccess(final UserResponse userResponse) {
+                if (userResponse.getStatus()) {
+                    Log.i("Get User Resp", userResponse.toString());
+                    userResponse.getUser().setId(info.organizerId);
+                    if (userResponse.getUser().photo != null) {
+                        userResponse.getUser().setUrl(userResponse.getUser().photo.replaceAll("\\/", "/"));
+                    }
+                    userPresenter.openProfile(userResponse.getUser());
+                } else {
+                    Toast.makeText(getContext(), "Ошибка отправки запроса", Toast.LENGTH_SHORT).show();
+                }
+                view.setEnabled(true);
+            }
 
-                                    if (response.getUser().id != HomeActivity.getMainUser().id) {
-                                        intent.putExtra("another_user", true);
-                                    } else {
-                                        intent.putExtra("another_user", false);
-                                    }
-
-                                    startActivity(intent);
-                                } else {
-                                    Toast.makeText(getContext(), "Ошибка отправки запроса", Toast.LENGTH_SHORT).show();
-                                    view.setEnabled(true);
-                                }
-                            }
-
-                            @Override
-                            public void onError(Throwable e) {
-                                Log.e("BoardFragmentInfo", "onError: " + e.getMessage());
-                                Toast.makeText(getContext(), "Ошибка отправки запроса", Toast.LENGTH_SHORT).show();
-                                view.setEnabled(true);
-                            }
-                        })
-        );
+            @Override
+            public void onError(final NetworkErrorException networkError) {
+                Log.e("BoardFragmentInfo", "onError: " + networkError.getMessage());
+                Toast.makeText(getContext(), "Ошибка отправки запроса", Toast.LENGTH_SHORT).show();
+                view.setEnabled(true);
+            }
+        }, info.organizerId);
     }
 
     private void onClickEdit(View view) {
