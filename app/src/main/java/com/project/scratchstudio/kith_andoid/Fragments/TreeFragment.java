@@ -25,7 +25,6 @@ import android.widget.Toast;
 
 import com.project.scratchstudio.kith_andoid.Activities.CodeActivity;
 import com.project.scratchstudio.kith_andoid.Activities.HomeActivity;
-import com.project.scratchstudio.kith_andoid.Activities.ProfileActivity;
 import com.project.scratchstudio.kith_andoid.Adapters.SearchAdapter;
 import com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView;
 import com.project.scratchstudio.kith_andoid.Holders.TreeHolder;
@@ -135,7 +134,8 @@ public class TreeFragment extends Fragment {
                     List<User> response = new ArrayList<>(Arrays.asList(userResponse));
                     for (User user : response) {
                         if (user.photo != null) {
-                            user.photo.replaceAll("\\/", "/");
+                            user.photo = user.photo.replaceAll("\\/", "/").replaceAll("@[0-9]*", "");
+                            Log.d("UserDebug", "Photo: " + user.photo);
                         }
                     }
                     setInvitedUsersList(response);
@@ -187,24 +187,19 @@ public class TreeFragment extends Fragment {
             holder.name.setText(name);
             holder.position.setText(user.getPosition());
 
-            if (user.getUrl() != null && !user.getUrl().equals("null") && !user.getUrl().equals("")) {
-                Picasso.with(getActivity()).load(user.getUrl().replaceAll("@[0-9]*", ""))
-                        .placeholder(com.project.scratchstudio.kith_andoid.R.mipmap.person)
-                        .error(com.project.scratchstudio.kith_andoid.R.mipmap.person)
-                        .transform(new PicassoCircleTransformation())
-                        .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
-                        .into(holder.image);
-            }
+            Picasso.with(getActivity()).load(user.photo)
+                    .placeholder(com.project.scratchstudio.kith_andoid.R.mipmap.person)
+                    .error(com.project.scratchstudio.kith_andoid.R.mipmap.person)
+                    .transform(new PicassoCircleTransformation())
+                    .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
+                    .into(holder.image);
 
             itemView.setOnClickListener(v -> {
                 if (SystemClock.elapsedRealtime() - buttonCount < 1000) {
                     return;
                 }
                 buttonCount = SystemClock.elapsedRealtime();
-//            view.setEnabled(false);
-
                 userPresenter.openProfile(user);
-//            view.setEnabled(true);
             });
         }
     }
@@ -224,15 +219,27 @@ public class TreeFragment extends Fragment {
                     httpService.referralCount(activity, mainUser, true);
 
                     HomeActivity.createInvitedUsers();
-                    httpService.refreshInvitedUsers(activity, mainUser.getId(), true, mySwipeRefreshLayout, this);
+                    userPresenter.getInvitedUsers(new UserPresenter.GetUserListCallback() {
+                        @Override
+                        public void onSuccess(final User[] userResponse) {
+                            List<User> response = new ArrayList<>(Arrays.asList(userResponse));
+                            for (User user : response) {
+                                if (user.photo != null) {
+                                    user.photo = user.photo.replaceAll("\\/", "/").replaceAll("@[0-9]*", "");
+                                }
+                            }
+                            setInvitedUsersList(response);
+                            mySwipeRefreshLayout.setRefreshing(false);
+                        }
+
+                        @Override
+                        public void onError(final NetworkErrorException networkError) {
+                            Toast.makeText(getContext(), "Ошибка отправки запроса", Toast.LENGTH_SHORT).show();
+                            mySwipeRefreshLayout.setRefreshing(false);
+                        }
+                    }, HomeActivity.getMainUser().id);
 
                     refreshUser();
-
-                } else {
-                    User user = (User) bundle.getSerializable("user");
-                    httpService.referralCount(activity, user, true);
-                    httpService.referralCount(getActivity(), user, false);
-                    httpService.refreshInvitedUsers(activity, user.getId(), false, mySwipeRefreshLayout, this);
                 }
             });
         } else {
@@ -313,6 +320,12 @@ public class TreeFragment extends Fragment {
                             @Override
                             public void onSuccess(UserListResponse response) {
                                 if (response.getStatus()) {
+                                    for (User user : response.getUsers()) {
+                                        if (user.photo != null) {
+//                                            Log.d("UserDebug", "Photo: " + user.photo);
+                                            user.photo = user.photo.replaceAll("\\/", "/").replaceAll("@[0-9]*", "");
+                                        }
+                                    }
                                     setListPersons(response.getUsers());
                                     setSearchAdapter(view);
                                 } else {
