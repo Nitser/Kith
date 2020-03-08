@@ -1,45 +1,45 @@
 package com.project.scratchstudio.kith_andoid.Adapters;
 
 import android.app.Activity;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
 
-import com.project.scratchstudio.kith_andoid.R;
 import com.project.scratchstudio.kith_andoid.Holders.SearchHolder;
-import com.project.scratchstudio.kith_andoid.Model.SearchInfo;
+import com.project.scratchstudio.kith_andoid.R;
 import com.project.scratchstudio.kith_andoid.Service.PicassoCircleTransformation;
+import com.project.scratchstudio.kith_andoid.network.model.user.User;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 public class SearchAdapter extends RecyclerView.Adapter<SearchHolder> implements Filterable {
 
     public interface OnItemClickListener {
-        void onItemClick(SearchInfo item);
+        void onItemClick(User item);
     }
 
-    private List<SearchInfo> searchList;
-    private List<SearchInfo> filteredData;
+    private List<User> searchList;
+    private List<User> filteredData;
 
     private final OnItemClickListener listener;
     private Activity activity;
 
-    public SearchAdapter(Activity activity, List<SearchInfo> searchInfos, OnItemClickListener listener) {
+    public SearchAdapter(Activity activity, List<User> searchInfos, OnItemClickListener listener) {
         this.activity = activity;
         this.searchList = searchInfos;
         filteredData = searchInfos;
         this.listener = listener;
     }
 
-    public void clearData(){
+    public void clearData() {
         searchList = null;
         filteredData = null;
     }
@@ -53,16 +53,18 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchHolder> implements
 
     @Override
     public void onBindViewHolder(@NonNull SearchHolder searchHolder, int i) {
-        SearchInfo searchInfo = filteredData.get(i);
+        User searchInfo = filteredData.get(i);
         String name = searchInfo.firstName + " " + searchInfo.lastName;
         searchHolder.nName.setText(name);
         searchHolder.nPosition.setText(searchInfo.position);
-        Picasso.with(activity).load(searchInfo.photo.replaceAll("@[0-9]*", ""))
-                .placeholder(com.project.scratchstudio.kith_andoid.R.mipmap.person)
-                .error(com.project.scratchstudio.kith_andoid.R.mipmap.person)
-                .transform(new PicassoCircleTransformation())
-                .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
-                .into(searchHolder.nPhoto);
+        if (searchInfo.photo != null) {
+            Picasso.with(activity).load(searchInfo.photo.replaceAll("@[0-9]*", ""))
+                    .placeholder(com.project.scratchstudio.kith_andoid.R.mipmap.person)
+                    .error(com.project.scratchstudio.kith_andoid.R.mipmap.person)
+                    .transform(new PicassoCircleTransformation())
+                    .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
+                    .into(searchHolder.nPhoto);
+        }
 
         searchHolder.bind(searchInfo, listener);
     }
@@ -73,46 +75,41 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchHolder> implements
     }
 
     //This should return a data object, not an int
-    public Object getItem(int position)
-    {
+    public Object getItem(int position) {
         return filteredData.get(position);
     }
 
-    public long getItemId(int position)
-    {
+    public long getItemId(int position) {
         return position;
     }
 
 
-
     @Override
-    public Filter getFilter()
-    {
-        return new Filter()
-        {
+    public Filter getFilter() {
+        return new Filter() {
             @Override
-            protected FilterResults performFiltering(CharSequence charSequence)
-            {
+            protected FilterResults performFiltering(CharSequence charSequence) {
                 FilterResults results = new FilterResults();
 
-                if(charSequence == null || charSequence.length() == 0) {
+                if (charSequence == null || charSequence.length() == 0) {
                     results.values = searchList;
                     results.count = searchList.size();
-                }
-                else {
+                } else {
                     String filter = String.valueOf(charSequence).toLowerCase();
 //                            .replaceAll("\\s+", "");
-                    ArrayList<SearchInfo> filterResultsData = new ArrayList<>();
+                    ArrayList<User> filterResultsData = new ArrayList<>();
 
-                    for(SearchInfo data : searchList) {
+                    for (User data : searchList) {
                         String searchInfo = data.firstName + data.lastName + data.position + data.description;
                         boolean contain = true;
-                        for (String filt: filter.split(" ")){
-                            if(!searchInfo.toLowerCase().contains(filt))
+                        for (String filt : filter.split(" ")) {
+                            if (!searchInfo.toLowerCase().contains(filt)) {
                                 contain = false;
+                            }
                         }
-                        if(contain)
+                        if (contain) {
                             filterResultsData.add(data);
+                        }
                     }
 
                     results.values = filterResultsData;
@@ -123,9 +120,8 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchHolder> implements
             }
 
             @Override
-            protected void publishResults(CharSequence charSequence, FilterResults filterResults)
-            {
-                filteredData = (ArrayList<SearchInfo>) filterResults.values;
+            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                filteredData = (ArrayList<User>) filterResults.values;
                 notifyDataSetChanged();
             }
         };

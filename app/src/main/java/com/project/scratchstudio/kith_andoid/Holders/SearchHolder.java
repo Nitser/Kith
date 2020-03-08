@@ -12,6 +12,7 @@ import com.project.scratchstudio.kith_andoid.Model.SearchInfo;
 import com.project.scratchstudio.kith_andoid.R;
 
 import com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView;
+import com.project.scratchstudio.kith_andoid.network.model.user.User;
 
 public class SearchHolder extends RecyclerView.ViewHolder {
 
@@ -31,7 +32,7 @@ public class SearchHolder extends RecyclerView.ViewHolder {
         cardView.setCardElevation(0);
     }
 
-    public void bind(final SearchInfo item, final SearchAdapter.OnItemClickListener listener) {
+    public void bind(final User item, final SearchAdapter.OnItemClickListener listener) {
         itemView.setOnClickListener(v -> listener.onItemClick(item));
     }
 }

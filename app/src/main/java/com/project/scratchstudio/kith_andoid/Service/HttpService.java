@@ -611,54 +611,6 @@ public class HttpService {
         httpPostRequest.execute("http://" + SERVER + "/api/users/edit");
     }
 
-    public void searchUsers(Activity activity, User user, TreeFragment treeFragment) {
-        String[] result_keys = {"status", "user_id", "user_firstname", "user_lastname", "user_photo", "user_middlename", "user_position",
-                                "user_description"};
-        String[] header_keys = {"Authorization"};
-        String[] body_keys = {"user_id", "search", "page", "size"};
-        String[] header_data = {user.getToken()};
-        String[] body_data = {String.valueOf(user.getId()), "", "0", "500"};
-
-        HttpPostRequest httpPostRequest = new HttpPostRequest(activity, header_keys, body_keys, header_data, body_data,
-                ((output, resultJSON, code) -> {
-                    if (output && resultJSON != null) {
-                        try {
-                            JSONObject json = new JSONObject(resultJSON);
-                            JSONArray response = json.getJSONArray("users");
-                            List<SearchInfo> list = new ArrayList<>();
-                            if (response.length() != 0 && !response.getJSONObject(0).has(result_keys[0])) {
-                                for (int i = 0; i < response.length(); i++) {
-                                    JSONObject obj = response.getJSONObject(i);
-                                    SearchInfo newInfo = new SearchInfo();
-                                    newInfo.id = obj.getInt(result_keys[1]);
-                                    newInfo.firstName = obj.getString(result_keys[2]);
-                                    newInfo.lastName = obj.getString(result_keys[3]);
-                                    newInfo.middleName = obj.getString("user_middlename");
-                                    newInfo.photo = obj.getString(result_keys[4]).replaceAll("\\/", "/");
-                                    newInfo.position = obj.getString(result_keys[6]);
-                                    newInfo.phone = obj.getString("user_phone");
-                                    newInfo.email = obj.getString("user_email");
-                                    newInfo.description = obj.getString("user_description");
-                                    list.add(newInfo);
-                                }
-                                TreeFragment.setListPersons(list);
-                                if (treeFragment != null) {
-                                    treeFragment.setSearchAdapter();
-                                }
-                            }
-                        } catch (JSONException e) {
-                            if (activity != null) {
-                                Toast.makeText(activity, getErrorMessage(code), Toast.LENGTH_SHORT).show();
-                            }
-                            e.printStackTrace();
-                        }
-                    } else if (activity != null) {
-                        Toast.makeText(activity, getErrorMessage(code), Toast.LENGTH_SHORT).show();
-                    }
-                }));
-        httpPostRequest.execute("http://" + SERVER + "/api/users/search");
-    }
-
     public void changePassword(Activity activity, User user, String newPassword) {
         String[] result_keys = {"status"};
         String[] header_keys = {"Authorization"};

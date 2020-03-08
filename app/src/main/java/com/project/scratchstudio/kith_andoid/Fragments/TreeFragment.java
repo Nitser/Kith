@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.os.SystemClock;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,12 +28,15 @@ import com.project.scratchstudio.kith_andoid.Activities.ProfileActivity;
 import com.project.scratchstudio.kith_andoid.Adapters.SearchAdapter;
 import com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView;
 import com.project.scratchstudio.kith_andoid.Holders.TreeHolder;
-import com.project.scratchstudio.kith_andoid.Model.SearchInfo;
 import com.project.scratchstudio.kith_andoid.R;
 import com.project.scratchstudio.kith_andoid.Service.HttpService;
 import com.project.scratchstudio.kith_andoid.Service.PicassoCircleTransformation;
 import com.project.scratchstudio.kith_andoid.app.FragmentType;
+import com.project.scratchstudio.kith_andoid.network.ApiClient;
+import com.project.scratchstudio.kith_andoid.network.apiService.UserApi;
 import com.project.scratchstudio.kith_andoid.network.model.user.User;
+import com.project.scratchstudio.kith_andoid.network.model.user.UserListResponse;
+import com.project.scratchstudio.kith_andoid.network.model.user.UserResponse;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
@@ -45,6 +49,10 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.observers.DisposableSingleObserver;
+import io.reactivex.schedulers.Schedulers;
 
 public class TreeFragment extends Fragment {
 
@@ -58,9 +66,12 @@ public class TreeFragment extends Fragment {
     private SwipeRefreshLayout mySwipeRefreshLayout;
     private User currentUser;
 
-    private static List<SearchInfo> listPersons = new ArrayList<>();
+    private UserApi userApi;
+    private CompositeDisposable disposable = new CompositeDisposable();
 
-    public static void setListPersons(List<SearchInfo> list) {
+    private static List<User> listPersons = new ArrayList<>();
+
+    public static void setListPersons(List<User> list) {
         listPersons = list;
     }
 
@@ -81,6 +92,7 @@ public class TreeFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        userApi = ApiClient.getClient(getContext()).create(UserApi.class);
 
         setButtonsListener();
         httpService = new HttpService();
@@ -283,17 +295,36 @@ public class TreeFragment extends Fragment {
         RelativeLayout layout = getActivity().findViewById(R.id.search_header);
         layout.setVisibility(View.VISIBLE);
         LinearLayout linearLayout = getActivity().findViewById(R.id.paper_search);
-//        linearLayout.setVisibility(View.VISIBLE);
         EditText editText = getActivity().findViewById(R.id.filter);
         editText.requestFocus();
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
 
-        if (isNetworkConnected()) {
-            httpService.searchUsers(getActivity(), HomeActivity.getMainUser(), this);
-        } else {
-            Toast.makeText(getActivity(), "Нет подключения к интернету", Toast.LENGTH_SHORT).show();
-        }
+        view.setEnabled(false);
+        disposable.add(
+                userApi.searchUsers(HomeActivity.getMainUser().id, "", "0", "500")
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(new DisposableSingleObserver<UserListResponse>() {
+                            @Override
+                            public void onSuccess(UserListResponse response) {
+                                if (response.getStatus()) {
+                                    setListPersons(response.getUsers());
+                                    setSearchAdapter(view);
+                                } else {
+                                    Toast.makeText(getContext(), "Ошибка отправки запроса", Toast.LENGTH_SHORT).show();
+                                }
+                                view.setEnabled(true);
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                Log.e("TreeFragmentInfo", "onError: " + e.getMessage());
+                                Toast.makeText(getContext(), "Ошибка отправки запроса", Toast.LENGTH_SHORT).show();
+                                view.setEnabled(true);
+                            }
+                        })
+        );
 
         list = getActivity().findViewById(R.id.listPerson);
         EditText filter = getActivity().findViewById(R.id.filter);
@@ -335,34 +366,51 @@ public class TreeFragment extends Fragment {
         imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
     }
 
-    public void setSearchAdapter() {
-        searchAdapter = new SearchAdapter(getActivity(), listPersons, item -> {
-            if (SystemClock.elapsedRealtime() - buttonCount < 1000) {
-                return;
-            }
-            buttonCount = SystemClock.elapsedRealtime();
-//            view.setEnabled(false);
-
-            User user = new User();
-            user.setId(item.id);
-            user.setFirstName(item.firstName);
-            user.setLastName(item.lastName);
-            user.setMiddleName(item.middleName);
-            user.setPosition(item.position);
-            user.setUrl(item.photo);
-            user.setPhone(item.phone);
-            user.setEmail(item.email);
-            user.setDescription(item.description);
-
-            Bundle bundle = new Bundle();
-            bundle.putBoolean("another_user", true);
-            bundle.putSerializable("user", user);
-            HomeActivity.getStackBundles().add(bundle);
-            HomeActivity homeActivity = (HomeActivity) getActivity();
-            homeActivity.replaceFragment(TreeFragment.newInstance(bundle, FragmentType.TREE.name()), FragmentType.TREE.name());
-//            view.setEnabled(true);
-        });
+    public void setSearchAdapter(View view) {
+        searchAdapter = new SearchAdapter(getActivity(), listPersons, item -> onClickProfile(view, item.id));
         list.setAdapter(searchAdapter);
+    }
+
+    private void onClickProfile(View view, int newUserId) {
+        view.setEnabled(false);
+        disposable.add(
+                userApi.getUser(newUserId)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(new DisposableSingleObserver<UserResponse>() {
+                            @Override
+                            public void onSuccess(UserResponse response) {
+                                if (response.getStatus()) {
+                                    response.getUser().setId(newUserId);
+                                    if (response.getUser().photo != null) {
+                                        response.getUser().setUrl(response.getUser().photo.replaceAll("\\/", "/"));
+                                    }
+                                    Bundle bundle = new Bundle();
+                                    bundle.putBoolean("another_user", true);
+                                    Intent intent = new Intent(getContext(), ProfileActivity.class);
+                                    intent.putExtra("user", response.getUser());
+
+                                    if (response.getUser().id != HomeActivity.getMainUser().id) {
+                                        intent.putExtra("another_user", true);
+                                    } else {
+                                        intent.putExtra("another_user", false);
+                                    }
+
+                                    startActivity(intent);
+                                } else {
+                                    Toast.makeText(getContext(), "Ошибка отправки запроса", Toast.LENGTH_SHORT).show();
+                                }
+                                view.setEnabled(true);
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                Log.e("TreeFragmentInfo", "onError: " + e.getMessage());
+                                Toast.makeText(getContext(), "Ошибка отправки запроса", Toast.LENGTH_SHORT).show();
+                                view.setEnabled(true);
+                            }
+                        })
+        );
     }
 
     public void onClickProfileButton(View view) {

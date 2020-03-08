@@ -1,6 +1,7 @@
 package com.project.scratchstudio.kith_andoid.network.apiService;
 
 import com.project.scratchstudio.kith_andoid.network.model.referral.ReferralResponse;
+import com.project.scratchstudio.kith_andoid.network.model.user.UserListResponse;
 import com.project.scratchstudio.kith_andoid.network.model.user.UserResponse;
 
 import io.reactivex.Single;
@@ -18,4 +19,9 @@ public interface UserApi {
     @FormUrlEncoded
     @POST("api/users/referral")
     Single<ReferralResponse> getReferralCode(@Field("user_id") int id);
+
+    @FormUrlEncoded
+    @POST("api/users/search")
+    Single<UserListResponse> searchUsers(@Field("user_id") int id, @Field("search") String search, @Field("page") String page,
+                                         @Field("size") String size);
 }
