@@ -255,10 +255,11 @@
                     android:layout_marginEnd="20dp"
                     android:background="@drawable/button_basic"
                     android:padding="10dp"
+                    android:textAllCaps="false"
                     android:textColor="@color/colorAccent"
                     android:textSize="16sp"
                     android:onClick="onClickContactShare"
-                    android:text="Поделиться"/>
+                    android:text="@string/share"/>
 
             </LinearLayout>
 

@@ -1,9 +1,9 @@
 <resources>
     <string name="app_name">Знакомые</string>
     <string name="kith">Знакомые</string>
-    <string name="our">НАС</string>
-    <string name="sign_in">ВОЙТИ</string>
-    <string name="registration">РЕГИСТРАЦИЯ</string>
+    <string name="our">Нас</string>
+    <string name="sign_in">Войти</string>
+    <string name="registration">Регистрация</string>
     <string name="login">Логин</string>
     <string name="password">Пароль</string>
     <string name="Name">Имя</string>
@@ -13,8 +13,8 @@
     <string name="refCode">Реферальный код</string>
     <string name="do_check_in">Зарегистрироваться</string>
     <string name="term_of_use">Я согласен с пользовательским соглашением и политикой конфиденциальности</string>
-    <string name="agreement">ПОЛЬЗОВАТЕЛЬСКОЕ СОГЛАШЕНИЕ</string>
-    <string name="term">ПОЛИТИКА КОНФИДЕНЦИАЛЬНОСТИ</string>
+    <string name="agreement">Пользовательское соглашение</string>
+    <string name="term">Политика конфиденциальности</string>
     <string name="position">Сфера деятельности</string>
     <string name="description">Описание</string>
     <string name="label_main">Главная</string>
@@ -49,4 +49,11 @@
     <string name="organizer_phone">Телефон: %1$s</string>
     <string name="search">Поиск</string>
     <string name="kithCount">Количество знакомых:</string>
+    <string name="share">Поделиться</string>
+    <string name="comments">Комментарии</string>
+    <string name="profile">Профиль</string>
+    <string name="all">Все</string>
+    <string name="my">Мои</string>
+    <string name="confirm">Подтвердить</string>
+    <string name="load_photo">Загрузить фото</string>
 </resources>

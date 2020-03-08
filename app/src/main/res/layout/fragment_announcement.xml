@@ -59,7 +59,8 @@
                     android:textSize="13sp"
                     android:paddingStart="5dp"
                     android:paddingEnd="5dp"
-                    android:text="Все" />
+                    android:textAllCaps="false"
+                    android:text="@string/all" />
 
                 <Button
                     android:id="@+id/sub"
@@ -70,6 +71,7 @@
                     android:textSize="13sp"
                     android:paddingStart="10dp"
                     android:paddingEnd="10dp"
+                    android:textAllCaps="false"
                     android:text="@string/favorite" />
 
                 <Button
@@ -82,7 +84,8 @@
                     android:background="@drawable/button_announcement_right"
                     android:textColor="@drawable/button_announcement_text"
                     android:textSize="13sp"
-                    android:text="Мои" />
+                    android:textAllCaps="false"
+                    android:text="@string/my" />
 
             </LinearLayout>
 
