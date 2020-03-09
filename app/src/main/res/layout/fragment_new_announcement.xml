@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:mask="http://schemas.android.com/apk/res-auto"
     android:id="@+id/f_tree"
     xmlns:customAttrs="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
@@ -133,41 +132,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp">
-
-                <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
-                    android:id="@+id/date"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Дата завершения:"
-                    android:textColor="@color/colorAccent"
-                    android:textSize="15sp"
-                    customAttrs:customFont="intro_regular"/>
-
-                <br.com.sapereaude.maskedEditText.MaskedEditText
-                    android:id="@+id/date_text"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginEnd="10dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_toEndOf="@+id/date"
-                    android:background="@drawable/entry_field_check_in"
-                    android:inputType="date"
-                    android:lines="1"
-                    android:maxLength="11"
-                    android:paddingBottom="15dp"
-                    android:paddingLeft="20dp"
-                    android:paddingRight="20dp"
-                    android:paddingTop="10dp"
-                    android:textColor="@color/colorPrimaryDark"
-                    android:textColorHint="@color/colorHint"
-                    android:textSize="14sp"
-                    android:typeface="monospace"
-                    mask:allowed_chars="1234567890"
-                    mask:mask="####-##-##"
-                    android:hint="ГГГГММДД"
-                    />
 
             </RelativeLayout>
 

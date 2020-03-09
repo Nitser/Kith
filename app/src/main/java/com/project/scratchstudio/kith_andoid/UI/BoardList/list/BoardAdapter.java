@@ -1,8 +1,6 @@
 package com.project.scratchstudio.kith_andoid.UI.BoardList.list;
 
 import android.app.Activity;
-import android.icu.text.DateFormat;
-import android.icu.text.SimpleDateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +14,6 @@ import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -58,21 +55,6 @@ public class BoardAdapter extends RecyclerView.Adapter<BoardHolder> {
             holder.favorite.setChecked(true);
         } else {
             holder.favorite.setChecked(false);
-        }
-
-        try {
-            DateFormat inputFormat;
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-                inputFormat = new SimpleDateFormat("yyyy-MM-dd");
-                DateFormat outputFormat = new SimpleDateFormat("dd.MM.yyyy");
-                Date date = inputFormat.parse(board.endDate.replaceAll("\\s.*$", ""));
-                String outputDateStr = outputFormat.format(date);
-                holder.date.setText(outputDateStr);
-            } else {
-                holder.date.setText(board.endDate.replaceAll("\\s.*$", ""));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
 
         if (board.url != null && !board.url.equals("null") && !board.url.equals("")) {

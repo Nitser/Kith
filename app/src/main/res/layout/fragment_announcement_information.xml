@@ -100,39 +100,16 @@
                 <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
                     android:id="@+id/title"
                     android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
                     android:layout_marginTop="5dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
                     android:textColor="@color/colorAccent"
                     android:textSize="20sp"
                     android:text="Контрольная закупка у оптовика"
                     customAttrs:customFont="intro_regular"/>
 
-                <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
-                    android:id="@+id/textView"
-                    android:layout_alignParentBottom="true"
-                    android:layout_toStartOf="@id/date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/colorAccent"
-                    android:textSize="14sp"
-                    android:layout_marginBottom="5dp"
-                    android:text="Дата завершения:"
-                    customAttrs:customFont="intro_regular"/>
-
-                <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
-                    android:id="@+id/date"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginEnd="5dp"
-                    android:layout_marginBottom="5dp"
-                    android:textColor="@color/colorAccent"
-                    android:textSize="14sp"
-                    android:text="20.12.2019"
-                    customAttrs:customFont="intro_regular"/>
             </RelativeLayout>
 
 

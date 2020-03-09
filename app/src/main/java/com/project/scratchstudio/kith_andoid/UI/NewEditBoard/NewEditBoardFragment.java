@@ -7,13 +7,10 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.SystemClock;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,21 +24,17 @@ import com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView;
 import com.project.scratchstudio.kith_andoid.R;
 import com.project.scratchstudio.kith_andoid.Service.HttpService;
 import com.project.scratchstudio.kith_andoid.Service.PhotoService;
-import com.project.scratchstudio.kith_andoid.UI.BoardInfo.BoardInfoFragment;
 import com.project.scratchstudio.kith_andoid.app.BaseFragment;
-import com.project.scratchstudio.kith_andoid.app.FragmentType;
 import com.project.scratchstudio.kith_andoid.network.model.board.Board;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.util.Calendar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.Fragment;
 import br.com.sapereaude.maskedEditText.MaskedEditText;
 
 import static android.app.Activity.RESULT_OK;
@@ -52,7 +45,6 @@ public class NewEditBoardFragment extends BaseFragment {
     private static long buttonCount = 0;
     private static String[] PERMISSIONS_STORAGE = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
     private CustomFontEditText need;
-    private MaskedEditText endDate;
 
     private static void verifyStoragePermissions(Activity activity) {
         int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
@@ -74,7 +66,6 @@ public class NewEditBoardFragment extends BaseFragment {
 
     private Bundle bundle;
     private Bitmap photo;
-    private boolean correctDate = false;
     private Board board;
 
     @Override
@@ -88,48 +79,6 @@ public class NewEditBoardFragment extends BaseFragment {
         verifyStoragePermissions(getActivity());
         setButtonsListener();
 
-        MaskedEditText endDate = getActivity().findViewById(R.id.date_text);
-        Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/intro_regular.ttf");
-        endDate.setTypeface(face);
-        endDate.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                Calendar cal = Calendar.getInstance();
-                String clean = s.toString().replaceAll("[^\\d.]|-.", "");
-
-                if (clean.length() == 8) {
-
-                    int day = Integer.parseInt(clean.substring(6, 8));
-                    int mon = Integer.parseInt(clean.substring(4, 6));
-                    int year = Integer.parseInt(clean.substring(0, 4));
-
-                    mon = mon < 1 ? 1 : mon > 12 ? 12 : mon;
-                    cal.set(Calendar.MONTH, mon - 1);
-                    year = (year < 1900) ? 1900 : (year > 2100) ? 2100 : year;
-                    cal.set(Calendar.YEAR, year);
-
-                    day = (day > cal.getActualMaximum(Calendar.DATE)) ? cal.getActualMaximum(Calendar.DATE) : day;
-                    clean = String.format("%02d%02d%02d", year, mon, day);
-                    clean = String.format("%s-%s-%s", clean.substring(0, 4),
-                            clean.substring(4, 6),
-                            clean.substring(6, 8));
-                    correctDate = String.valueOf(s).equals(clean);
-                } else {
-                    correctDate = false;
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-
         if (bundle.containsKey("is_edit") && bundle.getBoolean("is_edit")) {
             board = (Board) bundle.getSerializable("board");
             fillFields();
@@ -139,13 +88,11 @@ public class NewEditBoardFragment extends BaseFragment {
     private void fillFields() {
         CustomFontEditText title = getActivity().findViewById(R.id.title_text);
         CustomFontEditText description = getActivity().findViewById(R.id.change_description);
-        endDate = getActivity().findViewById(R.id.date_text);
         need = getActivity().findViewById(R.id.need_text);
         ImageView photo = getActivity().findViewById(R.id.new_photo);
 
         title.setText(board.title);
         description.setText(board.description);
-        endDate.setText(board.endDate);
         need.setText(board.needParticipants);
         if (board.url != null && !board.url.equals("null") && !board.url.equals("")) {
             Picasso.with(getActivity()).load(board.url.replaceAll("@[0-9]*", ""))
@@ -170,11 +117,11 @@ public class NewEditBoardFragment extends BaseFragment {
         if (bundle.containsKey("is_edit") && bundle.getBoolean("is_edit")) {
             editBoard();
         }
-       return super.onBackPressed();
+        return super.onBackPressed();
     }
 
     public void onClickDoneClose() {
-        ((HomeActivity)getActivity()).changedBoardPhoto();
+        ((HomeActivity) getActivity()).changedBoardPhoto();
 
         onClickClose(null);
     }
@@ -194,25 +141,19 @@ public class NewEditBoardFragment extends BaseFragment {
             Toast.makeText(getContext(), "Не заполнены все поля обьявления", Toast.LENGTH_SHORT).show();
             done.setEnabled(true);
         } else {
-            if (correctDate) {
-                if (isNetworkConnected()) {
-                    Board info = createBoard();
-                    HttpService httpService = new HttpService();
+            if (isNetworkConnected()) {
+                Board info = createBoard();
+                HttpService httpService = new HttpService();
 
-                    if (board == null) {
-                        title.clearFocus(); description.clearFocus(); need.clearFocus(); endDate.clearFocus();
-                        httpService.addAnnouncement(getActivity(), HomeActivity.getMainUser(), this, info, photo);
-                    } else {
-                        httpService.editAnnouncement(getActivity(), HomeActivity.getMainUser(), this, board, info, photo);
-                    }
-
+                if (board == null) {
+                    httpService.addAnnouncement(getActivity(), HomeActivity.getMainUser(), this, info, photo);
                 } else {
-                    done.setEnabled(true);
-                    Toast.makeText(getContext(), "Нет подключения к интернету", Toast.LENGTH_SHORT).show();
+                    httpService.editAnnouncement(getActivity(), HomeActivity.getMainUser(), this, board, info, photo);
                 }
+
             } else {
-                Toast.makeText(getContext(), "Неправильный формат даты", Toast.LENGTH_SHORT).show();
                 done.setEnabled(true);
+                Toast.makeText(getContext(), "Нет подключения к интернету", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -227,14 +168,11 @@ public class NewEditBoardFragment extends BaseFragment {
     private void editBoard() {
         CustomFontEditText title = getActivity().findViewById(R.id.title_text);
         CustomFontEditText description = getActivity().findViewById(R.id.change_description);
-        MaskedEditText endDate = getActivity().findViewById(R.id.date_text);
         CustomFontEditText need = getActivity().findViewById(R.id.need_text);
 
         board.title = title.getText().toString();
         board.description = description.getText().toString();
-        if (endDate.getText() != null) {
-            board.endDate = endDate.getText().toString();
-        }
+
         try {
             if (need.getText().equals("")) {
                 board.needParticipants = "";
@@ -248,18 +186,11 @@ public class NewEditBoardFragment extends BaseFragment {
 
     private Board createBoard() {
         CustomFontEditText title = getActivity().findViewById(R.id.title_text);
-        MaskedEditText endDate = getActivity().findViewById(R.id.date_text);
         CustomFontEditText need = getActivity().findViewById(R.id.need_text);
         CustomFontEditText description = getActivity().findViewById(R.id.change_description);
 
         Board info = new Board();
         info.title = title.getText().toString();
-
-        if (endDate.getText() == null) {
-            info.endDate = null;
-        } else {
-            info.endDate = endDate.getText().toString() + " 12:00:00";
-        }
 
         if (need.getText() == null) {
             info.needParticipants = "-";
