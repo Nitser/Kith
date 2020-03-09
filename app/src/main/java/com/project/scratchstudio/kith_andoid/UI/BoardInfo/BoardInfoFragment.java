@@ -110,17 +110,21 @@ public class BoardInfoFragment extends BaseFragment {
             e.printStackTrace();
         }
 
-        String ownerName = "Владелец: ";
-        if (info.organizerLastName != null && !info.organizerLastName.equals("null")) {
-            ownerName += info.organizerLastName + " ";
+        StringBuilder ownerName = new StringBuilder();
+        if (info.organizerName != null && !info.organizerName.equals("null")) {
+            ownerName.append(info.organizerName);
         } else {
-            owner.setVisibility(View.GONE);
+            if (info.organizerLastName != null && !info.organizerLastName.equals("null")) {
+                ownerName.append(info.organizerLastName);
+                owner.append(" ");
+                if (info.organizerFirstName != null && !info.organizerFirstName.equals("null")) {
+                    owner.append(info.organizerFirstName);
+                }
+            } else {
+                owner.setVisibility(View.GONE);
+            }
         }
-        if (!info.organizerName.equals("null")) {
-            owner.setVisibility(View.VISIBLE);
-            ownerName += info.organizerName;
-        }
-        owner.setText(ownerName);
+        owner.setText(getString(R.string.board_info_owner, ownerName));
 
         if (info.organizerPhone != null && !info.organizerPhone.equals("null")) {
             phone.setText(getString(R.string.organizer_phone, info.organizerPhone));

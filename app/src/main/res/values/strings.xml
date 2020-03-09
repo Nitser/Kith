@@ -45,6 +45,7 @@
     <string name="button_ready">Готово</string>
     <string name="favorite">Избранное</string>
 
+    <string name="board_info_owner">Владелец: %1$s</string>
     <string name="create_date">Создано: %1$s</string>
     <string name="organizer_phone">Телефон: %1$s</string>
     <string name="search">Поиск</string>
