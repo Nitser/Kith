@@ -128,51 +128,6 @@
 
             </RelativeLayout>
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp">
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp">
-
-                <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
-                    android:id="@+id/need"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Необходимо участников:"
-                    android:textColor="@color/colorAccent"
-                    android:textSize="15sp"
-                    customAttrs:customFont="intro_regular"/>
-
-                <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontEditText
-                    android:id="@+id/need_text"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginEnd="10dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_toEndOf="@+id/need"
-                    android:background="@drawable/entry_field_check_in"
-                    android:inputType="text"
-                    android:lines="1"
-                    android:maxLength="35"
-                    android:paddingBottom="15dp"
-                    android:paddingLeft="20dp"
-                    android:paddingRight="20dp"
-                    android:paddingTop="10dp"
-                    android:textColor="@color/colorPrimaryDark"
-                    android:textColorHint="@color/colorHint"
-                    android:textSize="14sp"
-                    customAttrs:customFont="intro_regular" />
-
-            </RelativeLayout>
-
             <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"

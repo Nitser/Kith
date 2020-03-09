@@ -35,7 +35,6 @@ import java.io.InputStream;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
-import br.com.sapereaude.maskedEditText.MaskedEditText;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -44,7 +43,6 @@ public class NewEditBoardFragment extends BaseFragment {
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private static long buttonCount = 0;
     private static String[] PERMISSIONS_STORAGE = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
-    private CustomFontEditText need;
 
     private static void verifyStoragePermissions(Activity activity) {
         int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
@@ -88,12 +86,10 @@ public class NewEditBoardFragment extends BaseFragment {
     private void fillFields() {
         CustomFontEditText title = getActivity().findViewById(R.id.title_text);
         CustomFontEditText description = getActivity().findViewById(R.id.change_description);
-        need = getActivity().findViewById(R.id.need_text);
         ImageView photo = getActivity().findViewById(R.id.new_photo);
 
         title.setText(board.title);
         description.setText(board.description);
-        need.setText(board.needParticipants);
         if (board.url != null && !board.url.equals("null") && !board.url.equals("")) {
             Picasso.with(getActivity()).load(board.url.replaceAll("@[0-9]*", ""))
                     .error(R.drawable.newspaper)
@@ -168,43 +164,24 @@ public class NewEditBoardFragment extends BaseFragment {
     private void editBoard() {
         CustomFontEditText title = getActivity().findViewById(R.id.title_text);
         CustomFontEditText description = getActivity().findViewById(R.id.change_description);
-        CustomFontEditText need = getActivity().findViewById(R.id.need_text);
 
         board.title = title.getText().toString();
         board.description = description.getText().toString();
-
-        try {
-            if (need.getText().equals("")) {
-                board.needParticipants = "";
-            } else {
-                board.needParticipants = need.getText().toString();
-            }
-        } catch (NullPointerException ex) {
-            board.needParticipants = "";
-        }
     }
 
     private Board createBoard() {
         CustomFontEditText title = getActivity().findViewById(R.id.title_text);
-        CustomFontEditText need = getActivity().findViewById(R.id.need_text);
         CustomFontEditText description = getActivity().findViewById(R.id.change_description);
 
         Board info = new Board();
         info.title = title.getText().toString();
-
-        if (need.getText() == null) {
-            info.needParticipants = "-";
-        } else {
-            info.needParticipants = need.getText().toString();
-        }
-
         info.description = description.getText().toString();
         info.organizerId = HomeActivity.getMainUser().getId();
 
         return info;
     }
 
-    public void onClickLoadPhoto(View view) {
+    private void onClickLoadPhoto(View view) {
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 2000);
         } else {
