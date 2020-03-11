@@ -2,11 +2,11 @@ package com.project.scratchstudio.kith_andoid;
 
 import android.accounts.NetworkErrorException;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 
 import com.project.scratchstudio.kith_andoid.Activities.HomeActivity;
-import com.project.scratchstudio.kith_andoid.Activities.ProfileActivity;
+import com.project.scratchstudio.kith_andoid.UI.ProfileFragment;
+import com.project.scratchstudio.kith_andoid.app.FragmentType;
 import com.project.scratchstudio.kith_andoid.network.ApiClient;
 import com.project.scratchstudio.kith_andoid.network.apiService.UserApi;
 import com.project.scratchstudio.kith_andoid.network.model.user.User;
@@ -30,17 +30,15 @@ public class UserPresenter {
 
     public void openProfile(User user) {
         Bundle bundle = new Bundle();
-        Intent intent = new Intent(context, ProfileActivity.class);
 
         if (user.id == HomeActivity.getMainUser().id) {
-            bundle.putBoolean("another_user", true);
-            intent.putExtra("another_user", false);
-            intent.putExtra("user", HomeActivity.getMainUser());
+            bundle.putBoolean("another_user", false);
+            bundle.putSerializable("user", HomeActivity.getMainUser());
         } else {
-            intent.putExtra("user", user);
+            bundle.putBoolean("another_user", true);
+            bundle.putSerializable("user", user);
         }
-
-        context.startActivity(intent);
+        ((HomeActivity) context).addFragment(ProfileFragment.newInstance(bundle), FragmentType.PROFILE.name());
     }
 
     public void getUser(final GetUserCallback callback, int userId) {

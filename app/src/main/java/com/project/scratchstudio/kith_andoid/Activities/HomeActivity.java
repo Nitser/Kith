@@ -1,12 +1,15 @@
 package com.project.scratchstudio.kith_andoid.Activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.project.scratchstudio.kith_andoid.Fragments.TreeFragment;
 import com.project.scratchstudio.kith_andoid.R;
 import com.project.scratchstudio.kith_andoid.Service.InternalStorageService;
+import com.project.scratchstudio.kith_andoid.SetInternalData.ClearUserIdAndToken;
 import com.project.scratchstudio.kith_andoid.SetInternalData.SetUserIdAndToken;
 import com.project.scratchstudio.kith_andoid.UI.BoardInfo.BoardInfoFragment;
 import com.project.scratchstudio.kith_andoid.UI.BoardList.BoardsFragment;
@@ -17,6 +20,7 @@ import com.project.scratchstudio.kith_andoid.network.model.user.User;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -29,6 +33,7 @@ public class HomeActivity extends AppCompatActivity {
     private static User mainUser;
     private static List<User> invitedUsers = new ArrayList<>();
     private static List<Bundle> stackBundles = new ArrayList<>();
+    private static Fragment active;
 
     private BottomNavigationView navigationView;
 
@@ -70,10 +75,18 @@ public class HomeActivity extends AppCompatActivity {
         return false;
     };
 
+    private BottomNavigationView.OnNavigationItemReselectedListener mOnNavigationItemReSelectedListener = menuItem -> {
+//        fragmentTransaction.
+        getSupportFragmentManager().popBackStackImmediate();
+    };
+
+
     public void addFragment(Fragment fragment, String tag) {
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         fragmentTransaction.add(R.id.container, fragment, tag);
+//        if(active != null)
+//            fragmentTransaction.hide(active);
         fragmentTransaction.addToBackStack(tag);
         fragmentTransaction.commit();
     }
@@ -119,51 +132,8 @@ public class HomeActivity extends AppCompatActivity {
 
         navigationView = findViewById(R.id.navigation);
         navigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        navigationView.setOnNavigationItemReselectedListener(mOnNavigationItemReSelectedListener);
     }
-
-//    @Override
-//    public void onBackPressed() {
-//        List<Fragment> fragmentList = getSupportFragmentManager().getFragments();
-//
-//        boolean handled = false;
-//        for (Fragment f : fragmentList) {
-//            if (f instanceof TreeFragment) {
-//                handled = ((TreeFragment) f).onBackPressed();
-//                if (handled) {
-//                    break;
-//                }
-//            } else if (f instanceof NewEditBoardFragment) {
-//                handled = ((NewEditBoardFragment) f).onBackPressed();
-//                if (handled) {
-//                    break;
-//                }
-//            } else if (f instanceof BoardInfoFragment) {
-//                handled = ((BoardInfoFragment) f).onBackPressed();
-//                if (handled) {
-//                    break;
-//                }
-//            } else if (f instanceof BoardsFragment) {
-//                handled = ((BoardsFragment) f).onBackPressed();
-//                if (handled) {
-//                    break;
-//                }
-//            } else if (f instanceof NewCommentFragment) {
-//                handled = ((NewCommentFragment) f).onBackPressed();
-//                if (handled) {
-//                    break;
-//                }
-//            } else if (f instanceof CommentListFragment) {
-//                Log.i("BACK_FR", "COMMENT");
-//                handled = ((CommentListFragment) f).onBackPressed();
-//                if (handled) {
-//                    break;
-//                }
-//            }
-//        }
-//        if (!handled) {
-//            super.onBackPressed();
-//        }
-//    }
 
     @Override
     public void onBackPressed() {
@@ -174,6 +144,16 @@ public class HomeActivity extends AppCompatActivity {
         } else {
             backFragment();
         }
+    }
+
+    public void exit(){
+        HomeActivity.cleanMainUser();
+        InternalStorageService internalStorageService = new InternalStorageService(this);
+        internalStorageService.setiSetInternalData(new ClearUserIdAndToken());
+        internalStorageService.execute();
+        Intent intent = new Intent(HomeActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     public void changedBoardPhoto() {

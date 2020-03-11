@@ -6,5 +6,6 @@ public enum FragmentType {
     BOARD_INFO,
     BOARD_NEW_EDIT,
     COMMENT_LIST,
-    NEW_COMMENT
+    NEW_COMMENT,
+    PROFILE
 }

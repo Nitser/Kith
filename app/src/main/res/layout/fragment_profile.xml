@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:customAttrs="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="10dp">
+
+            <ImageButton
+                android:id="@+id/back"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@null"
+                android:padding="5dp"
+                android:layout_marginStart="20dp"
+                customAttrs:layout_constraintStart_toStartOf="parent"
+                customAttrs:layout_constraintTop_toTopOf="parent"
+                customAttrs:layout_constraintBottom_toBottomOf="parent"
+                android:src="@drawable/ic_left" />
+
+            <TextView
+                style="@style/CustomTitleText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="@string/label_profile"
+                customAttrs:layout_constraintBottom_toBottomOf="parent"
+                customAttrs:layout_constraintEnd_toStartOf="@id/container"
+                customAttrs:layout_constraintStart_toEndOf="@id/back"
+                customAttrs:layout_constraintTop_toTopOf="parent" />
+
+            <LinearLayout
+                android:id="@+id/container"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                customAttrs:layout_constraintEnd_toEndOf="parent"
+                customAttrs:layout_constraintTop_toTopOf="parent"
+                customAttrs:layout_constraintBottom_toBottomOf="parent">
+
+                <TextView
+                    android:id="@+id/exit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    customAttrs:layout_constraintEnd_toStartOf="@id/edit"
+                    android:layout_marginEnd="5dp"
+                    android:padding="5dp"
+                    android:text="@string/button_exit"
+                    style="@style/CustomTitleText" />
+
+                <ImageButton
+                    android:id="@+id/edit"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="@null"
+                    android:padding="5dp"
+                    android:layout_marginEnd="10dp"
+                    customAttrs:layout_constraintEnd_toEndOf="parent"
+                    customAttrs:layout_constraintTop_toTopOf="parent"
+                    customAttrs:layout_constraintBottom_toBottomOf="parent"
+                    android:src="@drawable/ic_edit"/>
+
+                <ImageView
+                    android:id="@+id/share"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:background="@null"
+                    android:padding="5dp"
+                    android:layout_marginEnd="10dp"
+                    android:visibility="gone"
+                    customAttrs:layout_constraintEnd_toEndOf="parent"
+                    customAttrs:layout_constraintTop_toTopOf="parent"
+                    customAttrs:layout_constraintBottom_toBottomOf="parent"
+                    android:src="@drawable/ic_share"/>
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="10dp"
+                android:orientation="vertical"
+                android:paddingBottom="30dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/photo_container"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:layout_marginEnd="5dp">
+
+                        <ImageView
+                            android:id="@+id/photo"
+                            android:layout_width="140dp"
+                            android:layout_height="140dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginBottom="8dp"
+                            android:scaleType="centerCrop"
+                            android:src="@mipmap/person"
+                            customAttrs:layout_constraintBottom_toBottomOf="parent"
+                            customAttrs:layout_constraintEnd_toEndOf="parent"
+                            customAttrs:layout_constraintHorizontal_bias="0.0"
+                            customAttrs:layout_constraintStart_toStartOf="parent"
+                            customAttrs:layout_constraintTop_toTopOf="parent"
+                            customAttrs:layout_constraintVertical_bias="1.0" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <LinearLayout
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:layout_toEndOf="@+id/photo_container"
+                        android:orientation="vertical"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:text="Фамилия:"
+                            style="@style/CustomProfileTitleText"/>
+
+                        <TextView
+                            android:id="@+id/surname"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            style="@style/CustomProfileText"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:text="Имя:"
+                            style="@style/CustomProfileTitleText"/>
+
+                        <TextView
+                            android:id="@+id/name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            style="@style/CustomProfileText"/>
+
+                        <TextView
+                            android:id="@+id/label_middlename"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:text="Отчество:"
+                            style="@style/CustomProfileTitleText"/>
+
+                        <TextView
+                            android:id="@+id/middlename"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            style="@style/CustomProfileText"/>
+
+                    </LinearLayout>
+
+                </RelativeLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="Сфера деятельности:"
+                    style="@style/CustomProfileTitleText"/>
+
+                <TextView
+                    android:id="@+id/position"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/CustomProfileText"/>
+
+                <TextView
+                    android:id="@+id/label_email"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="Эл. почта:"
+                    style="@style/CustomProfileTitleText"/>
+
+                <TextView
+                    android:id="@+id/email"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/CustomProfileText"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="Телефон:"
+                    style="@style/CustomProfileTitleText"/>
+
+                <TextView
+                    android:id="@+id/phone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    style="@style/CustomProfileText"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="@string/kithCount"
+                    style="@style/CustomProfileTitleText"/>
+
+                <TextView
+                    android:id="@+id/users_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/CustomProfileText"/>
+
+                <TextView
+                    android:id="@+id/label_description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="Описание:"
+                    style="@style/CustomProfileTitleText"/>
+
+                <TextView
+                    android:id="@+id/description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    style="@style/CustomProfileText"/>
+
+                <Button
+                    android:id="@+id/my_share"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginEnd="20dp"
+                    android:background="@drawable/button_basic"
+                    android:padding="10dp"
+                    android:textAllCaps="false"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="16sp"
+                    android:text="@string/share"/>
+
+            </LinearLayout>
+
+        </ScrollView>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

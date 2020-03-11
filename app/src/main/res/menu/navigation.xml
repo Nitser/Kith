@@ -11,9 +11,4 @@
         android:icon="@drawable/ic_announcement"
         android:title="@string/label_announcements" />
 
-    <!--<item-->
-        <!--android:id="@+id/navigation_messages"-->
-        <!--android:icon="@drawable/ic_messages"-->
-        <!--android:title="@string/label_messages" />-->
-
 </menu>
