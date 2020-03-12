@@ -1,6 +1,6 @@
 package com.project.scratchstudio.kith_andoid.Service;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -24,13 +24,13 @@ import java.net.URL;
 
 public class PhotoService {
 
-    private Activity context;
+    private Context context;
 
-    public PhotoService(Activity context) {
+    public PhotoService(Context context) {
         this.context = context;
     }
 
-    String base64Photo(Bitmap photo) throws UnsupportedEncodingException {
+    public String base64Photo(Bitmap photo) throws UnsupportedEncodingException {
         if (photo == null) {
             return null;
         }

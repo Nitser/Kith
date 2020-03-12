@@ -46,7 +46,7 @@ public class TreeAdapter extends RecyclerView.Adapter<TreeHolder> {
         holder.name.setText(name);
         holder.position.setText(user.getPosition());
 
-            Picasso.with(activity).load(user.getUrl().replaceAll("@[0-9]*", ""))
+            Picasso.with(activity).load(user.photo.replaceAll("@[0-9]*", ""))
                     .placeholder(com.project.scratchstudio.kith_andoid.R.mipmap.person)
                     .error(com.project.scratchstudio.kith_andoid.R.mipmap.person)
                     .transform(new PicassoCircleTransformation())

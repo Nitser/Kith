@@ -68,7 +68,7 @@ public class NewCommentFragment extends BaseFragment {
 
         name.setText(mainUser.getFirstName());
         position.setText(mainUser.getPosition());
-        Picasso.with(getContext()).load(mainUser.getUrl().replaceAll("@[0-9]*", ""))
+        Picasso.with(getContext()).load(mainUser.photo.replaceAll("@[0-9]*", ""))
                 .placeholder(R.mipmap.person)
                 .error(R.mipmap.person)
                 .transform(new PicassoCircleTransformation())

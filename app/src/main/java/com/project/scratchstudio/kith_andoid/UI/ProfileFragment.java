@@ -1,24 +1,17 @@
 package com.project.scratchstudio.kith_andoid.UI;
 
-import android.content.Context;
+import android.accounts.NetworkErrorException;
 import android.content.Intent;
-import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.project.scratchstudio.kith_andoid.Activities.EditActivity;
 import com.project.scratchstudio.kith_andoid.Activities.HomeActivity;
-import com.project.scratchstudio.kith_andoid.Activities.ProfileActivity;
 import com.project.scratchstudio.kith_andoid.R;
 import com.project.scratchstudio.kith_andoid.Service.PicassoCircleTransformation;
 import com.project.scratchstudio.kith_andoid.UserPresenter;
@@ -29,6 +22,7 @@ import com.project.scratchstudio.kith_andoid.network.ApiClient;
 import com.project.scratchstudio.kith_andoid.network.apiService.UserApi;
 import com.project.scratchstudio.kith_andoid.network.model.referral.ReferralResponse;
 import com.project.scratchstudio.kith_andoid.network.model.user.User;
+import com.project.scratchstudio.kith_andoid.network.model.user.UserResponse;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
@@ -85,8 +79,8 @@ public class ProfileFragment extends BaseFragment {
 
     private void fullField() {
 
-        if (user.getUrl() != null) {
-            Picasso.with(getContext()).load(user.getUrl().replaceAll("@[0-9]*", ""))
+        if (user.photo != null) {
+            Picasso.with(getContext()).load(user.photo.replaceAll("@[0-9]*", ""))
                     .placeholder(R.mipmap.person)
                     .error(R.mipmap.person)
                     .transform(new PicassoCircleTransformation())
@@ -117,11 +111,6 @@ public class ProfileFragment extends BaseFragment {
         }
     }
 
-    private boolean isNetworkConnected() {
-        ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        return (cm != null && cm.getActiveNetworkInfo() != null);
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 0) {
@@ -129,48 +118,60 @@ public class ProfileFragment extends BaseFragment {
         }
         if (requestCode == 1) {
             if (data != null && resultCode == 0) {
-                if (isNetworkConnected()) {
-                    refreshUser();
-                } else {
-                    Toast.makeText(getContext(), "Нет подключения к интернету", Toast.LENGTH_SHORT).show();
-                }
+                userPresenter.getUser(new UserPresenter.GetUserCallback() {
+                    @Override
+                    public void onSuccess(final UserResponse userResponse) {
+                        if(userResponse.getUser().photo != null){
+                            HomeActivity.getMainUser().photo = (userResponse.getUser().photo);
+                            Log.i("Profile", userResponse.getUser().photo);
+                        } else {
+                            Log.i("Profile", "null photo");
+                        }
+                        refreshUser(userResponse.getUser());
+                        Toast.makeText(getContext(), "Данные обновлены", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onError(final NetworkErrorException networkError) {
+                        Toast.makeText(getContext(), "Ошибка отправки запроса", Toast.LENGTH_SHORT).show();
+                    }
+                }, HomeActivity.getMainUser().id);
             }
         }
     }
 
-    public void refreshUser() {
-        User user = HomeActivity.getMainUser();
-        if (user.getUrl() != null) {
-            Picasso.with(getContext()).load(user.getUrl().replaceAll("@[0-9]*", ""))
+    private void refreshUser(User refUser) {
+        if (refUser.photo != null) {
+            Picasso.with(getContext()).load(refUser.photo.replaceAll("@[0-9]*", ""))
                     .placeholder(R.mipmap.person)
                     .error(R.mipmap.person)
                     .transform(new PicassoCircleTransformation())
                     .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
                     .into(binding.photo);
         }
-        binding.name.setText(user.getFirstName());
-        binding.surname.setText(user.getLastName());
-        binding.phone.setText(user.getPhone());
-        if (user.getMiddleName() != null && !user.getMiddleName().equals("") && !user.getMiddleName().toLowerCase().equals("null")) {
-            binding.middlename.setText(user.getMiddleName());
+        binding.name.setText(refUser.getFirstName());
+        binding.surname.setText(refUser.getLastName());
+        binding.phone.setText(refUser.getPhone());
+        if (refUser.getMiddleName() != null && !refUser.getMiddleName().equals("") && !refUser.getMiddleName().toLowerCase().equals("null")) {
+            binding.middlename.setText(refUser.getMiddleName());
         } else {
             binding.middlename.setText("-");
         }
-        binding.position.setText(user.getPosition());
-        binding.usersCount.setText(String.valueOf(user.getUsersCount()));
-        if (user.getDescription() == null || user.getDescription().equals("") || user.getDescription().toLowerCase().equals("null")) {
+        binding.position.setText(refUser.getPosition());
+        binding.usersCount.setText(String.valueOf(refUser.getUsersCount()));
+        if (refUser.getDescription() == null || refUser.getDescription().equals("") || refUser.getDescription().toLowerCase().equals("null")) {
             binding.description.setText("-");
         } else {
-            binding.description.setText(user.getDescription());
+            binding.description.setText(refUser.getDescription());
         }
-        if (user.getEmail() == null || user.getEmail().equals("null") || user.getEmail().equals("")) {
+        if (refUser.getEmail() == null || refUser.getEmail().equals("null") || refUser.getEmail().equals("")) {
             binding.email.setText("-");
         } else {
-            binding.email.setText(user.getEmail());
+            binding.email.setText(refUser.getEmail());
         }
     }
 
-    private void initButtonListener(){
+    private void initButtonListener() {
         binding.back.setOnClickListener(this::onClickBack);
         binding.exit.setOnClickListener(this::onClickExitButton);
         binding.edit.setOnClickListener(this::onClickEditButton);
@@ -179,7 +180,7 @@ public class ProfileFragment extends BaseFragment {
         binding.phone.setOnClickListener(this::onClickCallPhone);
     }
 
-    public void onClickBack(View view) {
+    private void onClickBack(View view) {
         ((HomeActivity) getActivity()).backFragment();
     }
 
@@ -212,7 +213,8 @@ public class ProfileFragment extends BaseFragment {
                             @Override
                             public void onSuccess(ReferralResponse response) {
                                 Log.i("REf", response.getStatus() + " " + response.getReferral());
-                                String result = "ФИО: " + binding.surname.getText() + " " + binding.name.getText() + " " + binding.middlename.getText() + "\n"
+                                String result = "ФИО: " + binding.surname.getText() + " " + binding.name.getText() + " " + binding.middlename
+                                        .getText() + "\n"
                                         + (binding.phone.getText().length() > 1 ? "Телефон: " + binding.phone.getText() + "\n" : "")
                                         + (binding.email.getText().length() > 1 ? "Эл.почта: " + binding.email.getText() + "\n" : "")
                                         + (user.position.length() > 1 ? "Сфера деятельности: " + user.position + "\n" : "")
@@ -225,7 +227,8 @@ public class ProfileFragment extends BaseFragment {
 
                             @Override
                             public void onError(Throwable e) {
-                                String result = "ФИО: " + binding.surname.getText() + " " + binding.name.getText() + " " + binding.middlename.getText() + "\n"
+                                String result = "ФИО: " + binding.surname.getText() + " " + binding.name.getText() + " " + binding.middlename
+                                        .getText() + "\n"
                                         + "Телефон: " + binding.phone.getText() + "\n"
                                         + "Эл.почта: " + binding.email.getText() + "\n"
                                         + "Сфера деятельности: " + user.position + "\n"

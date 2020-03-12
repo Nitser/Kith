@@ -159,8 +159,8 @@ public class TreeFragment extends Fragment {
         CustomFontTextView name = getActivity().findViewById(R.id.name);
         CustomFontTextView position = getActivity().findViewById(R.id.position);
         ImageView photo = getActivity().findViewById(R.id.photo);
-        if (currentUser.getUrl() != null) {
-            Picasso.with(getActivity()).load(currentUser.getUrl().replaceAll("@[0-9]*", ""))
+        if (currentUser.photo != null) {
+            Picasso.with(getActivity()).load(currentUser.photo.replaceAll("@[0-9]*", ""))
                     .placeholder(R.mipmap.person)
                     .error(R.mipmap.person)
                     .transform(new PicassoCircleTransformation())
@@ -254,7 +254,7 @@ public class TreeFragment extends Fragment {
         CustomFontTextView position = getActivity().findViewById(R.id.position);
 
         User user = HomeActivity.getMainUser();
-        Picasso.with(getActivity()).load(user.getUrl().replaceAll("@[0-9]*", ""))
+        Picasso.with(getActivity()).load(user.photo.replaceAll("@[0-9]*", ""))
                 .placeholder(R.mipmap.person)
                 .error(R.mipmap.person)
                 .transform(new PicassoCircleTransformation())
@@ -396,7 +396,7 @@ public class TreeFragment extends Fragment {
                 if (userResponse.getStatus()) {
                     userResponse.getUser().setId(newUserId);
                     if (userResponse.getUser().photo != null) {
-                        userResponse.getUser().setUrl(userResponse.getUser().photo.replaceAll("\\/", "/"));
+                        userResponse.getUser().photo = (userResponse.getUser().photo.replaceAll("\\/", "/"));
                     }
                     userPresenter.openProfile(userResponse.getUser());
                 } else {

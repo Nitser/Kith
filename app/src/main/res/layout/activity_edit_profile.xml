@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+<androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:customAttrs="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/colorPrimary"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".Activities.EditActivity">
+    android:background="@color/colorPrimary">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,7 +18,7 @@
             android:layout_marginTop="15dp"
             android:layout_marginBottom="10dp">
 
-            <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+            <TextView
                 android:id="@+id/back"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -32,10 +31,10 @@
                 android:text="@string/button_cancel"
                 android:textColor="@color/colorAccent"
                 android:textSize="17sp"
-                customAttrs:customFont="intro_regular"
+                style="@style/CustomProfileText"
                 android:onClick="onClickCancelButton" />
 
-            <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
@@ -45,7 +44,7 @@
                 android:text="@string/label_edit"
                 android:textColor="@color/colorAccent"
                 android:textSize="17sp"
-                customAttrs:customFont="intro_regular"/>
+                style="@style/CustomProfileText"/>
         </RelativeLayout>
 
         <ScrollView
@@ -99,7 +98,7 @@
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="@+id/portfolio"
                             app:srcCompat="@drawable/ic_add"
-                            customAttrs:layout_constraintHorizontal_bias="0.492" />
+                            app:layout_constraintHorizontal_bias="0.492" />
 
                         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -107,15 +106,15 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="7dp">
-                        <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+                        <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.4"
                             android:textColor="@color/colorAccent"
                             android:textSize="15sp"
-                            customAttrs:customFont="intro_regular"
+                            style="@style/CustomProfileTitleText"
                             android:text="@string/lastName"/>
-                        <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontEditText
+                        <EditText
                             android:id="@+id/firstName"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
@@ -132,22 +131,27 @@
                             android:textColor="@color/colorPrimaryDark"
                             android:textColorHint="@color/colorHint"
                             android:textSize="14sp"
-                            customAttrs:customFont="intro_regular"/>
+                            style="@style/CustomProfileText"/>
                     </LinearLayout>
+
+<!--                    <include-->
+<!--                        android:id="@+id/banner"-->
+<!--                        layout="@layout/title_field_item"-->
+<!--                        app:titleText="@{`vghj`}" />-->
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="7dp">
-                        <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+                        <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.4"
                             android:textColor="@color/colorAccent"
                             android:textSize="15sp"
-                            customAttrs:customFont="intro_regular"
+                            style="@style/CustomProfileTitleText"
                             android:text="@string/Name"/>
-                        <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontEditText
+                        <EditText
                             android:id="@+id/lastName"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
@@ -164,22 +168,22 @@
                             android:textColor="@color/colorPrimaryDark"
                             android:textColorHint="@color/colorHint"
                             android:textSize="14sp"
-                            customAttrs:customFont="intro_regular"/>
+                            style="@style/CustomProfileText"/>
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="7dp">
-                        <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+                        <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.4"
                             android:textColor="@color/colorAccent"
                             android:textSize="15sp"
-                            customAttrs:customFont="intro_regular"
+                            style="@style/CustomProfileTitleText"
                             android:text="Отчество"/>
-                        <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontEditText
+                        <EditText
                             android:id="@+id/middleName"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
@@ -196,22 +200,22 @@
                             android:textColor="@color/colorPrimaryDark"
                             android:textColorHint="@color/colorHint"
                             android:textSize="14sp"
-                            customAttrs:customFont="intro_regular"/>
+                            style="@style/CustomProfileText"/>
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="7dp">
-                        <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+                        <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.4"
                             android:textColor="@color/colorAccent"
                             android:textSize="15sp"
-                            customAttrs:customFont="intro_regular"
+                            style="@style/CustomProfileTitleText"
                             android:text="@string/position"/>
-                        <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontEditText
+                        <EditText
                             android:id="@+id/position"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
@@ -228,22 +232,22 @@
                             android:textColor="@color/colorPrimaryDark"
                             android:textColorHint="@color/colorHint"
                             android:textSize="14sp"
-                            customAttrs:customFont="intro_regular"/>
+                            style="@style/CustomProfileText"/>
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="7dp">
-                        <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+                        <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.4"
                             android:textColor="@color/colorAccent"
                             android:textSize="15sp"
-                            customAttrs:customFont="intro_regular"
+                            style="@style/CustomProfileTitleText"
                             android:text="@string/email"/>
-                        <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontEditText
+                        <EditText
                             android:id="@+id/email"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
@@ -260,22 +264,22 @@
                             android:textColor="@color/colorPrimaryDark"
                             android:textColorHint="@color/colorHint"
                             android:textSize="14sp"
-                            customAttrs:customFont="intro_regular"/>
+                            style="@style/CustomProfileText"/>
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="7dp">
-                        <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+                        <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.4"
                             android:textColor="@color/colorAccent"
                             android:textSize="15sp"
-                            customAttrs:customFont="intro_regular"
+                            style="@style/CustomProfileTitleText"
                             android:text="@string/phone"/>
-                        <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontEditText
+                        <EditText
                             android:id="@+id/phone"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
@@ -292,7 +296,7 @@
                             android:textColor="@color/colorPrimaryDark"
                             android:textColorHint="@color/colorHint"
                             android:textSize="14sp"
-                            customAttrs:customFont="intro_regular"/>
+                            style="@style/CustomProfileText"/>
                     </LinearLayout>
 
                     <LinearLayout
@@ -300,17 +304,17 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:layout_marginBottom="7dp">
-                        <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+                        <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.3"
                             android:textColor="@color/colorAccent"
                             android:textSize="15sp"
                             android:padding="3dp"
-                            customAttrs:customFont="intro_regular"
+                            style="@style/CustomProfileTitleText"
                             android:text="@string/password"/>
 
-                        <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+                        <TextView
                             android:id="@+id/password"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
@@ -319,9 +323,9 @@
                             android:paddingBottom="5dp"
                             android:textColor="@color/colorAccent"
                             android:textSize="15sp"
-                            customAttrs:customFont="intro_regular"/>
+                            style="@style/CustomProfileText"/>
 
-                        <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+                        <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.4"
@@ -331,7 +335,7 @@
                             android:textColor="@color/colorAccent"
                             android:textSize="15sp"
                             android:onClick="onClickChangePassword"
-                            customAttrs:customFont="intro_regular"
+                            style="@style/CustomProfileText"
                             android:text="@string/edit"/>
                     </LinearLayout>
 
@@ -342,16 +346,16 @@
                         android:orientation="vertical"
                         android:layout_marginTop="10dp"
                         android:layout_marginBottom="7dp">
-                        <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+                        <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="7dp"
                             android:textColor="@color/colorAccent"
                             android:textSize="15sp"
-                            customAttrs:customFont="intro_regular"
+                            style="@style/CustomProfileTitleText"
                             android:gravity="center"
                             android:text="@string/description"/>
-                        <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontEditText
+                        <EditText
                             android:id="@+id/description"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -366,7 +370,7 @@
                             android:textColor="@color/colorPrimaryDark"
                             android:textColorHint="@color/colorHint"
                             android:textSize="14sp"
-                            customAttrs:customFont="intro_regular"/>
+                            style="@style/CustomProfileText"/>
                     </LinearLayout>
 
                 </LinearLayout>
@@ -395,3 +399,5 @@
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

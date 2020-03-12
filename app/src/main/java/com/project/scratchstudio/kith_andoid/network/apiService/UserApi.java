@@ -1,5 +1,6 @@
 package com.project.scratchstudio.kith_andoid.network.apiService;
 
+import com.project.scratchstudio.kith_andoid.network.model.BaseResponse;
 import com.project.scratchstudio.kith_andoid.network.model.referral.ReferralResponse;
 import com.project.scratchstudio.kith_andoid.network.model.user.User;
 import com.project.scratchstudio.kith_andoid.network.model.user.UserListResponse;
@@ -30,4 +31,11 @@ public interface UserApi {
     @POST("api/users/referral_users")
     Single<User[]> getInvitedUsers(@Field("user_id") int id, @Field("page") String page,
                                    @Field("size") String size);
+
+    @FormUrlEncoded
+    @POST("api/users/edit")
+    Single<BaseResponse> editUser(@Field("user_id") int id, @Field("user_firstname") String firstName, @Field("user_lastname") String lastName,
+                                  @Field("user_middlename") String middleName, @Field("user_phone") String phone, @Field("user_email") String email,
+                                  @Field("user_position") String position, @Field("user_description") String description,
+                                  @Field("user_photo") String photo);
 }

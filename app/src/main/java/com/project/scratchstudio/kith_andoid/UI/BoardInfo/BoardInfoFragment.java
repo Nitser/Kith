@@ -193,7 +193,7 @@ public class BoardInfoFragment extends BaseFragment {
                     Log.i("Get User Resp", userResponse.toString());
                     userResponse.getUser().setId(info.organizerId);
                     if (userResponse.getUser().photo != null) {
-                        userResponse.getUser().setUrl(userResponse.getUser().photo.replaceAll("\\/", "/"));
+                        userResponse.getUser().photo = (userResponse.getUser().photo.replaceAll("\\/", "/"));
                     }
                     userPresenter.openProfile(userResponse.getUser());
                 } else {

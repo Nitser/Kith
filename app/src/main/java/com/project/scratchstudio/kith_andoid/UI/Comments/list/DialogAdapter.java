@@ -82,7 +82,7 @@ public class DialogAdapter extends RecyclerView.Adapter<DialogHolder> {
         Picasso.with(activity).load(comment.getUser().photo.replaceAll("@[0-9]*", ""))
                 .transform(new PicassoCircleTransformation())
                 .error(com.project.scratchstudio.kith_andoid.R.mipmap.person)
-                .memoryPolicy(MemoryPolicy.NO_STORE)
+                .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
                 .into(holder.photo);
 //        holder.bind(comment, listener);
     }

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable name="titleText" type="java.lang.String"/>
+
+        <variable name="fieldHint" type="java.lang.String" />
+        <variable name="fieldText" type="java.lang.String" />
+    </data>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorAccent"
+            android:layout_weight="0.4"
+            android:textSize="15sp"
+            android:text="@{titleText}"
+            style="@style/CustomProfileTitleText"/>
+
+        <EditText
+            android:id="@+id/firstName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.6"
+            android:background="@drawable/entry_field_check_in"
+            android:inputType="textFilter|textNoSuggestions|textVisiblePassword"
+            android:lines="1"
+            android:paddingBottom="15dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="10dp"
+            android:textColor="@color/colorPrimaryDark"
+            android:textColorHint="@color/colorHint"
+            android:textSize="14sp"
+            android:hint="@{fieldHint}"
+            android:text="@{fieldText}"
+            style="@style/CustomProfileText"/>
+
+    </LinearLayout>
+
+</layout>

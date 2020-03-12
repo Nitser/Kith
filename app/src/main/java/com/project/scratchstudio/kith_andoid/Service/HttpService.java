@@ -14,7 +14,6 @@ import com.project.scratchstudio.kith_andoid.Activities.CheckInActivity;
 import com.project.scratchstudio.kith_andoid.Activities.EditActivity;
 import com.project.scratchstudio.kith_andoid.Activities.HomeActivity;
 import com.project.scratchstudio.kith_andoid.Activities.MainActivity;
-import com.project.scratchstudio.kith_andoid.Activities.ProfileActivity;
 import com.project.scratchstudio.kith_andoid.Activities.SignInActivity;
 import com.project.scratchstudio.kith_andoid.Activities.SmsActivity;
 import com.project.scratchstudio.kith_andoid.CustomViews.CustomFontEditText;
@@ -22,7 +21,6 @@ import com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView;
 import com.project.scratchstudio.kith_andoid.UI.NewEditBoard.NewEditBoardFragment;
 import com.project.scratchstudio.kith_andoid.Fragments.TreeFragment;
 import com.project.scratchstudio.kith_andoid.Model.Cache;
-import com.project.scratchstudio.kith_andoid.Model.SearchInfo;
 import com.project.scratchstudio.kith_andoid.R;
 import com.project.scratchstudio.kith_andoid.SetInternalData.ClearUserIdAndToken;
 import com.project.scratchstudio.kith_andoid.SetInternalData.SetCountData;
@@ -198,7 +196,7 @@ public class HttpService {
                         HomeActivity.getMainUser().setPosition(user.getString("user_position"));
                         HomeActivity.getMainUser().setEmail(user.getString("user_email"));
                         try {
-                            HomeActivity.getMainUser().setUrl(user.getString("photo").replaceAll("\\/", "/"));
+                            HomeActivity.getMainUser().photo = (user.getString("photo").replaceAll("\\/", "/"));
                         } catch (Exception e) {
                             Log.i("DECODE ERR: ", e.getMessage());
                         }
@@ -218,8 +216,8 @@ public class HttpService {
                             name.setText(userName);
                             position.setText(HomeActivity.getMainUser().getPosition());
                         } else if (context != null) {
-                            ProfileActivity profileActivity = (ProfileActivity) context;
-                            profileActivity.refreshUser();
+//                            ProfileActivity profileActivity = (ProfileActivity) context;
+//                            profileActivity.refreshUser();
                         }
                     } else if (context != null) {
                         Toast.makeText(context, getErrorMessage(code), Toast.LENGTH_SHORT).show();
@@ -468,7 +466,7 @@ public class HttpService {
                                     user.setId(obj.getInt(result_keys[1]));
                                     user.setFirstName(obj.getString(result_keys[2]));
                                     user.setLastName(obj.getString(result_keys[3]));
-                                    user.setUrl(obj.getString(result_keys[4]).replaceAll("\\/", "/"));
+                                    user.photo = (obj.getString(result_keys[4]).replaceAll("\\/", "/"));
                                     user.setMiddleName(obj.getString(result_keys[5]));
                                     user.setPosition(obj.getString(result_keys[6]));
                                     user.setPhone(obj.getString(result_keys[7]));
@@ -498,62 +496,6 @@ public class HttpService {
                     }
                 }));
         httpPostRequest.execute("http://" + SERVER + "/api/users/referral_users");
-    }
-
-    public void refreshUser(Activity activity, User user, Bitmap photo, Boolean edit) throws UnsupportedEncodingException {
-        PhotoService photoService = new PhotoService(activity);
-        String res = photoService.base64Photo(photo);
-
-        String[] result_keys = {"status"};
-        String[] header_keys = {"Authorization"};
-        String[] body_keys = {"user_id", "user_firstname", "user_lastname", "user_middlename", "user_phone", "user_email", "user_position",
-                              "user_description", "user_photo"};
-        String[] header_data = {user.getToken()};
-        String[] body_data = {String.valueOf(user.getId()), user.getFirstName(), user.getLastName(), user.getMiddleName(), user.getPhone(),
-                              user.getEmail(), user.getPosition(), user.getDescription(), res};
-
-        HttpPostRequest httpPostRequest = new HttpPostRequest(activity, header_keys, body_keys, header_data, body_data,
-                ((output, resultJSON, code) -> {
-                    if (output && resultJSON != null) {
-                        JSONObject response;
-                        try {
-                            response = new JSONObject(resultJSON);
-                            if (response.getBoolean(result_keys[0])) {
-                                if (activity != null) {
-                                    Toast.makeText(activity, "Данные обновлены", Toast.LENGTH_SHORT).show();
-                                }
-                                User mainUser = HomeActivity.getMainUser();
-                                mainUser.setFirstName(user.getFirstName());
-                                mainUser.setLastName(user.getLastName());
-                                mainUser.setMiddleName(user.getMiddleName());
-                                mainUser.setPhone(user.getPhone());
-                                mainUser.setEmail(user.getEmail());
-                                mainUser.setPosition(user.getPosition());
-                                mainUser.setDescription(user.getDescription());
-                                mainUser.setEmail(user.getEmail());
-                                if (edit) {
-                                    EditActivity editActivity = (EditActivity) activity;
-                                    editActivity.finishEdit();
-                                }
-                            } else if (activity != null) {
-                                Toast.makeText(activity, getErrorMessage(code), Toast.LENGTH_SHORT).show();
-                            }
-                        } catch (JSONException e) {
-                            if (code != 200 && activity != null) {
-                                Toast.makeText(activity, getErrorMessage(code), Toast.LENGTH_SHORT).show();
-                            }
-                            e.printStackTrace();
-                        } catch (NullPointerException ignored) {
-                        }
-                    } else if (activity != null) {
-                        Toast.makeText(activity, getErrorMessage(code), Toast.LENGTH_SHORT).show();
-                    }
-                    if (activity != null) {
-                        Button button = activity.findViewById(R.id.button3);
-                        button.setEnabled(true);
-                    }
-                }));
-        httpPostRequest.execute("http://" + SERVER + "/api/users/edit");
     }
 
     public void changePassword(Activity activity, User user, String newPassword) {
