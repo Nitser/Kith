@@ -548,8 +548,8 @@ public class HttpService {
         } else {
             body_keys = new String[]{"board_user_id", "board_title", "board_description", "board_subscriptions", "board_date_end", "board_enabled",
                                      "board_needs_subscriptions", "board_id"};
-            body_data = new String[]{String.valueOf(user.getId()), info.title, info.description, String.valueOf(0), info.endDate, String.valueOf(1),
-                                     info.needParticipants.replaceAll("-", ""), String.valueOf(old.id)};
+            body_data = new String[]{String.valueOf(user.getId()), info.title, info.description, String.valueOf(0), "", String.valueOf(1),
+                                     "", String.valueOf(old.id)};
         }
 
         HttpPostRequest httpPostRequest = new HttpPostRequest(activity, header_keys, body_keys, header_data, body_data,

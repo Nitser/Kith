@@ -14,17 +14,17 @@ import android.os.SystemClock;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.project.scratchstudio.kith_andoid.Activities.HomeActivity;
-import com.project.scratchstudio.kith_andoid.CustomViews.CustomFontEditText;
-import com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView;
 import com.project.scratchstudio.kith_andoid.R;
 import com.project.scratchstudio.kith_andoid.Service.HttpService;
 import com.project.scratchstudio.kith_andoid.Service.PhotoService;
 import com.project.scratchstudio.kith_andoid.app.BaseFragment;
+import com.project.scratchstudio.kith_andoid.databinding.FragmentNewAnnouncementBinding;
 import com.project.scratchstudio.kith_andoid.network.model.board.Board;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
@@ -35,6 +35,7 @@ import java.io.InputStream;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
+import androidx.databinding.DataBindingUtil;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -42,6 +43,7 @@ public class NewEditBoardFragment extends BaseFragment {
 
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private static long buttonCount = 0;
+    private FragmentNewAnnouncementBinding binding;
     private static String[] PERMISSIONS_STORAGE = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
     private static void verifyStoragePermissions(Activity activity) {
@@ -69,7 +71,8 @@ public class NewEditBoardFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         bundle = getArguments();
-        return inflater.inflate(R.layout.fragment_new_announcement, container, false);
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_new_announcement, container, false);
+        return binding.getRoot();
     }
 
     @Override
@@ -84,28 +87,21 @@ public class NewEditBoardFragment extends BaseFragment {
     }
 
     private void fillFields() {
-        CustomFontEditText title = getActivity().findViewById(R.id.title_text);
-        CustomFontEditText description = getActivity().findViewById(R.id.change_description);
-        ImageView photo = getActivity().findViewById(R.id.new_photo);
-
-        title.setText(board.title);
-        description.setText(board.description);
+        binding.titleText.setText(board.title);
+        binding.changeDescription.setText(board.description);
         if (board.url != null && !board.url.equals("null") && !board.url.equals("")) {
             Picasso.with(getActivity()).load(board.url.replaceAll("@[0-9]*", ""))
                     .error(R.drawable.newspaper)
                     .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
-                    .into(photo);
-            photo.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                    .into(binding.newPhoto);
+            binding.newPhoto.setScaleType(ImageView.ScaleType.CENTER_CROP);
         }
     }
 
     private void setButtonsListener() {
-        CustomFontTextView cancel = getActivity().findViewById(R.id.cancel);
-        cancel.setOnClickListener(this::onClickClose);
-        Button load = getActivity().findViewById(R.id.loadPhoto);
-        load.setOnClickListener(this::onClickLoadPhoto);
-        CustomFontTextView done = getActivity().findViewById(R.id.done);
-        done.setOnClickListener(this::onClickDone);
+        binding.cancel.setOnClickListener(this::onClickClose);
+        binding.loadPhoto.setOnClickListener(this::onClickLoadPhoto);
+        binding.done.setOnClickListener(this::onClickDone);
     }
 
     @Override
@@ -113,6 +109,7 @@ public class NewEditBoardFragment extends BaseFragment {
         if (bundle.containsKey("is_edit") && bundle.getBoolean("is_edit")) {
             editBoard();
         }
+        hideKeyboard(getActivity());
         return super.onBackPressed();
     }
 
@@ -123,19 +120,12 @@ public class NewEditBoardFragment extends BaseFragment {
     }
 
     private void onClickDone(View view) {
-        if (SystemClock.elapsedRealtime() - buttonCount < 1000) {
-            return;
-        }
-        buttonCount = SystemClock.elapsedRealtime();
-        CustomFontTextView done = getActivity().findViewById(R.id.done);
-        done.setEnabled(false);
-
-        CustomFontEditText title = getActivity().findViewById(R.id.title_text);
-        CustomFontEditText description = getActivity().findViewById(R.id.change_description);
-        if (title.getText() == null || title.getText().toString().equals("") || description.getText() == null || description.getText().toString()
+        view.setEnabled(false);
+        hideKeyboard(getActivity());
+        if (binding.titleText.getText() == null || binding.titleText.getText().toString().equals("") || binding.changeDescription.getText() == null
+                || binding.changeDescription.getText().toString()
                 .equals("")) {
             Toast.makeText(getContext(), "Не заполнены все поля обьявления", Toast.LENGTH_SHORT).show();
-            done.setEnabled(true);
         } else {
             if (isNetworkConnected()) {
                 Board info = createBoard();
@@ -146,36 +136,30 @@ public class NewEditBoardFragment extends BaseFragment {
                 } else {
                     httpService.editAnnouncement(getActivity(), HomeActivity.getMainUser(), this, board, info, photo);
                 }
-
             } else {
-                done.setEnabled(true);
                 Toast.makeText(getContext(), "Нет подключения к интернету", Toast.LENGTH_SHORT).show();
             }
         }
+        view.setEnabled(true);
     }
 
     public void onClickClose(View view) {
         if (bundle.containsKey("is_edit") && bundle.getBoolean("is_edit")) {
             editBoard();
         }
+        hideKeyboard(getActivity());
         ((HomeActivity) getActivity()).backFragment();
     }
 
     private void editBoard() {
-        CustomFontEditText title = getActivity().findViewById(R.id.title_text);
-        CustomFontEditText description = getActivity().findViewById(R.id.change_description);
-
-        board.title = title.getText().toString();
-        board.description = description.getText().toString();
+        board.title = binding.titleText.getText().toString();
+        board.description = binding.changeDescription.getText().toString();
     }
 
     private Board createBoard() {
-        CustomFontEditText title = getActivity().findViewById(R.id.title_text);
-        CustomFontEditText description = getActivity().findViewById(R.id.change_description);
-
         Board info = new Board();
-        info.title = title.getText().toString();
-        info.description = description.getText().toString();
+        info.title = binding.titleText.getText().toString();
+        info.description = binding.changeDescription.getText().toString();
         info.organizerId = HomeActivity.getMainUser().getId();
 
         return info;
@@ -199,12 +183,19 @@ public class NewEditBoardFragment extends BaseFragment {
         startActivityForResult(intent, 0);
     }
 
+    private static void hideKeyboard(Activity activity) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        View view = activity.getCurrentFocus();
+        if (view == null) {
+            view = new View(activity);
+        }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        //super method removed
         Button load = getActivity().findViewById(R.id.loadPhoto);
         if (requestCode == 0 && resultCode == RESULT_OK && intent != null && intent.getData() != null) {
-            ImageView image = getActivity().findViewById(R.id.new_photo);
             Uri imageUri = intent.getData();
             InputStream imageStream;
             PhotoService photoService = new PhotoService(getActivity());
@@ -212,10 +203,10 @@ public class NewEditBoardFragment extends BaseFragment {
                 imageStream = getActivity().getContentResolver().openInputStream(imageUri);
                 photo = BitmapFactory.decodeStream(imageStream);
                 photo = photoService.changePhoto(photo, imageUri);
-                photo = photoService.resizeBitmap(photo, image.getWidth(), image.getHeight());
+                photo = photoService.resizeBitmap(photo, binding.newPhoto.getWidth(), binding.newPhoto.getHeight());
                 photo = photoService.compressPhoto(photo);
-                image.setImageBitmap(photo);
-                image.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                binding.newPhoto.setImageBitmap(photo);
+                binding.newPhoto.setScaleType(ImageView.ScaleType.CENTER_CROP);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }

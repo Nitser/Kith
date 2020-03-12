@@ -57,4 +57,6 @@
     <string name="my">Мои</string>
     <string name="confirm">Подтвердить</string>
     <string name="load_photo">Загрузить фото</string>
+    <string name="cost">Стоимость</string>
+    <string name="title">Заголовок</string>
 </resources>
