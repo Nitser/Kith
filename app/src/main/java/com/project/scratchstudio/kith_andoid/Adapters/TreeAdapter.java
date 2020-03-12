@@ -1,20 +1,21 @@
 package com.project.scratchstudio.kith_andoid.Adapters;
 
 import android.app.Activity;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.project.scratchstudio.kith_andoid.Holders.TreeHolder;
-import com.project.scratchstudio.kith_andoid.network.model.user.User;
 import com.project.scratchstudio.kith_andoid.R;
 import com.project.scratchstudio.kith_andoid.Service.PicassoCircleTransformation;
+import com.project.scratchstudio.kith_andoid.network.model.user.User;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class TreeAdapter extends RecyclerView.Adapter<TreeHolder> {
 
@@ -25,6 +26,10 @@ public class TreeAdapter extends RecyclerView.Adapter<TreeHolder> {
     private List<User> userList;
     private final TreeAdapter.OnItemClickListener listener;
     private Activity activity;
+
+    public void setUserList(List<User> list) {
+        userList = list;
+    }
 
     public TreeAdapter(Activity activity, List<User> annInfos, TreeAdapter.OnItemClickListener listener) {
         this.activity = activity;
@@ -46,12 +51,12 @@ public class TreeAdapter extends RecyclerView.Adapter<TreeHolder> {
         holder.name.setText(name);
         holder.position.setText(user.getPosition());
 
-            Picasso.with(activity).load(user.photo.replaceAll("@[0-9]*", ""))
-                    .placeholder(com.project.scratchstudio.kith_andoid.R.mipmap.person)
-                    .error(com.project.scratchstudio.kith_andoid.R.mipmap.person)
-                    .transform(new PicassoCircleTransformation())
-                    .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
-                    .into(holder.image);
+        Picasso.with(activity).load(user.photo.replaceAll("@[0-9]*", ""))
+                .placeholder(com.project.scratchstudio.kith_andoid.R.mipmap.person)
+                .error(com.project.scratchstudio.kith_andoid.R.mipmap.person)
+                .transform(new PicassoCircleTransformation())
+                .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
+                .into(holder.image);
 
         holder.bind(user, listener);
     }

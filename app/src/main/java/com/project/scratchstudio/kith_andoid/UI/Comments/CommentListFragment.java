@@ -13,7 +13,7 @@ import com.project.scratchstudio.kith_andoid.Activities.HomeActivity;
 import com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView;
 import com.project.scratchstudio.kith_andoid.CustomViews.EndlessRecyclerViewScrollListener;
 import com.project.scratchstudio.kith_andoid.R;
-import com.project.scratchstudio.kith_andoid.UI.Comments.list.DialogAdapter;
+import com.project.scratchstudio.kith_andoid.UI.Comments.list.CommentAdapter;
 import com.project.scratchstudio.kith_andoid.UI.NewComment.NewCommentFragment;
 import com.project.scratchstudio.kith_andoid.app.BaseFragment;
 import com.project.scratchstudio.kith_andoid.app.FragmentType;
@@ -39,7 +39,7 @@ public class CommentListFragment extends BaseFragment {
     private int boardId;
     private String boardTitle;
     private RecyclerView listView;
-    private DialogAdapter adapter;
+    private CommentAdapter adapter;
 
     private CommentApi commentApi;
     private CompositeDisposable disposable = new CompositeDisposable();
@@ -67,9 +67,9 @@ public class CommentListFragment extends BaseFragment {
         liveDataHelper = LiveDataHelper.getInstance();
         LiveDataHelper.getInstance().observeCommentList().observe(this, commentList -> {
             if (adapter.getItemCount() == 0) {
-                adapter.setDialogList(commentList);
+                adapter.setCommentList(commentList);
             }
-            adapter.setDialogList(commentList);
+            adapter.setCommentList(commentList);
             adapter.notifyDataSetChanged();
         });
 
@@ -120,7 +120,7 @@ public class CommentListFragment extends BaseFragment {
     }
 
     private void setAdapter() {
-        adapter = new DialogAdapter(getActivity());
+        adapter = new CommentAdapter(getActivity());
         listView.setAdapter(adapter);
     }
 

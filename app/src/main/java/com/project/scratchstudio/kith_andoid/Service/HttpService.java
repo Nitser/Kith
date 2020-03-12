@@ -11,34 +11,27 @@ import android.widget.Toast;
 
 import com.project.scratchstudio.kith_andoid.Activities.ChangePasswordActivity;
 import com.project.scratchstudio.kith_andoid.Activities.CheckInActivity;
-import com.project.scratchstudio.kith_andoid.Activities.EditActivity;
 import com.project.scratchstudio.kith_andoid.Activities.HomeActivity;
 import com.project.scratchstudio.kith_andoid.Activities.MainActivity;
 import com.project.scratchstudio.kith_andoid.Activities.SignInActivity;
 import com.project.scratchstudio.kith_andoid.Activities.SmsActivity;
 import com.project.scratchstudio.kith_andoid.CustomViews.CustomFontEditText;
 import com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView;
-import com.project.scratchstudio.kith_andoid.UI.NewEditBoard.NewEditBoardFragment;
-import com.project.scratchstudio.kith_andoid.Fragments.TreeFragment;
 import com.project.scratchstudio.kith_andoid.Model.Cache;
 import com.project.scratchstudio.kith_andoid.R;
 import com.project.scratchstudio.kith_andoid.SetInternalData.ClearUserIdAndToken;
 import com.project.scratchstudio.kith_andoid.SetInternalData.SetCountData;
+import com.project.scratchstudio.kith_andoid.UI.NewEditBoard.NewEditBoardFragment;
 import com.project.scratchstudio.kith_andoid.network.model.board.Board;
 import com.project.scratchstudio.kith_andoid.network.model.user.User;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
-
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 public class HttpService {
 
@@ -232,13 +225,7 @@ public class HttpService {
                 } catch (JSONException e) {
                     if (context != null) {
                         Toast.makeText(context, getErrorMessage(code), Toast.LENGTH_SHORT).show();
-                        HomeActivity.cleanMainUser();
-                        InternalStorageService internalStorageService = new InternalStorageService(context);
-                        internalStorageService.setiSetInternalData(new ClearUserIdAndToken());
-                        internalStorageService.execute();
-                        Intent intent = new Intent(context, MainActivity.class);
-                        context.startActivity(intent);
-                        context.finish();
+
                     }
                     e.printStackTrace();
                 } catch (NullPointerException ignored) {
@@ -445,59 +432,6 @@ public class HttpService {
         httpPostRequest.execute("http://" + SERVER + "/api/users/checkcode");
     }
 
-    public void refreshInvitedUsers(Activity activity, int id, boolean owner, SwipeRefreshLayout refreshLayout, TreeFragment fragment) {
-        String[] result_keys = {"status", "user_id", "user_firstname", "user_lastname", "photo", "user_middlename", "user_position", "user_phone",
-                                "user_description"};
-        String[] header_keys = {"Authorization"};
-        String[] body_keys = {"user_id", "page", "size"};
-        String[] header_data = {HomeActivity.getMainUser().getToken()};
-        String[] body_data = {String.valueOf(id), "0", "50"};
-
-        HttpPostRequest httpPostRequest = new HttpPostRequest(activity, header_keys, body_keys, header_data, body_data,
-                ((output, resultJSON, code) -> {
-                    if (output && resultJSON != null) {
-                        try {
-                            JSONArray response = new JSONArray(resultJSON);
-                            List<User> list = new ArrayList<>();
-                            if (response.length() != 0 && !response.getJSONObject(0).has(result_keys[0])) {
-                                for (int i = 0; i < response.length(); i++) {
-                                    JSONObject obj = response.getJSONObject(i);
-                                    User user = new User();
-                                    user.setId(obj.getInt(result_keys[1]));
-                                    user.setFirstName(obj.getString(result_keys[2]));
-                                    user.setLastName(obj.getString(result_keys[3]));
-                                    user.photo = (obj.getString(result_keys[4]).replaceAll("\\/", "/"));
-                                    user.setMiddleName(obj.getString(result_keys[5]));
-                                    user.setPosition(obj.getString(result_keys[6]));
-                                    user.setPhone(obj.getString(result_keys[7]));
-                                    user.setDescription(obj.getString(result_keys[8]));
-                                    user.setEmail(obj.getString("user_email"));
-
-                                    list.add(user);
-                                }
-                                if (activity != null) {
-                                    HomeActivity homeActivity = (HomeActivity) activity;
-                                    homeActivity.setInvitedUsers(list);
-                                }
-                            }
-                            if (fragment != null) {
-                                fragment.setInvitedUsersList(list);
-                            }
-                            refreshLayout.setRefreshing(false);
-                        } catch (JSONException e) {
-                            if (activity != null) {
-                                Toast.makeText(activity, getErrorMessage(code), Toast.LENGTH_SHORT).show();
-                            }
-                            e.printStackTrace();
-                        } catch (NullPointerException ignored) {
-                        }
-                    } else if (activity != null) {
-                        Toast.makeText(activity, getErrorMessage(code), Toast.LENGTH_SHORT).show();
-                    }
-                }));
-        httpPostRequest.execute("http://" + SERVER + "/api/users/referral_users");
-    }
-
     public void changePassword(Activity activity, User user, String newPassword) {
         String[] result_keys = {"status"};
         String[] header_keys = {"Authorization"};
@@ -571,7 +505,7 @@ public class HttpService {
                             JSONObject json = new JSONObject(resultJSON);
                             if (json.getBoolean(result_keys[0]) && activity != null && nFragment != null) {
                                 Toast.makeText(activity, "Объявление создано", Toast.LENGTH_SHORT).show();
-                                ((HomeActivity)activity).updateBoards();
+                                ((HomeActivity) activity).updateBoards();
                                 nFragment.onClickClose(null);
                             } else {
                                 Toast.makeText(activity, "Ошибка отправки запроса", Toast.LENGTH_SHORT).show();

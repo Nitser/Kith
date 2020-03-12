@@ -21,41 +21,33 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class DialogAdapter extends RecyclerView.Adapter<DialogHolder> {
+public class CommentAdapter extends RecyclerView.Adapter<CommentHolder> {
 
     public interface OnItemClickListener {
         void onItemClick(Comment item);
     }
 
-    private List<Comment> dialogList = new ArrayList<>();
+    private List<Comment> commentList = new ArrayList<>();
     private Activity activity;
 
-    public DialogAdapter(Activity activity) {
+    public CommentAdapter(Activity activity) {
         this.activity = activity;
     }
 
-    public void setDialogList(List<Comment> list) {
-        dialogList = list;
+    public void setCommentList(List<Comment> list) {
+        commentList = list;
     }
-
-    //TODO: for active comments
-//    private DialogAdapter.OnItemClickListener listener;
-//    public DialogAdapter(Activity activity, List<Comment> annInfos, DialogAdapter.OnItemClickListener listener) {
-//        this.activity = activity;
-//        dialogList = annInfos;
-//        this.listener = listener;
-//    }
 
     @NonNull
     @Override
-    public DialogHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+    public CommentHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View itemView = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.message_dialog_item_layout, viewGroup, false);
-        return new DialogHolder(itemView);
+        return new CommentHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull DialogHolder holder, int i) {
-        Comment comment = dialogList.get(i);
+    public void onBindViewHolder(@NonNull CommentHolder holder, int i) {
+        Comment comment = commentList.get(i);
         holder.name.setText(comment.getUser().lastName + " " + comment.getUser().firstName);
         holder.position.setText(comment.getUser().position);
         holder.time.setText(comment.getTimestamp().replaceAll("[-0-9]*\\s", "").replaceAll(":[0-9]*$", ""));
@@ -84,12 +76,11 @@ public class DialogAdapter extends RecyclerView.Adapter<DialogHolder> {
                 .error(com.project.scratchstudio.kith_andoid.R.mipmap.person)
                 .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
                 .into(holder.photo);
-//        holder.bind(comment, listener);
     }
 
     @Override
     public int getItemCount() {
-        return dialogList.size();
+        return commentList.size();
     }
 
 }

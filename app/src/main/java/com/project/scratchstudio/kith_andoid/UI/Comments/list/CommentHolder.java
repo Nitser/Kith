@@ -4,7 +4,6 @@ import android.graphics.Color;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.project.scratchstudio.kith_andoid.UI.Comments.list.DialogAdapter;
 import com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView;
 import com.project.scratchstudio.kith_andoid.R;
 import com.project.scratchstudio.kith_andoid.network.model.comment.Comment;
@@ -13,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class DialogHolder extends RecyclerView.ViewHolder {
+public class CommentHolder extends RecyclerView.ViewHolder {
 
     public CustomFontTextView name;
     public CustomFontTextView position;
@@ -23,7 +22,7 @@ public class DialogHolder extends RecyclerView.ViewHolder {
     public ImageView photo;
     private CardView cardView;
 
-    public DialogHolder(@NonNull View itemView) {
+    public CommentHolder(@NonNull View itemView) {
         super(itemView);
         name = itemView.findViewById(R.id.name);
         position = itemView.findViewById(R.id.position);
@@ -38,7 +37,7 @@ public class DialogHolder extends RecyclerView.ViewHolder {
         cardView.setCardElevation(0);
     }
 
-    public void bind(final Comment item, final DialogAdapter.OnItemClickListener listener) {
+    public void bind(final Comment item, final CommentAdapter.OnItemClickListener listener) {
         itemView.setOnClickListener(v -> listener.onItemClick(item));
     }
 }

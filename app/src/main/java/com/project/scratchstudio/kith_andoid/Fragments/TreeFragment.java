@@ -25,12 +25,15 @@ import android.widget.Toast;
 
 import com.project.scratchstudio.kith_andoid.Activities.CodeActivity;
 import com.project.scratchstudio.kith_andoid.Activities.HomeActivity;
+import com.project.scratchstudio.kith_andoid.Activities.MainActivity;
 import com.project.scratchstudio.kith_andoid.Adapters.SearchAdapter;
 import com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView;
 import com.project.scratchstudio.kith_andoid.Holders.TreeHolder;
 import com.project.scratchstudio.kith_andoid.R;
 import com.project.scratchstudio.kith_andoid.Service.HttpService;
+import com.project.scratchstudio.kith_andoid.Service.InternalStorageService;
 import com.project.scratchstudio.kith_andoid.Service.PicassoCircleTransformation;
+import com.project.scratchstudio.kith_andoid.SetInternalData.ClearUserIdAndToken;
 import com.project.scratchstudio.kith_andoid.UserPresenter;
 import com.project.scratchstudio.kith_andoid.app.FragmentType;
 import com.project.scratchstudio.kith_andoid.network.ApiClient;
@@ -61,12 +64,12 @@ public class TreeFragment extends Fragment {
     private static long buttonCount = 0;
     private Bundle bundle;
     private HttpService httpService;
-    public SearchAdapter searchAdapter;
+    private SearchAdapter searchAdapter;
 
     private RecyclerView list;
     private LinearLayout linearLayout;
     private SwipeRefreshLayout mySwipeRefreshLayout;
-    private User currentUser;
+    private User currentUser = HomeActivity.getMainUser();
 
     private UserApi userApi;
     private CompositeDisposable disposable = new CompositeDisposable();
@@ -74,7 +77,7 @@ public class TreeFragment extends Fragment {
 
     private static List<User> listPersons = new ArrayList<>();
 
-    public static void setListPersons(List<User> list) {
+    private static void setListPersons(List<User> list) {
         listPersons = list;
     }
 
@@ -103,56 +106,90 @@ public class TreeFragment extends Fragment {
         User mainUser = HomeActivity.getMainUser();
         String userName = "";
 
-        if (bundle != null && bundle.containsKey("another_user") && !bundle.getBoolean("another_user")) {
-            currentUser = mainUser;
-            if (currentUser.getFirstName() == null) {
-                if (isNetworkConnected()) {
-                    httpService.getUser(getActivity(), false);
-                } else {
-                    Toast.makeText(getActivity(), "Нет подключения к интернету", Toast.LENGTH_SHORT).show();
-                }
-            } else {
-                userName = currentUser.getFirstName() + " " + currentUser.getLastName();
-            }
-            HomeActivity.createInvitedUsers();
-        } else if (bundle != null && bundle.containsKey("user")) {
-            currentUser = (User) bundle.getSerializable("user");
-            userName = currentUser.getFirstName() + " " + currentUser.getLastName();
-
-            ImageButton back = getActivity().findViewById(R.id.back);
-            back.setVisibility(View.VISIBLE);
-        }
-
-        init(userName);
-        if (isNetworkConnected()) {
-            httpService.referralCount(getActivity(), currentUser, false);
-            httpService.referralCount(getActivity(), currentUser, true);
-
-            userPresenter.getInvitedUsers(new UserPresenter.GetUserListCallback() {
+        if (mainUser.getFirstName() == null) {
+            userPresenter.getUser(new UserPresenter.GetUserCallback() {
                 @Override
-                public void onSuccess(final User[] userResponse) {
-                    List<User> response = new ArrayList<>(Arrays.asList(userResponse));
-                    for (User user : response) {
-                        if (user.photo != null) {
-                            user.photo = user.photo.replaceAll("\\/", "/").replaceAll("@[0-9]*", "");
-                            Log.d("UserDebug", "Photo: " + user.photo);
-                        }
+                public void onSuccess(final UserResponse userResponse) {
+                    if (userResponse.getStatus()) {
+                        currentUser.firstName = userResponse.getUser().firstName;
+                        currentUser.lastName = userResponse.getUser().lastName;
+                        currentUser.middleName = userResponse.getUser().middleName;
+                        currentUser.login = userResponse.getUser().login;
+                        currentUser.phone = userResponse.getUser().phone;
+                        currentUser.description = userResponse.getUser().description;
+                        currentUser.position = userResponse.getUser().position;
+                        currentUser.email = userResponse.getUser().email;
+                        currentUser.photo = userResponse.getUser().photo.replaceAll("\\/", "/");
+
+                        ImageView photo = view.findViewById(R.id.photo);
+                        Picasso.with(getContext()).load(currentUser.photo)
+                                .placeholder(R.mipmap.person)
+                                .error(R.mipmap.person)
+                                .transform(new PicassoCircleTransformation())
+                                .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
+                                .into(photo);
+
+                        CustomFontTextView name = view.findViewById(R.id.name);
+                        CustomFontTextView position = view.findViewById(R.id.position);
+                        String userName = currentUser.getFirstName() + " " + currentUser.getLastName();
+                        name.setText(userName);
+                        position.setText(currentUser.getPosition());
+                    } else {
+                        Toast.makeText(getContext(), "Ошибка отправки запроса", Toast.LENGTH_SHORT).show();
+                        exit();
                     }
-                    setInvitedUsersList(response);
                 }
 
                 @Override
                 public void onError(final NetworkErrorException networkError) {
                     Toast.makeText(getContext(), "Ошибка отправки запроса", Toast.LENGTH_SHORT).show();
+                    exit();
                 }
-            }, HomeActivity.getMainUser().id);
+            }, currentUser.id);
+        } else {
+            userName = currentUser.getFirstName() + " " + currentUser.getLastName();
+        }
+        HomeActivity.createInvitedUsers();
+
+        init(userName);
+        if (isNetworkConnected()) {
+            httpService.referralCount(getActivity(), currentUser, false);
+            httpService.referralCount(getActivity(), currentUser, true);
         } else {
             Toast.makeText(getActivity(), "Нет подключения к интернету", Toast.LENGTH_SHORT).show();
         }
 
+        userPresenter.getInvitedUsers(new UserPresenter.GetUserListCallback() {
+            @Override
+            public void onSuccess(final User[] userResponse) {
+                List<User> response = new ArrayList<>(Arrays.asList(userResponse));
+                for (User user : response) {
+                    if (user.photo != null) {
+                        user.photo = user.photo.replaceAll("\\/", "/").replaceAll("@[0-9]*", "");
+                        Log.d("UserDebug", "Photo: " + user.photo);
+                    }
+                }
+                setInvitedUsersList(response);
+            }
+
+            @Override
+            public void onError(final NetworkErrorException networkError) {
+                Toast.makeText(getContext(), "Ошибка отправки запроса", Toast.LENGTH_SHORT).show();
+            }
+        }, HomeActivity.getMainUser().id);
+
         mySwipeRefreshLayout = getActivity().findViewById(R.id.swiperefresh);
         mySwipeRefreshLayout.setOnRefreshListener(this::myUpdateOperation);
 
+    }
+
+    private void exit() {
+        HomeActivity.cleanMainUser();
+        InternalStorageService internalStorageService = new InternalStorageService(getActivity());
+        internalStorageService.setiSetInternalData(new ClearUserIdAndToken());
+        internalStorageService.execute();
+        Intent intent = new Intent(getContext(), MainActivity.class);
+        startActivity(intent);
     }
 
     private void init(String str_name) {
@@ -174,7 +211,7 @@ public class TreeFragment extends Fragment {
 
     }
 
-    public void setInvitedUsersList(List<User> invitedUsers) {
+    private void setInvitedUsersList(List<User> invitedUsers) {
         cleanUsers();
         for (int i = 0; i < invitedUsers.size(); i++) {
             LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -248,7 +285,7 @@ public class TreeFragment extends Fragment {
         }
     }
 
-    public void refreshUser() {
+    private void refreshUser() {
         ImageView photo = getActivity().findViewById(R.id.photo);
         CustomFontTextView name = getActivity().findViewById(R.id.name);
         CustomFontTextView position = getActivity().findViewById(R.id.position);
@@ -284,14 +321,14 @@ public class TreeFragment extends Fragment {
         searchBack.setOnClickListener(this::onClickBackSearch);
     }
 
-    public void onClickBack(View view) {
+    private void onClickBack(View view) {
         HomeActivity.getStackBundles().remove(HomeActivity.getStackBundles().size() - 1);
         Bundle bundle = HomeActivity.getStackBundles().get(HomeActivity.getStackBundles().size() - 1);
         HomeActivity homeActivity = (HomeActivity) getActivity();
         homeActivity.replaceFragment(TreeFragment.newInstance(bundle, FragmentType.TREE.name()), FragmentType.TREE.name());
     }
 
-    public void onClickCode(View view) {
+    private void onClickCode(View view) {
         if (SystemClock.elapsedRealtime() - buttonCount < 1000) {
             return;
         }
@@ -302,7 +339,7 @@ public class TreeFragment extends Fragment {
         view.setEnabled(true);
     }
 
-    public void onClickSearch(View view) {
+    private void onClickSearch(View view) {
         RelativeLayout layout = getActivity().findViewById(R.id.search_header);
         layout.setVisibility(View.VISIBLE);
         LinearLayout linearLayout = getActivity().findViewById(R.id.paper_search);
@@ -387,7 +424,7 @@ public class TreeFragment extends Fragment {
         list.setAdapter(searchAdapter);
     }
 
-    public static void hideKeyboard(Activity activity) {
+    private static void hideKeyboard(Activity activity) {
         InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
         View view = activity.getCurrentFocus();
         if (view == null) {
@@ -426,10 +463,6 @@ public class TreeFragment extends Fragment {
     }
 
     private void onClickProfileButton(View view) {
-        if (SystemClock.elapsedRealtime() - buttonCount < 1000) {
-            return;
-        }
-        buttonCount = SystemClock.elapsedRealtime();
         view.setEnabled(false);
         userPresenter.openProfile(HomeActivity.getMainUser());
         view.setEnabled(true);

@@ -3,7 +3,6 @@ package com.project.scratchstudio.kith_andoid.Activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MenuItem;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.project.scratchstudio.kith_andoid.Fragments.TreeFragment;
@@ -20,7 +19,6 @@ import com.project.scratchstudio.kith_andoid.network.model.user.User;
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -39,6 +37,10 @@ public class HomeActivity extends AppCompatActivity {
 
     public static User getMainUser() {
         return mainUser;
+    }
+
+    public static void setMainUser(User user) {
+        mainUser = user;
     }
 
     public static List<Bundle> getStackBundles() {
@@ -146,7 +148,7 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
-    public void exit(){
+    public void exit() {
         HomeActivity.cleanMainUser();
         InternalStorageService internalStorageService = new InternalStorageService(this);
         internalStorageService.setiSetInternalData(new ClearUserIdAndToken());

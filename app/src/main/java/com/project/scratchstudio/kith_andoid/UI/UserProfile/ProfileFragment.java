@@ -1,4 +1,4 @@
-package com.project.scratchstudio.kith_andoid.UI;
+package com.project.scratchstudio.kith_andoid.UI.UserProfile;
 
 import android.accounts.NetworkErrorException;
 import android.content.Intent;
