@@ -322,7 +322,6 @@ public class TreeFragment extends Fragment {
                                 if (response.getStatus()) {
                                     for (User user : response.getUsers()) {
                                         if (user.photo != null) {
-//                                            Log.d("UserDebug", "Photo: " + user.photo);
                                             user.photo = user.photo.replaceAll("\\/", "/").replaceAll("@[0-9]*", "");
                                         }
                                     }
@@ -373,7 +372,7 @@ public class TreeFragment extends Fragment {
 
     }
 
-    public void onClickBackSearch(View view) {
+    private void onClickBackSearch(View view) {
         RelativeLayout layout = getActivity().findViewById(R.id.search_header);
         layout.setVisibility(View.INVISIBLE);
         LinearLayout linearLayout = getActivity().findViewById(R.id.paper_search);
@@ -383,13 +382,24 @@ public class TreeFragment extends Fragment {
         imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
     }
 
-    public void setSearchAdapter(View view) {
+    private void setSearchAdapter(View view) {
         searchAdapter = new SearchAdapter(getActivity(), listPersons, item -> getProfile(view, item.id));
         list.setAdapter(searchAdapter);
     }
 
+    public static void hideKeyboard(Activity activity) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        View view = activity.getCurrentFocus();
+        if (view == null) {
+            view = new View(activity);
+        }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
     private void getProfile(View view, int newUserId) {
         view.setEnabled(false);
+        EditText editText = getActivity().findViewById(R.id.filter);
+        editText.requestFocus();
         userPresenter.getUser(new UserPresenter.GetUserCallback() {
             @Override
             public void onSuccess(final UserResponse userResponse) {
@@ -398,6 +408,7 @@ public class TreeFragment extends Fragment {
                     if (userResponse.getUser().photo != null) {
                         userResponse.getUser().photo = (userResponse.getUser().photo.replaceAll("\\/", "/"));
                     }
+                    hideKeyboard(getActivity());
                     userPresenter.openProfile(userResponse.getUser());
                 } else {
                     Toast.makeText(getContext(), "Ошибка отправки запроса", Toast.LENGTH_SHORT).show();
@@ -414,7 +425,7 @@ public class TreeFragment extends Fragment {
         }, newUserId);
     }
 
-    public void onClickProfileButton(View view) {
+    private void onClickProfileButton(View view) {
         if (SystemClock.elapsedRealtime() - buttonCount < 1000) {
             return;
         }

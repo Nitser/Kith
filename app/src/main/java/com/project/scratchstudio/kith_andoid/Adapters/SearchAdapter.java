@@ -74,11 +74,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchHolder> implements
         return filteredData.size();
     }
 
-    //This should return a data object, not an int
-    public Object getItem(int position) {
-        return filteredData.get(position);
-    }
-
     public long getItemId(int position) {
         return position;
     }
@@ -96,7 +91,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchHolder> implements
                     results.count = searchList.size();
                 } else {
                     String filter = String.valueOf(charSequence).toLowerCase();
-//                            .replaceAll("\\s+", "");
                     ArrayList<User> filterResultsData = new ArrayList<>();
 
                     for (User data : searchList) {
