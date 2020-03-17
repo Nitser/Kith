@@ -7,7 +7,7 @@ import android.os.Bundle;
 
 import com.project.scratchstudio.kith_andoid.Activities.HomeActivity;
 import com.project.scratchstudio.kith_andoid.Service.PhotoService;
-import com.project.scratchstudio.kith_andoid.UI.UserProfile.ProfileFragment;
+import com.project.scratchstudio.kith_andoid.ui.UserProfile.ProfileFragment;
 import com.project.scratchstudio.kith_andoid.app.FragmentType;
 import com.project.scratchstudio.kith_andoid.network.ApiClient;
 import com.project.scratchstudio.kith_andoid.network.apiService.UserApi;

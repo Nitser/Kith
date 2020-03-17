@@ -1,5 +1,6 @@
 package com.project.scratchstudio.kith_andoid.network.apiService;
 
+import com.project.scratchstudio.kith_andoid.network.model.BaseResponse;
 import com.project.scratchstudio.kith_andoid.network.model.board.BoardsResponse;
 import com.project.scratchstudio.kith_andoid.network.model.favorite.FavoriteResponse;
 
@@ -29,4 +30,12 @@ public interface BoardApi {
 
     @GET("api/boards/getuserboards/{id}")
     Single<BoardsResponse> getMyBoards(@Path("id") int id);
+
+    @FormUrlEncoded
+    @POST("api/boards/create")
+    Single<BaseResponse> createBoard(@Field("board_user_id") int userId, @Field("board_title") String title,
+                                     @Field("board_description") String description,
+                                     @Field("board_photo") String photo, @Field("board_subscriptions") int subscriptions,
+                                     @Field("board_enabled") int enabled, @Field("board_cost") String cost);
+
 }

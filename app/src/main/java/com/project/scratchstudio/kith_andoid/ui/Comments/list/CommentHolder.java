@@ -1,4 +1,4 @@
-package com.project.scratchstudio.kith_andoid.UI.Comments.list;
+package com.project.scratchstudio.kith_andoid.ui.Comments.list;
 
 import android.graphics.Color;
 import android.view.View;

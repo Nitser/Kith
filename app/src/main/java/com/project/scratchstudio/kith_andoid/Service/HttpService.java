@@ -21,7 +21,7 @@ import com.project.scratchstudio.kith_andoid.Model.Cache;
 import com.project.scratchstudio.kith_andoid.R;
 import com.project.scratchstudio.kith_andoid.SetInternalData.ClearUserIdAndToken;
 import com.project.scratchstudio.kith_andoid.SetInternalData.SetCountData;
-import com.project.scratchstudio.kith_andoid.UI.NewEditBoard.NewEditBoardFragment;
+import com.project.scratchstudio.kith_andoid.ui.neweditboard.NewEditBoardFragment;
 import com.project.scratchstudio.kith_andoid.network.model.board.Board;
 import com.project.scratchstudio.kith_andoid.network.model.user.User;
 import com.squareup.picasso.MemoryPolicy;
@@ -487,15 +487,14 @@ public class HttpService {
                 e.printStackTrace();
                 res = "";
             }
-            body_keys = new String[]{"board_user_id", "board_title", "board_description", "board_photo", "board_subscriptions", "board_date_end",
-                                     "board_enabled", "board_needs_subscriptions"};
-            body_data = new String[]{String.valueOf(user.getId()), info.title, info.description, res, String.valueOf(0), info.endDate,
-                                     String.valueOf(1), info.needParticipants};
+            body_keys = new String[]{"board_user_id", "board_title", "board_description", "board_photo", "board_subscriptions",
+                                     "board_enabled", "board_cost"};
+            body_data = new String[]{String.valueOf(user.getId()), info.title, info.description, res, String.valueOf(0),
+                                     String.valueOf(1), info.cost};
         } else {
-            body_keys = new String[]{"board_user_id", "board_title", "board_description", "board_subscriptions", "board_date_end", "board_enabled",
-                                     "board_needs_subscriptions"};
-            body_data = new String[]{String.valueOf(user.getId()), info.title, info.description, String.valueOf(0), info.endDate, String.valueOf(1),
-                                     info.needParticipants};
+            body_keys = new String[]{"board_user_id", "board_title", "board_description", "board_subscriptions", "board_enabled", "board_cost"};
+            body_data = new String[]{String.valueOf(user.getId()), info.title, info.description, String.valueOf(0), String.valueOf(1),
+                                     info.cost};
         }
 
         HttpPostRequest httpPostRequest = new HttpPostRequest(activity, header_keys, body_keys, header_data, body_data,

@@ -86,6 +86,7 @@ public class EditActivity extends AppCompatActivity {
             binding.description.setText(mainUser.getDescription());
         }
         binding.password.setText(new String(new char[mainUser.getPassword().length()]).replace("\0", "*"));
+        binding.position.setText(mainUser.position);
     }
 
 

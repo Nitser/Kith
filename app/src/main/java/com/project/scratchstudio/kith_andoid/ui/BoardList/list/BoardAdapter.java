@@ -1,4 +1,4 @@
-package com.project.scratchstudio.kith_andoid.UI.BoardList.list;
+package com.project.scratchstudio.kith_andoid.ui.BoardList.list;
 
 import android.app.Activity;
 import android.view.LayoutInflater;
@@ -8,7 +8,7 @@ import android.widget.ImageView;
 
 import com.project.scratchstudio.kith_andoid.Activities.HomeActivity;
 import com.project.scratchstudio.kith_andoid.R;
-import com.project.scratchstudio.kith_andoid.UI.BoardList.BoardsFragment;
+import com.project.scratchstudio.kith_andoid.ui.BoardList.BoardsFragment;
 import com.project.scratchstudio.kith_andoid.network.model.board.Board;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;

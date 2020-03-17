@@ -1,4 +1,4 @@
-package com.project.scratchstudio.kith_andoid.UI.BoardList;
+package com.project.scratchstudio.kith_andoid.ui.BoardList;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -14,9 +14,9 @@ import android.widget.Toast;
 import com.project.scratchstudio.kith_andoid.Activities.HomeActivity;
 import com.project.scratchstudio.kith_andoid.Fragments.TreeFragment;
 import com.project.scratchstudio.kith_andoid.R;
-import com.project.scratchstudio.kith_andoid.UI.BoardInfo.BoardInfoFragment;
-import com.project.scratchstudio.kith_andoid.UI.BoardList.list.BoardAdapter;
-import com.project.scratchstudio.kith_andoid.UI.NewEditBoard.NewEditBoardFragment;
+import com.project.scratchstudio.kith_andoid.ui.BoardInfo.BoardInfoFragment;
+import com.project.scratchstudio.kith_andoid.ui.BoardList.list.BoardAdapter;
+import com.project.scratchstudio.kith_andoid.ui.neweditboard.NewEditBoardFragment;
 import com.project.scratchstudio.kith_andoid.app.BaseFragment;
 import com.project.scratchstudio.kith_andoid.app.FragmentType;
 import com.project.scratchstudio.kith_andoid.network.ApiClient;
@@ -261,8 +261,11 @@ public class BoardsFragment extends BaseFragment {
 
     private void changeBoardDate(BoardType boardType, ArrayList<Board> boards) {
         for (Board board : boards) {
+            Log.i("BOARDLIST", "cost = " + board.cost);
             board.organizerName = board.organizerFirstName + " " + board.organizerLastName;
-            board.url = board.url.replaceAll("\\/", "/");
+            if (board.url != null) {
+                board.url = board.url.replaceAll("\\/", "/");
+            }
         }
         type = boardType;
         changeSelectedButton();

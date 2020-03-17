@@ -1,13 +1,12 @@
-package com.project.scratchstudio.kith_andoid.UI.NewEditBoard;
+package com.project.scratchstudio.kith_andoid.ui.neweditboard;
 
 import android.Manifest;
+import android.accounts.NetworkErrorException;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -20,11 +19,13 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.project.scratchstudio.kith_andoid.Activities.HomeActivity;
+import com.project.scratchstudio.kith_andoid.BoardPresenter;
 import com.project.scratchstudio.kith_andoid.R;
 import com.project.scratchstudio.kith_andoid.Service.HttpService;
 import com.project.scratchstudio.kith_andoid.Service.PhotoService;
 import com.project.scratchstudio.kith_andoid.app.BaseFragment;
 import com.project.scratchstudio.kith_andoid.databinding.FragmentNewAnnouncementBinding;
+import com.project.scratchstudio.kith_andoid.network.model.BaseResponse;
 import com.project.scratchstudio.kith_andoid.network.model.board.Board;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
@@ -45,6 +46,7 @@ public class NewEditBoardFragment extends BaseFragment {
     private static long buttonCount = 0;
     private FragmentNewAnnouncementBinding binding;
     private static String[] PERMISSIONS_STORAGE = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+    private BoardPresenter boardPresenter;
 
     private static void verifyStoragePermissions(Activity activity) {
         int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
@@ -78,6 +80,8 @@ public class NewEditBoardFragment extends BaseFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         verifyStoragePermissions(getActivity());
+        boardPresenter = new BoardPresenter(getContext());
+        binding.costText.addTextChangedListener(new CurrencyTextWatcher(binding.costText));
         setButtonsListener();
 
         if (bundle.containsKey("is_edit") && bundle.getBoolean("is_edit")) {
@@ -96,6 +100,7 @@ public class NewEditBoardFragment extends BaseFragment {
                     .into(binding.newPhoto);
             binding.newPhoto.setScaleType(ImageView.ScaleType.CENTER_CROP);
         }
+        binding.costText.setText(board.cost);
     }
 
     private void setButtonsListener() {
@@ -115,7 +120,6 @@ public class NewEditBoardFragment extends BaseFragment {
 
     public void onClickDoneClose() {
         ((HomeActivity) getActivity()).changedBoardPhoto();
-
         onClickClose(null);
     }
 
@@ -127,18 +131,30 @@ public class NewEditBoardFragment extends BaseFragment {
                 .equals("")) {
             Toast.makeText(getContext(), "Не заполнены все поля обьявления", Toast.LENGTH_SHORT).show();
         } else {
-            if (isNetworkConnected()) {
-                Board info = createBoard();
-                HttpService httpService = new HttpService();
+            Board newBoard = createBoard();
+            if (board == null) {
+                boardPresenter.createBoard(new BoardPresenter.CreateBoardCallback() {
+                    @Override
+                    public void onSuccess(final BaseResponse baseResponse) {
+                        if (baseResponse.getStatus()) {
+                            Toast.makeText(getContext(), "Объявление создано", Toast.LENGTH_SHORT).show();
+                            ((HomeActivity) getActivity()).updateBoards();
+                            onClickClose(null);
+                        } else {
+                            Toast.makeText(getContext(), "Ошибка отправки запроса", Toast.LENGTH_SHORT).show();
+                        }
+                    }
 
-                if (board == null) {
-                    httpService.addAnnouncement(getActivity(), HomeActivity.getMainUser(), this, info, photo);
-                } else {
-                    httpService.editAnnouncement(getActivity(), HomeActivity.getMainUser(), this, board, info, photo);
-                }
+                    @Override
+                    public void onError(final NetworkErrorException networkError) {
+                        Toast.makeText(getContext(), "Ошибка отправки запроса", Toast.LENGTH_SHORT).show();
+                    }
+                }, newBoard, photo);
             } else {
-                Toast.makeText(getContext(), "Нет подключения к интернету", Toast.LENGTH_SHORT).show();
+                HttpService httpService = new HttpService();
+                httpService.editAnnouncement(getActivity(), HomeActivity.getMainUser(), this, board, newBoard, photo);
             }
+
         }
         view.setEnabled(true);
     }
@@ -154,6 +170,7 @@ public class NewEditBoardFragment extends BaseFragment {
     private void editBoard() {
         board.title = binding.titleText.getText().toString();
         board.description = binding.changeDescription.getText().toString();
+        board.cost = binding.costText.getText().toString().replaceAll(" \u20BD", "");
     }
 
     private Board createBoard() {
@@ -161,6 +178,7 @@ public class NewEditBoardFragment extends BaseFragment {
         info.title = binding.titleText.getText().toString();
         info.description = binding.changeDescription.getText().toString();
         info.organizerId = HomeActivity.getMainUser().getId();
+        info.cost = binding.costText.getText().toString().replaceAll(" \u20BD", "");
 
         return info;
     }
@@ -214,11 +232,5 @@ public class NewEditBoardFragment extends BaseFragment {
         } else if (requestCode == 0) {
             load.setEnabled(true);
         }
-    }
-
-
-    private boolean isNetworkConnected() {
-        ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        return (cm != null && cm.getActiveNetworkInfo() != null);
     }
 }

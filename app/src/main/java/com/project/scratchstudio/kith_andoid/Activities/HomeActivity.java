@@ -10,9 +10,9 @@ import com.project.scratchstudio.kith_andoid.R;
 import com.project.scratchstudio.kith_andoid.Service.InternalStorageService;
 import com.project.scratchstudio.kith_andoid.SetInternalData.ClearUserIdAndToken;
 import com.project.scratchstudio.kith_andoid.SetInternalData.SetUserIdAndToken;
-import com.project.scratchstudio.kith_andoid.UI.BoardInfo.BoardInfoFragment;
-import com.project.scratchstudio.kith_andoid.UI.BoardList.BoardsFragment;
-import com.project.scratchstudio.kith_andoid.UI.Comments.CommentListFragment;
+import com.project.scratchstudio.kith_andoid.ui.BoardInfo.BoardInfoFragment;
+import com.project.scratchstudio.kith_andoid.ui.BoardList.BoardsFragment;
+import com.project.scratchstudio.kith_andoid.ui.Comments.CommentListFragment;
 import com.project.scratchstudio.kith_andoid.app.FragmentType;
 import com.project.scratchstudio.kith_andoid.network.model.user.User;
 

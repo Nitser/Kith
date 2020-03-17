@@ -1,4 +1,4 @@
-package com.project.scratchstudio.kith_andoid.UI.BoardInfo;
+package com.project.scratchstudio.kith_andoid.ui.BoardInfo;
 
 import android.accounts.NetworkErrorException;
 import android.content.Intent;
@@ -19,8 +19,8 @@ import android.widget.Toast;
 
 import com.project.scratchstudio.kith_andoid.Activities.HomeActivity;
 import com.project.scratchstudio.kith_andoid.R;
-import com.project.scratchstudio.kith_andoid.UI.Comments.CommentListFragment;
-import com.project.scratchstudio.kith_andoid.UI.NewEditBoard.NewEditBoardFragment;
+import com.project.scratchstudio.kith_andoid.ui.Comments.CommentListFragment;
+import com.project.scratchstudio.kith_andoid.ui.neweditboard.NewEditBoardFragment;
 import com.project.scratchstudio.kith_andoid.UserPresenter;
 import com.project.scratchstudio.kith_andoid.app.BaseFragment;
 import com.project.scratchstudio.kith_andoid.app.FragmentType;

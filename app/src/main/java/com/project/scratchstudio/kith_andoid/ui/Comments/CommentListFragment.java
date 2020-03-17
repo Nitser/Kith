@@ -1,4 +1,4 @@
-package com.project.scratchstudio.kith_andoid.UI.Comments;
+package com.project.scratchstudio.kith_andoid.ui.Comments;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -13,8 +13,8 @@ import com.project.scratchstudio.kith_andoid.Activities.HomeActivity;
 import com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView;
 import com.project.scratchstudio.kith_andoid.CustomViews.EndlessRecyclerViewScrollListener;
 import com.project.scratchstudio.kith_andoid.R;
-import com.project.scratchstudio.kith_andoid.UI.Comments.list.CommentAdapter;
-import com.project.scratchstudio.kith_andoid.UI.NewComment.NewCommentFragment;
+import com.project.scratchstudio.kith_andoid.ui.Comments.list.CommentAdapter;
+import com.project.scratchstudio.kith_andoid.ui.NewComment.NewCommentFragment;
 import com.project.scratchstudio.kith_andoid.app.BaseFragment;
 import com.project.scratchstudio.kith_andoid.app.FragmentType;
 import com.project.scratchstudio.kith_andoid.network.ApiClient;

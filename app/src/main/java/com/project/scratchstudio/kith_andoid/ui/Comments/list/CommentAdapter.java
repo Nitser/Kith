@@ -1,4 +1,4 @@
-package com.project.scratchstudio.kith_andoid.UI.Comments.list;
+package com.project.scratchstudio.kith_andoid.ui.Comments.list;
 
 import android.app.Activity;
 import android.icu.text.DateFormat;

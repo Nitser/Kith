@@ -1,4 +1,4 @@
-package com.project.scratchstudio.kith_andoid.UI.NewComment;
+package com.project.scratchstudio.kith_andoid.ui.NewComment;
 
 import android.os.Bundle;
 import android.util.Log;

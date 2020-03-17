@@ -1,4 +1,4 @@
-package com.project.scratchstudio.kith_andoid.UI.BoardList;
+package com.project.scratchstudio.kith_andoid.ui.BoardList;
 
 import java.io.Serializable;
 

@@ -53,4 +53,7 @@ public class Board extends BaseResponse implements Serializable {
 
     public String organizerName;
 
+    @SerializedName("board_cost")
+    public String cost;
+
 }
