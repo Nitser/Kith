@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout  xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:tools="http://schemas.android.com/tools">
+<RelativeLayout  android:orientation="vertical"
+    android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
     xmlns:customAttrs="http://schemas.android.com/apk/res-auto"
     tools:context=".Activities.CheckInActivity">
 
-
     <ScrollView
-
         android:id="@+id/scroll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -49,7 +48,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+            <TextView
                 android:id="@+id/customFontTextView4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -63,7 +62,7 @@
                 app:layout_constraintHorizontal_bias="0.496"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/imageView2"
-                customAttrs:customFont="intro_regular" />
+                style="@style/CustomProfileTitleText"/>
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/constraintLayout2"
@@ -87,8 +86,8 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintVertical_bias="0.227">
 
-                    <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
-                        android:id="@+id/portfolio"
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/photo"
                         android:layout_width="match_parent"
                         android:layout_height="114dp"
                         android:src="@mipmap/person"
@@ -102,7 +101,7 @@
                         android:id="@+id/buttonPhoto"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
-                        android:layout_alignBottom="@+id/portfolio"
+                        android:layout_alignBottom="@+id/photo"
                         android:layout_alignParentBottom="true"
                         android:layout_centerHorizontal="true"
                         android:layout_marginEnd="8dp"
@@ -113,13 +112,13 @@
                         android:tint="@color/colorAccent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="@+id/portfolio"
+                        app:layout_constraintTop_toTopOf="@+id/photo"
                         app:srcCompat="@drawable/ic_add" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontEditText
-                    android:id="@+id/editText5"
+                <EditText
+                    android:id="@+id/first_name"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
@@ -138,11 +137,11 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="1.0"
                     app:layout_constraintStart_toEndOf="@+id/relativeLayout5"
-                    app:layout_constraintTop_toBottomOf="@+id/editText"
-                    customAttrs:customFont="intro_regular" />
+                    app:layout_constraintTop_toBottomOf="@+id/last_name"
+                    style="@style/CustomProfileText" />
 
-                <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontEditText
-                    android:id="@+id/editText"
+                <EditText
+                    android:id="@+id/last_name"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
@@ -161,10 +160,10 @@
                     app:layout_constraintHorizontal_bias="1.0"
                     app:layout_constraintStart_toEndOf="@+id/relativeLayout5"
                     app:layout_constraintTop_toTopOf="parent"
-                    customAttrs:customFont="intro_regular" />
+                    style="@style/CustomProfileText" />
 
-                <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontEditText
-                    android:id="@+id/editText6"
+                <EditText
+                    android:id="@+id/middle_name"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
@@ -182,11 +181,11 @@
                     android:textSize="14sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/relativeLayout5"
-                    app:layout_constraintTop_toBottomOf="@+id/editText5"
-                    customAttrs:customFont="intro_regular" />
+                    app:layout_constraintTop_toBottomOf="@+id/first_name"
+                    style="@style/CustomProfileText" />
 
-                <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontEditText
-                    android:id="@+id/editText7"
+                <EditText
+                    android:id="@+id/login"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
@@ -204,11 +203,11 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.631"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/editText6"
-                    customAttrs:customFont="intro_regular" />
+                    app:layout_constraintTop_toBottomOf="@+id/middle_name"
+                    style="@style/CustomProfileText" />
 
-                <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontEditText
-                    android:id="@+id/editText8"
+                <EditText
+                    android:id="@+id/password"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
@@ -226,11 +225,11 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.621"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/editText7"
-                    customAttrs:customFont="intro_regular" />
+                    app:layout_constraintTop_toBottomOf="@+id/login"
+                    style="@style/CustomProfileText" />
 
-                <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontEditText
-                    android:id="@+id/editText4"
+                <EditText
+                    android:id="@+id/phone"
                     android:layout_width="230dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
@@ -249,11 +248,11 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/editText8"
-                    customAttrs:customFont="intro_regular" />
+                    app:layout_constraintTop_toBottomOf="@+id/password"
+                    style="@style/CustomProfileText" />
 
-                <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontEditText
-                    android:id="@+id/editText1"
+                <EditText
+                    android:id="@+id/position"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
@@ -272,11 +271,11 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.621"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/editText4"
-                    customAttrs:customFont="intro_regular" />
+                    app:layout_constraintTop_toBottomOf="@+id/phone"
+                    style="@style/CustomProfileText" />
 
-                <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontEditText
-                    android:id="@+id/editText9"
+                <EditText
+                    android:id="@+id/ref_code"
                     android:layout_width="186dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
@@ -294,11 +293,11 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/editText1"
-                    customAttrs:customFont="intro_regular" />
+                    app:layout_constraintTop_toBottomOf="@+id/position"
+                    style="@style/CustomProfileText" />
 
-                <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontEditText
-                    android:id="@+id/editText2"
+                <EditText
+                    android:id="@+id/description"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
@@ -319,8 +318,8 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.621"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/editText9"
-                    customAttrs:customFont="intro_regular" />
+                    app:layout_constraintTop_toBottomOf="@+id/ref_code"
+                    style="@style/CustomProfileText" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -345,7 +344,7 @@
                     android:buttonTint="@color/colorDark"
                     android:onClick="onCheckButton" />
 
-                <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+                <TextView
                     android:id="@+id/agree"
                     android:layout_width="325dp"
                     android:layout_height="wrap_content"
@@ -355,12 +354,12 @@
                     android:textColor="@color/colorAccent"
                     android:textColorLink="@color/colorAccent"
                     android:textSize="12sp"
-                    customAttrs:customFont="intro_regular" />
+                    style="@style/CustomProfileText" />
 
             </RelativeLayout>
 
             <Button
-                android:id="@+id/button3"
+                android:id="@+id/sing_up"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:background="@drawable/button_check_in"
@@ -383,3 +382,4 @@
 
 
 </RelativeLayout>
+</layout>
