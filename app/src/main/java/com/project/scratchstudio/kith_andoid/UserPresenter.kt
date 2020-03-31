@@ -26,10 +26,27 @@ class UserPresenter(private val context: Context) {
         userApi = ApiClient.getClient(context).create(UserApi::class.java)
     }
 
+    fun changePassword(callback: BaseCallback, userId: Int, oldPassword: String, newPassword: String) {
+        disposable.add(
+                userApi.changePassword(userId, newPassword, oldPassword)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(object : DisposableSingleObserver<BaseResponse>() {
+                            override fun onSuccess(response: BaseResponse) {
+                                callback.onSuccess(response)
+                            }
+
+                            override fun onError(e: Throwable) {
+                                callback.onError(NetworkErrorException(e))
+                            }
+                        })
+        )
+    }
+
     fun openProfile(user: User) {
         val bundle = Bundle()
 
-        if (user.id == HomeActivity.mainUser!!.id) {
+        if (user.id == HomeActivity.mainUser.id) {
             bundle.putBoolean("another_user", false)
             bundle.putSerializable("user", HomeActivity.mainUser)
         } else {
@@ -56,7 +73,7 @@ class UserPresenter(private val context: Context) {
         )
     }
 
-    fun editUser(callback: EditUserCallback, newUser: User, newPhoto: Bitmap?) {
+    fun editUser(callback: BaseCallback, newUser: User, newPhoto: Bitmap?) {
         var res = ""
         try {
             val photoService = PhotoService(context)
@@ -122,7 +139,7 @@ class UserPresenter(private val context: Context) {
         fun onError(networkError: NetworkErrorException)
     }
 
-    interface EditUserCallback {
+    interface BaseCallback {
         fun onSuccess(baseResponse: BaseResponse)
 
         fun onError(networkError: NetworkErrorException)

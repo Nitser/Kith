@@ -1,20 +1,18 @@
 package com.project.scratchstudio.kith_andoid.network
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import com.project.scratchstudio.kith_andoid.network.model.board.Board
 import com.project.scratchstudio.kith_andoid.network.model.comment.Comment
 import com.project.scratchstudio.kith_andoid.network.model.user.User
-
 import java.util.ArrayList
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
-
 class LiveDataHelper {
-    private val userList = MediatorLiveData<List<User>>()
-    private val commentList = MediatorLiveData<List<Comment>>()
-    private val boardList = MediatorLiveData<List<Board>>()
+    private val userList = MediatorLiveData<MutableList<User>>()
+    private val commentList = MediatorLiveData<MutableList<Comment>>()
+    private val boardList = MediatorLiveData<MutableList<Board>>()
 
-    fun updateUserList(newUserList: List<User>) {
+    fun updateUserList(newUserList: MutableList<User>) {
         val list = ArrayList<User>()
         if (userList.value != null) {
             list.addAll(userList.value!!)
@@ -23,11 +21,11 @@ class LiveDataHelper {
         userList.postValue(list)
     }
 
-    fun observeUserList(): LiveData<List<User>> {
+    fun observeUserList(): LiveData<MutableList<User>> {
         return userList
     }
 
-    fun updateCommentList(newCommentList: List<Comment>) {
+    fun updateCommentList(newCommentList: MutableList<Comment>) {
         val list = ArrayList<Comment>()
         if (commentList.value != null) {
             list.addAll(commentList.value!!)
@@ -36,7 +34,7 @@ class LiveDataHelper {
         commentList.postValue(list)
     }
 
-    fun observeCommentList(): LiveData<List<Comment>> {
+    fun observeCommentList(): LiveData<MutableList<Comment>> {
         return commentList
     }
 
@@ -46,7 +44,7 @@ class LiveDataHelper {
         }
     }
 
-    fun updateBoardList(newBoardList: List<Board>) {
+    fun updateBoardList(newBoardList: MutableList<Board>) {
         val list = ArrayList<Board>()
         if (boardList.value != null) {
             list.addAll(boardList.value!!)
@@ -55,7 +53,7 @@ class LiveDataHelper {
         boardList.postValue(list)
     }
 
-    fun observeBoardList(): LiveData<List<Board>> {
+    fun observeBoardList(): LiveData<MutableList<Board>> {
         return boardList
     }
 

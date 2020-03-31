@@ -150,7 +150,7 @@ class EditActivity : AppCompatActivity() {
     fun onClickRefreshButton(view: View) {
         view.isEnabled = false
         val refreshUser = makeRefreshUser()
-        userPresenter!!.editUser(object : UserPresenter.EditUserCallback {
+        userPresenter!!.editUser(object : UserPresenter.BaseCallback {
             override fun onSuccess(baseResponse: BaseResponse) {
                 if (baseResponse.status) {
                     isChanged = true

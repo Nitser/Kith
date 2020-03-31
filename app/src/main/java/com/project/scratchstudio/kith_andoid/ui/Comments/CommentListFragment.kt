@@ -8,13 +8,13 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.Toast
-
+import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.project.scratchstudio.kith_andoid.Activities.HomeActivity
 import com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
 import com.project.scratchstudio.kith_andoid.CustomViews.EndlessRecyclerViewScrollListener
 import com.project.scratchstudio.kith_andoid.R
-import com.project.scratchstudio.kith_andoid.ui.Comments.list.CommentAdapter
-import com.project.scratchstudio.kith_andoid.ui.NewComment.NewCommentFragment
 import com.project.scratchstudio.kith_andoid.app.BaseFragment
 import com.project.scratchstudio.kith_andoid.app.FragmentType
 import com.project.scratchstudio.kith_andoid.network.ApiClient
@@ -22,10 +22,8 @@ import com.project.scratchstudio.kith_andoid.network.LiveDataHelper
 import com.project.scratchstudio.kith_andoid.network.apiService.CommentApi
 import com.project.scratchstudio.kith_andoid.network.model.comment.Comment
 import com.project.scratchstudio.kith_andoid.network.model.comment.CommentResponse
-
-import java.util.Collections
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import com.project.scratchstudio.kith_andoid.ui.Comments.list.CommentAdapter
+import com.project.scratchstudio.kith_andoid.ui.NewComment.NewCommentFragment
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableSingleObserver
@@ -51,16 +49,15 @@ class CommentListFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         liveDataHelper = LiveDataHelper.instance
-        val sum: (Int, Int) -> Int = { x: Int, y: Int -> x + y }
-        LiveDataHelper.instance.observeCommentList().observe(this, sum)
-
-        { commentList ->
+//        val sum: (Int, Int) -> Int = { x: Int, y: Int -> x + y }
+        val commentObserver = Observer<MutableList<Comment>> { commentList ->
             if (adapter!!.itemCount == 0) {
                 adapter!!.setCommentList(commentList)
             }
             adapter!!.setCommentList(commentList)
             adapter!!.notifyDataSetChanged()
         }
+        LiveDataHelper.instance.observeCommentList().observe(this, commentObserver)
 
         commentApi = ApiClient.getClient(context!!).create<CommentApi>(CommentApi::class.java)
         getComments(0, 10)

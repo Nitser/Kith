@@ -1,5 +1,6 @@
 package com.project.scratchstudio.kith_andoid.Activities
 
+import android.accounts.NetworkErrorException
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -15,12 +16,14 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.project.scratchstudio.kith_andoid.CustomViews.CustomFontEditText
 import com.project.scratchstudio.kith_andoid.R
-import com.project.scratchstudio.kith_andoid.Service.HttpService
+import com.project.scratchstudio.kith_andoid.UserPresenter
+import com.project.scratchstudio.kith_andoid.network.model.BaseResponse
 import java.util.Objects
 
 class ChangePasswordActivity : AppCompatActivity() {
 
     private var isChange = false
+    private lateinit var userPresenter: UserPresenter
 
     private val isNetworkConnected: Boolean
         get() {
@@ -31,7 +34,7 @@ class ChangePasswordActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_change_password)
-
+        userPresenter = UserPresenter(applicationContext)
     }
 
     fun onClickChangePassword(view: View) {
@@ -46,8 +49,22 @@ class ChangePasswordActivity : AppCompatActivity() {
             val repPassword = findViewById<CustomFontEditText>(R.id.rep_password)
             if (Objects.requireNonNull<Editable>(newPassword.text).toString() == Objects.requireNonNull<Editable>(repPassword.text).toString()) {
                 if (isNetworkConnected) {
-                    val httpService = HttpService()
-                    httpService.changePassword(this, HomeActivity.mainUser, newPassword.text!!.toString())
+                    userPresenter.changePassword(object : UserPresenter.BaseCallback {
+                        override fun onSuccess(baseResponse: BaseResponse) {
+                            if (baseResponse.status) {
+                                Toast.makeText(applicationContext, "Пароль изменен", Toast.LENGTH_SHORT).show()
+                                saveNewPassword(newPassword.text.toString())
+                            } else {
+                                Toast.makeText(applicationContext, "Ошибка отправки запроса", Toast.LENGTH_SHORT).show()
+                            }
+                            view.isEnabled = true
+                        }
+
+                        override fun onError(networkError: NetworkErrorException) {
+                            Toast.makeText(applicationContext, "Ошибка отправки запроса", Toast.LENGTH_SHORT).show()
+                            view.isEnabled = true
+                        }
+                    }, HomeActivity.mainUser.id, HomeActivity.mainUser.password, newPassword.text.toString())
                 } else {
                     view.isEnabled = true
                     Toast.makeText(this, "Нет подключения к интернету", Toast.LENGTH_SHORT).show()

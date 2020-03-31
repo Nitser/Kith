@@ -412,8 +412,11 @@ class TreeFragment : Fragment() {
     }
 
     private fun setSearchAdapter(view: View) {
-//        val onItemClick: SearchAdapter.OnItemClickListener = {item -> getProfile(view, item.id) }
-        searchAdapter = SearchAdapter(activity!!, listPersons, )
+        searchAdapter = SearchAdapter(activity!!, listPersons, object : SearchAdapter.OnItemClickListener {
+            override fun onItemClick(item: User) {
+                getProfile(view, item.id)
+            }
+        })
 
         list.adapter = searchAdapter
     }

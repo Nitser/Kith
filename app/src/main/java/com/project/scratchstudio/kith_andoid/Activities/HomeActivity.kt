@@ -29,23 +29,21 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var boardsFragment: BoardsFragment
     private lateinit var navigationView: BottomNavigationView
 
-    private val mOnNavigationItemSelectedListener = { item ->
+    private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener{ item ->
         when (item.getItemId()) {
             R.id.navigation_tree -> {
                 bundle = stackBundles[stackBundles.size - 1]
                 replaceFragment(TreeFragment.newInstance(bundle), FragmentType.TREE.name)
-                return true
             }
             R.id.navigation_announcements -> {
                 boardsFragment = BoardsFragment.newInstance(bundle, FragmentType.BOARD_LIST.name)
                 replaceFragment(boardsFragment, FragmentType.BOARD_LIST.name)
-                return true
             }
         }
         false
     }
 
-    private val mOnNavigationItemReSelectedListener = {
+    private val mOnNavigationItemReSelectedListener = BottomNavigationView.OnNavigationItemReselectedListener{
         //        fragmentTransaction.
         supportFragmentManager.popBackStackImmediate()
     }
@@ -155,7 +153,7 @@ class HomeActivity : AppCompatActivity() {
         private var invitedUsers: List<User> = ArrayList()
         private val stackBundles = ArrayList<Bundle>()
 
-        fun getStackBundles(): List<Bundle> {
+        fun getStackBundles(): MutableList<Bundle> {
             return stackBundles
         }
 

@@ -1,26 +1,45 @@
 package com.project.scratchstudio.kith_andoid.Activities
 
+import android.accounts.NetworkErrorException
 import android.content.Intent
-import android.os.CountDownTimer
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.view.KeyEvent
 import android.view.View
-
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.project.scratchstudio.kith_andoid.CustomViews.CustomFontEditText
 import com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+import com.project.scratchstudio.kith_andoid.EntryPresenter
 import com.project.scratchstudio.kith_andoid.R
 import com.project.scratchstudio.kith_andoid.Service.HttpService
+import com.project.scratchstudio.kith_andoid.network.model.BaseResponse
+import com.project.scratchstudio.kith_andoid.network.model.entry.EntryResponse
 
 class SmsActivity : AppCompatActivity() {
 
     private var httpService: HttpService? = null
+    private lateinit var entryPresenter: EntryPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        entryPresenter = EntryPresenter(applicationContext)
         setContentView(R.layout.activity_sms)
-        httpService = HttpService()
-        httpService!!.sendSms(this, HomeActivity.mainUser.login)
+        sendSMS()
+    }
+
+    private fun sendSMS() {
+        entryPresenter.sendSMS(object : EntryPresenter.BaseCallback {
+            override fun onSuccess(baseResponse: BaseResponse) {
+                if (!baseResponse.status) {
+                    Toast.makeText(applicationContext, "Ошибка отправки запроса", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onError(networkError: NetworkErrorException) {
+                Toast.makeText(applicationContext, "Ошибка отправки запроса", Toast.LENGTH_SHORT).show()
+            }
+        }, HomeActivity.mainUser.login)
     }
 
     fun onClickBackButton(view: View) {
@@ -34,13 +53,31 @@ class SmsActivity : AppCompatActivity() {
     fun checkButton(view: View) {
         view.isEnabled = false
         val smsCode = findViewById<CustomFontEditText>(R.id.editText7)
-        httpService!!.checkSms(this, view, HomeActivity.mainUser.id, smsCode.text.toString())
+        entryPresenter.checkSMS(object : EntryPresenter.EntryCallback {
+            override fun onSuccess(entryResponse: EntryResponse) {
+                if (entryResponse.status) {
+                    HomeActivity.mainUser.token = entryResponse.tokenType + " " + entryResponse.token
+                    val intent = Intent(applicationContext, HomeActivity::class.java)
+//                    intent.putExtra("another_user", false)
+                    startActivity(intent)
+                    Toast.makeText(applicationContext, "SMS код подтвержден", Toast.LENGTH_SHORT).show()
+                    finish()
+                } else {
+                    Toast.makeText(applicationContext, "Ошибка отправки запроса", Toast.LENGTH_SHORT).show()
+                    view.isEnabled = true
+                }
+            }
+
+            override fun onError(networkError: NetworkErrorException) {
+                Toast.makeText(applicationContext, "Ошибка отправки запроса", Toast.LENGTH_SHORT).show()
+                view.isEnabled = true
+            }
+        }, HomeActivity.mainUser.login, HomeActivity.mainUser.password, smsCode.text.toString())
     }
 
     fun againButton(view: View) {
         view.isEnabled = false
-        httpService = HttpService()
-        httpService!!.sendSms(this, HomeActivity.mainUser.login)
+        sendSMS()
 
         val text = view as CustomFontTextView
         text.setTextColor(resources.getColor(R.color.colorHint))

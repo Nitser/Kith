@@ -30,6 +30,7 @@ import com.squareup.picasso.Picasso
 import java.util.ArrayList
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.project.scratchstudio.kith_andoid.ui.BoardList.list.BoardHolder
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
@@ -133,13 +134,15 @@ class BoardsFragment : BaseFragment() {
                 .into(clickPhoto)
     }
 
-    fun setAdapter() {
-        adapter = BoardAdapter(activity!!, { item, id, holder ->
-            bundle!!.putSerializable("board", item)
-            bundle!!.putSerializable("type", type)
-            clickPhoto = holder.image
-            clickUrl = item.url
-            (context as HomeActivity).addFragment(BoardInfoFragment.newInstance(bundle), FragmentType.BOARD_INFO.name)
+    private fun setAdapter() {
+        adapter = BoardAdapter(activity!!, object : BoardAdapter.OnItemClickListener {
+            override fun onItemClick(item: Board, id: Int, boardHolder: BoardHolder) {
+                bundle!!.putSerializable("board", item)
+                bundle!!.putSerializable("type", type)
+                clickPhoto = boardHolder.image
+                clickUrl = item.url
+                (context as HomeActivity).addFragment(BoardInfoFragment.newInstance(bundle!!), FragmentType.BOARD_INFO.name)
+            }
         }, this)
         container!!.adapter = adapter
     }
@@ -152,9 +155,9 @@ class BoardsFragment : BaseFragment() {
         val sub = activity!!.findViewById<Button>(R.id.sub)
         val my = activity!!.findViewById<Button>(R.id.my)
 
-        all.setOnClickListener { v -> loadBoards(BoardType.ALL) }
-        sub.setOnClickListener { v -> loadBoards(BoardType.SUB) }
-        my.setOnClickListener { v -> loadBoards(BoardType.MY) }
+        all.setOnClickListener { loadBoards(BoardType.ALL) }
+        sub.setOnClickListener { loadBoards(BoardType.SUB) }
+        my.setOnClickListener { loadBoards(BoardType.MY) }
     }
 
     private fun changeSelectedButton() {
@@ -184,12 +187,12 @@ class BoardsFragment : BaseFragment() {
         val dis: Disposable
         when (newType) {
             BoardType.ALL -> {
-                dis = boardApi!!.getBoards(HomeActivity.mainUser!!.id)
+                dis = boardApi!!.getBoards(HomeActivity.mainUser.id)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeWith(object : DisposableSingleObserver<BoardsResponse>() {
                             override fun onSuccess(response: BoardsResponse) {
-                                changeBoardDate(newType, response.boards!!)
+                                changeBoardDate(newType, response.boards)
                             }
 
                             override fun onError(e: Throwable) {
@@ -199,12 +202,12 @@ class BoardsFragment : BaseFragment() {
                         })
             }
             BoardType.SUB -> {
-                dis = boardApi!!.getFavoriteBoards(HomeActivity.mainUser!!.id)
+                dis = boardApi!!.getFavoriteBoards(HomeActivity.mainUser.id)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeWith(object : DisposableSingleObserver<BoardsResponse>() {
                             override fun onSuccess(response: BoardsResponse) {
-                                changeBoardDate(newType, response.boards!!)
+                                changeBoardDate(newType, response.boards)
                             }
 
                             override fun onError(e: Throwable) {
@@ -214,12 +217,12 @@ class BoardsFragment : BaseFragment() {
                         })
             }
             else -> {
-                dis = boardApi!!.getMyBoards(HomeActivity.mainUser!!.id)
+                dis = boardApi!!.getMyBoards(HomeActivity.mainUser.id)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeWith(object : DisposableSingleObserver<BoardsResponse>() {
                             override fun onSuccess(response: BoardsResponse) {
-                                changeBoardDate(newType, response.boards!!)
+                                changeBoardDate(newType, response.boards)
                             }
 
                             override fun onError(e: Throwable) {
@@ -235,10 +238,10 @@ class BoardsFragment : BaseFragment() {
 
     private fun changeBoardDate(boardType: BoardType, boards: ArrayList<Board>) {
         for (board in boards) {
-            Log.i("BOARDLIST", "cost = " + board.cost!!)
+            Log.i("BOARDLIST", "cost = " + board.cost)
             board.organizerName = board.organizerFirstName + " " + board.organizerLastName
             if (board.url != "") {
-                board.url = board.url!!.replace("\\/".toRegex(), "/")
+                board.url = board.url.replace("\\/".toRegex(), "/")
             }
         }
         type = boardType
