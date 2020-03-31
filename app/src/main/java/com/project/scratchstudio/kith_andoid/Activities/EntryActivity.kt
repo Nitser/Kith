@@ -19,6 +19,7 @@ class EntryActivity : BaseActivity() {
         setContentView(R.layout.activity_entry)
         replaceFragment(SplashFragment.newInstance(), FragmentType.SPLASH.name)
         loadUserFromStorage()
+        loadCountFromStorage()
     }
 
     private fun loadUserFromStorage() {
