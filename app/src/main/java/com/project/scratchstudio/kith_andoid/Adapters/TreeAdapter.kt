@@ -6,7 +6,7 @@ import android.view.ViewGroup
 
 import com.project.scratchstudio.kith_andoid.holders.TreeHolder
 import com.project.scratchstudio.kith_andoid.R
-import com.project.scratchstudio.kith_andoid.Service.PicassoCircleTransformation
+import com.project.scratchstudio.kith_andoid.service.PicassoCircleTransformation
 import com.project.scratchstudio.kith_andoid.network.model.user.User
 import com.squareup.picasso.MemoryPolicy
 import com.squareup.picasso.Picasso

@@ -7,7 +7,7 @@ import android.widget.Filterable
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.project.scratchstudio.kith_andoid.R
-import com.project.scratchstudio.kith_andoid.Service.PicassoCircleTransformation
+import com.project.scratchstudio.kith_andoid.service.PicassoCircleTransformation
 import com.project.scratchstudio.kith_andoid.holders.SearchHolder
 import com.project.scratchstudio.kith_andoid.network.model.user.User
 import com.squareup.picasso.MemoryPolicy

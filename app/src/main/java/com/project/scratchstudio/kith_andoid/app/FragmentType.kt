@@ -7,5 +7,6 @@ enum class FragmentType {
     BOARD_NEW_EDIT,
     COMMENT_LIST,
     NEW_COMMENT,
-    PROFILE
+    PROFILE,
+    SPLASH
 }

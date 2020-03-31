@@ -32,10 +32,10 @@ import com.project.scratchstudio.kith_andoid.Activities.MainActivity
 import com.project.scratchstudio.kith_andoid.Adapters.SearchAdapter
 import com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
 import com.project.scratchstudio.kith_andoid.R
-import com.project.scratchstudio.kith_andoid.Service.HttpService
-import com.project.scratchstudio.kith_andoid.Service.InternalStorageService
-import com.project.scratchstudio.kith_andoid.Service.PicassoCircleTransformation
-import com.project.scratchstudio.kith_andoid.SetInternalData.ClearUserIdAndToken
+import com.project.scratchstudio.kith_andoid.service.HttpService
+import com.project.scratchstudio.kith_andoid.service.internal_storage.InternalStorageService
+import com.project.scratchstudio.kith_andoid.service.PicassoCircleTransformation
+import com.project.scratchstudio.kith_andoid.service.internal_storage.set_internal_data.ClearUserIdAndToken
 import com.project.scratchstudio.kith_andoid.UserPresenter
 import com.project.scratchstudio.kith_andoid.app.FragmentType
 import com.project.scratchstudio.kith_andoid.holders.TreeHolder
@@ -160,9 +160,9 @@ class TreeFragment : Fragment() {
 
     private fun exit() {
         HomeActivity.cleanMainUser()
-        val internalStorageService = InternalStorageService(activity!!)
-        internalStorageService.setiSetInternalData(ClearUserIdAndToken())
-        internalStorageService.execute()
+//        val internalStorageService = InternalStorageService(activity!!)
+//        internalStorageService.setISetInternalData(ClearUserIdAndToken())
+//        internalStorageService.execute()
         val intent = Intent(context, MainActivity::class.java)
         startActivity(intent)
     }
@@ -319,8 +319,8 @@ class TreeFragment : Fragment() {
     }
 
     private fun onClickBack() {
-        HomeActivity.getStackBundles().removeAt(HomeActivity.getStackBundles().size - 1)
-        val bundle = HomeActivity.getStackBundles()[HomeActivity.getStackBundles().size - 1]
+        (activity as HomeActivity).getStackBundles().removeAt((activity as HomeActivity).getStackBundles().size - 1)
+        val bundle = (activity as HomeActivity).getStackBundles()[(activity as HomeActivity).getStackBundles().size - 1]
         val homeActivity = activity as HomeActivity?
         homeActivity!!.replaceFragment(newInstance(bundle), FragmentType.TREE.name)
     }

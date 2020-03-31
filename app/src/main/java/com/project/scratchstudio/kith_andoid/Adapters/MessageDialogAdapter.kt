@@ -10,7 +10,7 @@ import android.widget.Filterable
 import com.project.scratchstudio.kith_andoid.holders.MessageDialogHolder
 import com.project.scratchstudio.kith_andoid.model.AnnouncementInfo
 import com.project.scratchstudio.kith_andoid.R
-import com.project.scratchstudio.kith_andoid.Service.PicassoCircleTransformation
+import com.project.scratchstudio.kith_andoid.service.PicassoCircleTransformation
 import com.squareup.picasso.MemoryPolicy
 import com.squareup.picasso.Picasso
 

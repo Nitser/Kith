@@ -22,7 +22,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.project.scratchstudio.kith_andoid.CustomViews.CustomFontEditText
 import com.project.scratchstudio.kith_andoid.R
-import com.project.scratchstudio.kith_andoid.Service.PhotoService
+import com.project.scratchstudio.kith_andoid.service.PhotoService
 import com.project.scratchstudio.kith_andoid.databinding.ActivityCheckInBinding
 import com.project.scratchstudio.kith_andoid.network.ApiClient
 import com.project.scratchstudio.kith_andoid.network.apiService.EntryApi

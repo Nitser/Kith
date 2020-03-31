@@ -12,7 +12,7 @@ import com.project.scratchstudio.kith_andoid.CustomViews.CustomFontEditText
 import com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
 import com.project.scratchstudio.kith_andoid.EntryPresenter
 import com.project.scratchstudio.kith_andoid.R
-import com.project.scratchstudio.kith_andoid.Service.HttpService
+import com.project.scratchstudio.kith_andoid.service.HttpService
 import com.project.scratchstudio.kith_andoid.network.model.BaseResponse
 import com.project.scratchstudio.kith_andoid.network.model.entry.EntryResponse
 

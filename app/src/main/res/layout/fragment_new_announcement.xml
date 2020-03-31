@@ -143,7 +143,7 @@
                         android:textSize="15sp"
                         style="@style/CustomProfileTitleText"/>
 
-                    <com.project.scratchstudio.kith_andoid.ui.neweditboard.CustomEditText
+                    <com.project.scratchstudio.kith_andoid.ui.home_package.neweditboard.CustomEditText
                         android:id="@+id/cost_text"
                         android:layout_marginStart="20dp"
                         android:layout_marginEnd="10dp"

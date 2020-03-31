@@ -3,7 +3,7 @@ package com.project.scratchstudio.kith_andoid
 import android.accounts.NetworkErrorException
 import android.content.Context
 import android.graphics.Bitmap
-import com.project.scratchstudio.kith_andoid.Service.PhotoService
+import com.project.scratchstudio.kith_andoid.service.PhotoService
 import com.project.scratchstudio.kith_andoid.network.ApiClient
 import com.project.scratchstudio.kith_andoid.network.apiService.BoardApi
 import com.project.scratchstudio.kith_andoid.network.model.BaseResponse

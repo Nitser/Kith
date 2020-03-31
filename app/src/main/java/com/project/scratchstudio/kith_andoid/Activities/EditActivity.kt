@@ -16,8 +16,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.project.scratchstudio.kith_andoid.R
-import com.project.scratchstudio.kith_andoid.Service.PhotoService
-import com.project.scratchstudio.kith_andoid.Service.PicassoCircleTransformation
+import com.project.scratchstudio.kith_andoid.service.PhotoService
+import com.project.scratchstudio.kith_andoid.service.PicassoCircleTransformation
 import com.project.scratchstudio.kith_andoid.UserPresenter
 import com.project.scratchstudio.kith_andoid.databinding.ActivityEditProfileBinding
 import com.project.scratchstudio.kith_andoid.network.model.BaseResponse
