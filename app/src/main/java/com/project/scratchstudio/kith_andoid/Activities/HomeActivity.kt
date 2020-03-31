@@ -5,13 +5,13 @@ import android.os.Bundle
 import android.util.Log
 
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.project.scratchstudio.kith_andoid.Fragments.TreeFragment
 import com.project.scratchstudio.kith_andoid.R
 import com.project.scratchstudio.kith_andoid.ui.home_package.BoardInfo.BoardInfoFragment
 import com.project.scratchstudio.kith_andoid.ui.home_package.BoardList.BoardsFragment
 import com.project.scratchstudio.kith_andoid.ui.home_package.Comments.CommentListFragment
 import com.project.scratchstudio.kith_andoid.app.FragmentType
 import com.project.scratchstudio.kith_andoid.network.model.user.User
+import com.project.scratchstudio.kith_andoid.ui.entry_package.main.MainActivity
 
 import java.util.ArrayList
 

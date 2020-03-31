@@ -47,6 +47,7 @@ open class BaseActivity : AppCompatActivity() {
 
     fun replaceFragment(fragment: Fragment?, tag: String) {
         val ft = supportFragmentManager.beginTransaction()
+        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
         ft.replace(R.id.container, fragment!!)
         ft.commit()
     }

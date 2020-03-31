@@ -28,14 +28,12 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.project.scratchstudio.kith_andoid.Activities.CodeActivity
 import com.project.scratchstudio.kith_andoid.Activities.HomeActivity
-import com.project.scratchstudio.kith_andoid.Activities.MainActivity
+import com.project.scratchstudio.kith_andoid.ui.entry_package.main.MainActivity
 import com.project.scratchstudio.kith_andoid.Adapters.SearchAdapter
 import com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
 import com.project.scratchstudio.kith_andoid.R
 import com.project.scratchstudio.kith_andoid.service.HttpService
-import com.project.scratchstudio.kith_andoid.service.internal_storage.InternalStorageService
 import com.project.scratchstudio.kith_andoid.service.PicassoCircleTransformation
-import com.project.scratchstudio.kith_andoid.service.internal_storage.set_internal_data.ClearUserIdAndToken
 import com.project.scratchstudio.kith_andoid.UserPresenter
 import com.project.scratchstudio.kith_andoid.app.FragmentType
 import com.project.scratchstudio.kith_andoid.holders.TreeHolder

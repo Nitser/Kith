@@ -13,6 +13,7 @@ import com.project.scratchstudio.kith_andoid.R
 import com.project.scratchstudio.kith_andoid.network.ApiClient
 import com.project.scratchstudio.kith_andoid.network.apiService.EntryApi
 import com.project.scratchstudio.kith_andoid.network.model.entry.EntryResponse
+import com.project.scratchstudio.kith_andoid.ui.entry_package.main.MainActivity
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableSingleObserver

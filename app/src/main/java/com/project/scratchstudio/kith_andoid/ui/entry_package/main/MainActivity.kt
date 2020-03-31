@@ -1,11 +1,9 @@
-package com.project.scratchstudio.kith_andoid.Activities
+package com.project.scratchstudio.kith_andoid.ui.entry_package.main
 
 import android.Manifest
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Typeface
-import android.net.ConnectivityManager
 import android.os.Build
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -14,6 +12,8 @@ import android.os.Bundle
 import android.view.KeyEvent
 import android.view.View
 import android.widget.Button
+import com.project.scratchstudio.kith_andoid.Activities.CheckInActivity
+import com.project.scratchstudio.kith_andoid.Activities.SignInActivity
 
 import com.project.scratchstudio.kith_andoid.R
 
@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.fragment_main)
 
         if (Build.VERSION.SDK_INT >= 23) {
             val permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
@@ -43,10 +43,10 @@ class MainActivity : AppCompatActivity() {
         //        }
 
 
-        val button = findViewById<Button>(R.id.button)
-        val button1 = findViewById<Button>(R.id.button2)
-        button.typeface = Typeface.createFromAsset(assets, "fonts/intro_regular.ttf")
-        button1.typeface = Typeface.createFromAsset(assets, "fonts/intro_regular.ttf")
+//        val button = findViewById<Button>(R.id.button)
+//        val button1 = findViewById<Button>(R.id.button2)
+//        button.typeface = Typeface.createFromAsset(assets, "fonts/intro_regular.ttf")
+//        button1.typeface = Typeface.createFromAsset(assets, "fonts/intro_regular.ttf")
     }
 
     fun signInButton(view: View) {

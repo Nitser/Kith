@@ -8,5 +8,6 @@ enum class FragmentType {
     COMMENT_LIST,
     NEW_COMMENT,
     PROFILE,
-    SPLASH
+    SPLASH,
+    MAIN
 }

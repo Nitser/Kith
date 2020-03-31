@@ -8,6 +8,7 @@ import com.project.scratchstudio.kith_andoid.app.FragmentType
 import com.project.scratchstudio.kith_andoid.service.internal_storage.InternalStorageService
 import com.project.scratchstudio.kith_andoid.service.internal_storage.get_internal_data.GetCountData
 import com.project.scratchstudio.kith_andoid.service.internal_storage.get_internal_data.GetUserIdAndToken
+import com.project.scratchstudio.kith_andoid.ui.entry_package.main.MainFragment
 import com.project.scratchstudio.kith_andoid.ui.entry_package.splash.SplashFragment
 
 class EntryActivity : BaseActivity() {
@@ -34,9 +35,10 @@ class EntryActivity : BaseActivity() {
                     }, SPLASH_DISPLAY_LENGTH.toLong())
                 } else {
                     Handler().postDelayed({
-                        val intent = Intent(applicationContext, MainActivity::class.java)
-                        startActivity(intent)
-                        finish()
+                        replaceFragment(MainFragment.newInstance(), FragmentType.MAIN.name)
+//                        val intent = Intent(applicationContext, MainActivity::class.java)
+//                        startActivity(intent)
+//                        finish()
                     }, SPLASH_DISPLAY_LENGTH.toLong())
                 }
             }

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    android:orientation="vertical"
+    android:weightSum="2">
+
+    <ImageView
+        android:id="@+id/view2"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_gravity="center"
+        android:layout_margin="50dp"
+        android:layout_weight="0.9"
+        android:background="@drawable/ic_logo" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1.1"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingTop="20dp">
+
+        <Button
+            android:id="@+id/sing_in"
+            android:layout_width="265dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@drawable/button_basic"
+            android:padding="10dp"
+            android:text="@string/sign_in"
+            android:textAllCaps="false"
+            android:textColor="@color/colorAccent"
+            android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/sing_up"
+            android:layout_width="265dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/button_basic"
+            android:padding="10dp"
+            android:text="@string/registration"
+            android:textAllCaps="false"
+            android:textColor="@color/colorAccent"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+
+</LinearLayout>

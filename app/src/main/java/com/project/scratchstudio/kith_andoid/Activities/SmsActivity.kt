@@ -15,6 +15,7 @@ import com.project.scratchstudio.kith_andoid.R
 import com.project.scratchstudio.kith_andoid.service.HttpService
 import com.project.scratchstudio.kith_andoid.network.model.BaseResponse
 import com.project.scratchstudio.kith_andoid.network.model.entry.EntryResponse
+import com.project.scratchstudio.kith_andoid.ui.entry_package.main.MainActivity
 
 class SmsActivity : AppCompatActivity() {
 

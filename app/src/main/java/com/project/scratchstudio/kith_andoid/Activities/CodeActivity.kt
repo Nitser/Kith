@@ -66,7 +66,7 @@ class CodeActivity : AppCompatActivity() {
         val textView = findViewById<TextView>(R.id.customFontTextView6)
         val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         val clip = ClipData.newPlainText("code", textView.text.toString())
-        clipboard.primaryClip = clip
+//        clipboard.primaryClip = clip
         Toast.makeText(this, "Код сохранен", Toast.LENGTH_SHORT).show()
     }
 
