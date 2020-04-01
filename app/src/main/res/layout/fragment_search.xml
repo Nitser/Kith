@@ -7,7 +7,7 @@
     android:orientation="horizontal"
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/colorPrimary"
-    tools:context="com.project.scratchstudio.kith_andoid.Fragments.TreeFragment">
+    tools:context="com.project.scratchstudio.kith_andoid.fragments.TreeFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -31,7 +31,7 @@
                 android:src="@drawable/ic_left"
                 android:visibility="visible" />
 
-            <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+            <com.project.scratchstudio.kith_andoid.custom_views.CustomFontTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"

@@ -8,9 +8,9 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.Toast
-import com.project.scratchstudio.kith_andoid.Activities.EntryActivity
-import com.project.scratchstudio.kith_andoid.Activities.HomeActivity
-import com.project.scratchstudio.kith_andoid.CustomViews.CustomFontEditText
+import com.project.scratchstudio.kith_andoid.activities.EntryActivity
+import com.project.scratchstudio.kith_andoid.activities.HomeActivity
+import com.project.scratchstudio.kith_andoid.custom_views.CustomFontEditText
 import com.project.scratchstudio.kith_andoid.R
 import com.project.scratchstudio.kith_andoid.app.BaseFragment
 import com.project.scratchstudio.kith_andoid.network.ApiClient

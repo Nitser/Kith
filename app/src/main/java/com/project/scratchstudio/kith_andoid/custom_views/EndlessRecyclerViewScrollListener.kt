@@ -1,4 +1,4 @@
-package com.project.scratchstudio.kith_andoid.CustomViews
+package com.project.scratchstudio.kith_andoid.custom_views
 
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView

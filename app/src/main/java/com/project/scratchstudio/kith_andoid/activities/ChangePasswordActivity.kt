@@ -1,4 +1,4 @@
-package com.project.scratchstudio.kith_andoid.Activities
+package com.project.scratchstudio.kith_andoid.activities
 
 import android.accounts.NetworkErrorException
 import android.content.Context
@@ -14,7 +14,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.project.scratchstudio.kith_andoid.CustomViews.CustomFontEditText
+import com.project.scratchstudio.kith_andoid.custom_views.CustomFontEditText
 import com.project.scratchstudio.kith_andoid.R
 import com.project.scratchstudio.kith_andoid.UserPresenter
 import com.project.scratchstudio.kith_andoid.network.model.BaseResponse

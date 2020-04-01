@@ -1,4 +1,4 @@
-package com.project.scratchstudio.kith_andoid.Activities
+package com.project.scratchstudio.kith_andoid.activities
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

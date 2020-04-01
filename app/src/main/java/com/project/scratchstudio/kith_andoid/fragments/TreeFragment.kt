@@ -1,4 +1,4 @@
-package com.project.scratchstudio.kith_andoid.Fragments
+package com.project.scratchstudio.kith_andoid.fragments
 
 import android.accounts.NetworkErrorException
 import android.annotation.SuppressLint
@@ -26,11 +26,11 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.project.scratchstudio.kith_andoid.Activities.CodeActivity
-import com.project.scratchstudio.kith_andoid.Activities.EntryActivity
-import com.project.scratchstudio.kith_andoid.Activities.HomeActivity
-import com.project.scratchstudio.kith_andoid.Adapters.SearchAdapter
-import com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+import com.project.scratchstudio.kith_andoid.activities.CodeActivity
+import com.project.scratchstudio.kith_andoid.activities.EntryActivity
+import com.project.scratchstudio.kith_andoid.activities.HomeActivity
+import com.project.scratchstudio.kith_andoid.adapters.SearchAdapter
+import com.project.scratchstudio.kith_andoid.custom_views.CustomFontTextView
 import com.project.scratchstudio.kith_andoid.R
 import com.project.scratchstudio.kith_andoid.service.HttpService
 import com.project.scratchstudio.kith_andoid.service.PicassoCircleTransformation

@@ -2,7 +2,7 @@ package com.project.scratchstudio.kith_andoid.service.internal_storage.set_inter
 
 import android.content.SharedPreferences
 
-import com.project.scratchstudio.kith_andoid.Activities.HomeActivity
+import com.project.scratchstudio.kith_andoid.activities.HomeActivity
 
 class SetUserIdAndToken : ISetInternalData {
 

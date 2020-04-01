@@ -5,8 +5,8 @@ import android.view.View
 import android.widget.ImageView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
-import com.project.scratchstudio.kith_andoid.Adapters.SearchAdapter
-import com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+import com.project.scratchstudio.kith_andoid.adapters.SearchAdapter
+import com.project.scratchstudio.kith_andoid.custom_views.CustomFontTextView
 import com.project.scratchstudio.kith_andoid.R
 import com.project.scratchstudio.kith_andoid.network.model.user.User
 

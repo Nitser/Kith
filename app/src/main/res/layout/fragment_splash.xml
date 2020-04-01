@@ -23,7 +23,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.302" />
 
-    <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+    <com.project.scratchstudio.kith_andoid.custom_views.CustomFontTextView
         android:id="@+id/customFontTextView10"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -50,7 +50,7 @@
         app:layout_constraintVertical_bias="0.707"
         tools:layout_editor_absoluteX="0dp">
 
-        <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+        <com.project.scratchstudio.kith_andoid.custom_views.CustomFontTextView
             android:id="@+id/label_1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -60,7 +60,7 @@
             android:textSize="26sp"
             customAttrs:customFont="hatten" />
 
-        <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+        <com.project.scratchstudio.kith_andoid.custom_views.CustomFontTextView
             android:id="@+id/label_2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

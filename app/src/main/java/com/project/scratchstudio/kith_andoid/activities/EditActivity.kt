@@ -1,4 +1,4 @@
-package com.project.scratchstudio.kith_andoid.Activities
+package com.project.scratchstudio.kith_andoid.activities
 
 import android.accounts.NetworkErrorException
 import android.app.Activity

@@ -29,7 +29,7 @@
             android:layout_gravity="center_vertical"
             android:src="@mipmap/person"/>
 
-        <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+        <com.project.scratchstudio.kith_andoid.custom_views.CustomFontTextView
             android:id="@+id/name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -41,7 +41,7 @@
             android:text="Max Wright"
             android:layout_toEndOf="@+id/photo"/>
 
-        <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+        <com.project.scratchstudio.kith_andoid.custom_views.CustomFontTextView
             android:id="@+id/position"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -53,7 +53,7 @@
             android:layout_toEndOf="@+id/photo"
             android:layout_below="@+id/name"/>
 
-        <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+        <com.project.scratchstudio.kith_andoid.custom_views.CustomFontTextView
             android:id="@+id/time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -66,7 +66,7 @@
             android:layout_toEndOf="@+id/name"
             android:text="01:18"/>
 
-        <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+        <com.project.scratchstudio.kith_andoid.custom_views.CustomFontTextView
             android:id="@+id/date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -79,7 +79,7 @@
             android:layout_toEndOf="@+id/position"
             android:text="05.06.2019"/>
 
-        <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+        <com.project.scratchstudio.kith_andoid.custom_views.CustomFontTextView
             android:id="@+id/comment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

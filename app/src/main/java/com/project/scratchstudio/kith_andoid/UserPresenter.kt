@@ -4,7 +4,7 @@ import android.accounts.NetworkErrorException
 import android.content.Context
 import android.graphics.Bitmap
 import android.os.Bundle
-import com.project.scratchstudio.kith_andoid.Activities.HomeActivity
+import com.project.scratchstudio.kith_andoid.activities.HomeActivity
 import com.project.scratchstudio.kith_andoid.service.PhotoService
 import com.project.scratchstudio.kith_andoid.app.FragmentType
 import com.project.scratchstudio.kith_andoid.network.ApiClient

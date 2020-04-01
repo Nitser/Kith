@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
-    tools:context=".Activities.AgreementActivity">
+    tools:context=".activities.AgreementActivity">
 
     <RelativeLayout
         android:id="@+id/relativeLayout"
@@ -32,7 +32,7 @@
             android:src="@drawable/ic_left"
             android:onClick="onClickBackButton" />
 
-        <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+        <com.project.scratchstudio.kith_andoid.custom_views.CustomFontTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"

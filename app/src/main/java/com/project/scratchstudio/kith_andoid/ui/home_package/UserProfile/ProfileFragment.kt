@@ -9,8 +9,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import com.project.scratchstudio.kith_andoid.Activities.EditActivity
-import com.project.scratchstudio.kith_andoid.Activities.HomeActivity
+import com.project.scratchstudio.kith_andoid.activities.EditActivity
+import com.project.scratchstudio.kith_andoid.activities.HomeActivity
 import com.project.scratchstudio.kith_andoid.R
 import com.project.scratchstudio.kith_andoid.service.PicassoCircleTransformation
 import com.project.scratchstudio.kith_andoid.UserPresenter

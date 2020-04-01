@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import com.project.scratchstudio.kith_andoid.Activities.EntryActivity
+import com.project.scratchstudio.kith_andoid.activities.EntryActivity
 import com.project.scratchstudio.kith_andoid.R
 import com.project.scratchstudio.kith_andoid.app.BaseFragment
 import com.project.scratchstudio.kith_andoid.app.FragmentType

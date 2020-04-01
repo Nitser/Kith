@@ -4,7 +4,7 @@ import android.graphics.Color
 import android.view.View
 import android.widget.ImageView
 
-import com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+import com.project.scratchstudio.kith_andoid.custom_views.CustomFontTextView
 import com.project.scratchstudio.kith_andoid.R
 import com.project.scratchstudio.kith_andoid.network.model.comment.Comment
 import androidx.cardview.widget.CardView

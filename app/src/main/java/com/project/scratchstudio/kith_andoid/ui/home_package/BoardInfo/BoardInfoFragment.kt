@@ -16,7 +16,7 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import com.project.scratchstudio.kith_andoid.Activities.HomeActivity
+import com.project.scratchstudio.kith_andoid.activities.HomeActivity
 import com.project.scratchstudio.kith_andoid.R
 import com.project.scratchstudio.kith_andoid.UserPresenter
 import com.project.scratchstudio.kith_andoid.app.BaseFragment

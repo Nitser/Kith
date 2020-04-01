@@ -18,7 +18,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
-import com.project.scratchstudio.kith_andoid.Activities.HomeActivity
+import com.project.scratchstudio.kith_andoid.activities.HomeActivity
 import com.project.scratchstudio.kith_andoid.BoardPresenter
 import com.project.scratchstudio.kith_andoid.R
 import com.project.scratchstudio.kith_andoid.service.PhotoService

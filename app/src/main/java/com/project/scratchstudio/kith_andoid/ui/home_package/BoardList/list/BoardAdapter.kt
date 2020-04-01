@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
-import com.project.scratchstudio.kith_andoid.Activities.HomeActivity
+import com.project.scratchstudio.kith_andoid.activities.HomeActivity
 import com.project.scratchstudio.kith_andoid.R
 import com.project.scratchstudio.kith_andoid.network.model.board.Board
 import com.project.scratchstudio.kith_andoid.ui.home_package.BoardList.BoardsFragment

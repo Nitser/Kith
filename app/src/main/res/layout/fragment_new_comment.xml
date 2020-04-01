@@ -21,7 +21,7 @@
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="16dp">
 
-        <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+        <com.project.scratchstudio.kith_andoid.custom_views.CustomFontTextView
             android:id="@+id/new_comment_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -36,7 +36,7 @@
             android:textSize="17sp"
             customAttrs:customFont="intro_regular" />
 
-        <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+        <com.project.scratchstudio.kith_andoid.custom_views.CustomFontTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
@@ -48,7 +48,7 @@
             android:textSize="17sp"
             customAttrs:customFont="intro_regular" />
 
-        <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+        <com.project.scratchstudio.kith_andoid.custom_views.CustomFontTextView
             android:id="@+id/new_comment_done"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -92,7 +92,7 @@
                 android:scaleType="centerCrop"
                 android:src="@mipmap/person" />
 
-            <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontEditText
+            <com.project.scratchstudio.kith_andoid.custom_views.CustomFontEditText
                 android:id="@+id/new_comment_message"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -107,7 +107,7 @@
                 android:textSize="14sp"
                 customAttrs:customFont="intro_regular" />
 
-            <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+            <com.project.scratchstudio.kith_andoid.custom_views.CustomFontTextView
                 android:id="@+id/new_comment_position"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -119,7 +119,7 @@
                 android:textSize="14sp"
                 customAttrs:customFont="intro_regular" />
 
-            <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+            <com.project.scratchstudio.kith_andoid.custom_views.CustomFontTextView
                 android:id="@+id/new_comment_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

@@ -1,4 +1,4 @@
-package com.project.scratchstudio.kith_andoid.Adapters
+package com.project.scratchstudio.kith_andoid.adapters
 
 import android.app.Activity
 import android.view.LayoutInflater

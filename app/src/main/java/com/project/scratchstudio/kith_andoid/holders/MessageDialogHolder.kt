@@ -6,8 +6,8 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import android.widget.ImageView
 
-import com.project.scratchstudio.kith_andoid.Adapters.MessageDialogAdapter
-import com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+import com.project.scratchstudio.kith_andoid.adapters.MessageDialogAdapter
+import com.project.scratchstudio.kith_andoid.custom_views.CustomFontTextView
 import com.project.scratchstudio.kith_andoid.model.AnnouncementInfo
 import com.project.scratchstudio.kith_andoid.R
 

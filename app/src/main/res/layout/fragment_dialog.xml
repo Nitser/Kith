@@ -9,7 +9,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
     android:orientation="horizontal"
-    tools:context="com.project.scratchstudio.kith_andoid.Fragments.TreeFragment">
+    tools:context="com.project.scratchstudio.kith_andoid.fragments.TreeFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -33,7 +33,7 @@
                 android:background="@null"
                 android:src="@drawable/ic_edit_blue" />
 
-            <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+            <com.project.scratchstudio.kith_andoid.custom_views.CustomFontTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -66,7 +66,7 @@
                 android:background="@null"
                 android:src="@drawable/ic_left" />
 
-            <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+            <com.project.scratchstudio.kith_andoid.custom_views.CustomFontTextView
                 android:id="@+id/title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

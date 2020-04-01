@@ -7,7 +7,7 @@
     android:orientation="horizontal"
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/colorPrimary"
-    tools:context="com.project.scratchstudio.kith_andoid.Fragments.TreeFragment">
+    tools:context="com.project.scratchstudio.kith_andoid.fragments.TreeFragment">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -36,7 +36,7 @@
                 android:src="@drawable/ic_left"
                 android:visibility="visible" />
 
-            <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+            <com.project.scratchstudio.kith_andoid.custom_views.CustomFontTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 customAttrs:layout_constraintTop_toTopOf="parent"
@@ -97,7 +97,7 @@
                     android:layout_height="match_parent"
                     android:background="#BF144B69"/>
 
-                <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+                <com.project.scratchstudio.kith_andoid.custom_views.CustomFontTextView
                     android:id="@+id/title"
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"

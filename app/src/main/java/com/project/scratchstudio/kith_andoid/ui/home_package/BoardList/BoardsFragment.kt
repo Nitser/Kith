@@ -11,8 +11,8 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.Toast
 
-import com.project.scratchstudio.kith_andoid.Activities.HomeActivity
-import com.project.scratchstudio.kith_andoid.Fragments.TreeFragment
+import com.project.scratchstudio.kith_andoid.activities.HomeActivity
+import com.project.scratchstudio.kith_andoid.fragments.TreeFragment
 import com.project.scratchstudio.kith_andoid.R
 import com.project.scratchstudio.kith_andoid.ui.home_package.BoardInfo.BoardInfoFragment
 import com.project.scratchstudio.kith_andoid.ui.home_package.BoardList.list.BoardAdapter

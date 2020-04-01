@@ -6,7 +6,7 @@
     android:orientation="vertical"
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/colorPrimary"
-    tools:context="com.project.scratchstudio.kith_andoid.Fragments.TreeFragment">
+    tools:context="com.project.scratchstudio.kith_andoid.fragments.TreeFragment">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -30,7 +30,7 @@
                 android:src="@drawable/ic_left"
                 android:visibility="invisible" />
 
-            <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+            <com.project.scratchstudio.kith_andoid.custom_views.CustomFontTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
@@ -170,7 +170,7 @@
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
-                    <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+                    <com.project.scratchstudio.kith_andoid.custom_views.CustomFontTextView
                         android:id="@+id/name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -181,7 +181,7 @@
                         customAttrs:customFont="intro_regular"
                         android:layout_marginTop="10dp"/>
 
-                    <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+                    <com.project.scratchstudio.kith_andoid.custom_views.CustomFontTextView
                         android:id="@+id/position"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -192,7 +192,7 @@
                         customAttrs:customFont="intro_regular"
                         android:layout_marginTop="10dp"/>
 
-                    <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+                    <com.project.scratchstudio.kith_andoid.custom_views.CustomFontTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Вы и ваши знакомые пригласили:"
@@ -202,7 +202,7 @@
                         customAttrs:customFont="intro_regular"
                         android:layout_marginTop="30dp"/>
 
-                    <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+                    <com.project.scratchstudio.kith_andoid.custom_views.CustomFontTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/yourPeople"

@@ -21,15 +21,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Activities.BaseActivity"/>
-        <activity android:name=".Activities.EntryActivity"
+        <activity android:name=".activities.BaseActivity"/>
+        <activity android:name=".activities.EntryActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activities.ChangePasswordActivity"/>
+        <activity android:name=".activities.ChangePasswordActivity"/>
         <activity
             android:name=".ui.entry_package.main.MainActivity"
             android:screenOrientation="portrait" />
@@ -41,22 +41,22 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".Activities.AgreementActivity"
+            android:name=".activities.AgreementActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Activities.HomeActivity"
+            android:name=".activities.HomeActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Activities.CodeActivity"
+            android:name=".activities.CodeActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Activities.TermActivity"
+            android:name=".activities.TermActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.entry_package.sms_check.SmsActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Activities.EditActivity"
+            android:name=".activities.EditActivity"
             android:screenOrientation="portrait" />
     </application>
 
