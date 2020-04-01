@@ -2,11 +2,10 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
-    xmlns:customAttrs="http://schemas.android.com/apk/res-auto"
-    tools:context=".Activities.SmsActivity">
+    android:background="@color/colorPrimary">
 
     <RelativeLayout
         android:id="@+id/relativeLayout"
@@ -19,8 +18,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
-            android:id="@+id/back"
+        <TextView
+            android:id="@+id/check_sms_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
@@ -28,20 +27,17 @@
             android:layout_marginStart="20dp"
             android:padding="5dp"
             android:background="@android:color/transparent"
-            android:onClick="onClickBackButton"
             android:text="Отмена"
             android:textSize="17sp"
-            android:textColor="@color/colorAccent"
-            customAttrs:customFont="intro_regular" />
+            android:textColor="@color/colorAccent" />
 
-        <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:text="Аутентификация"
             android:textColor="@color/colorAccent"
-            android:textSize="17sp"
-            customAttrs:customFont="intro_regular" />
+            android:textSize="17sp" />
     </RelativeLayout>
 
 
@@ -56,9 +52,9 @@
         app:layout_constraintVertical_bias="0.498">
 
 
-        <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
+        <TextView
             android:id="@+id/customFontTextView8"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:gravity="center"
@@ -66,10 +62,9 @@
             android:textColor="@color/colorAccent"
             android:textSize="17sp"
             app:layout_constraintTop_toTopOf="parent"
-            customAttrs:customFont="intro_regular"
             tools:layout_editor_absoluteX="0dp" />
 
-        <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontEditText
+        <EditText
             android:id="@+id/editText7"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -90,18 +85,16 @@
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/customFontTextView8"
-            customAttrs:customFont="intro_regular" />
+            app:layout_constraintTop_toBottomOf="@+id/customFontTextView8" />
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/check_sms_confirm"
             android:layout_width="265dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:background="@drawable/button_basic"
-            android:onClick="checkButton"
             android:padding="10dp"
             android:textAllCaps="false"
             android:text="@string/confirm"
@@ -112,8 +105,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editText7" />
 
-        <com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
-            android:id="@+id/customFontTextView9"
+        <TextView
+            android:id="@+id/check_sms_repeat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
@@ -121,15 +114,13 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="28dp"
             android:padding="5dp"
-            android:onClick="againButton"
             android:text="Отправить повторно"
             android:textColor="@color/colorAccent"
             android:textSize="17sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.502"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/button2"
-            customAttrs:customFont="intro_regular" />
+            app:layout_constraintTop_toBottomOf="@+id/check_sms_confirm"/>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

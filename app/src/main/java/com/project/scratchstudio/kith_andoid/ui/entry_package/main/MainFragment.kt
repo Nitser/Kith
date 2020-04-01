@@ -1,16 +1,17 @@
 package com.project.scratchstudio.kith_andoid.ui.entry_package.main
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import com.project.scratchstudio.kith_andoid.Activities.CheckInActivity
-import com.project.scratchstudio.kith_andoid.Activities.SignInActivity
+import com.project.scratchstudio.kith_andoid.Activities.EntryActivity
 import com.project.scratchstudio.kith_andoid.R
 import com.project.scratchstudio.kith_andoid.app.BaseFragment
+import com.project.scratchstudio.kith_andoid.app.FragmentType
 import com.project.scratchstudio.kith_andoid.app.Permissions
+import com.project.scratchstudio.kith_andoid.ui.entry_package.sing_in.SingInFragment
+import com.project.scratchstudio.kith_andoid.ui.entry_package.sing_up.SingUpFragment
 
 class MainFragment : BaseFragment() {
 
@@ -33,17 +34,11 @@ class MainFragment : BaseFragment() {
     }
 
     private fun signInButton(view: View) {
-        view.isEnabled = false
-        val intent = Intent(activity, SignInActivity::class.java)
-        startActivity(intent)
-        activity?.finish()
+        (activity as EntryActivity).addFragment(SingInFragment.newInstance(), FragmentType.SING_IN.name)
     }
 
     private fun singUpButton(view: View) {
-        view.isEnabled = false
-        val intent = Intent(activity, CheckInActivity::class.java)
-        startActivity(intent)
-        activity?.finish()
+        (activity as EntryActivity).addFragment(SingUpFragment.newInstance(), FragmentType.SING_UP.name)
     }
 
     companion object {

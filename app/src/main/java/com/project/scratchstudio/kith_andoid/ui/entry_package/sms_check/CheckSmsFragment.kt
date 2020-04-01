@@ -1,76 +1,84 @@
-package com.project.scratchstudio.kith_andoid.Activities
+package com.project.scratchstudio.kith_andoid.ui.entry_package.sms_check
 
 import android.accounts.NetworkErrorException
 import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.view.KeyEvent
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
+import com.project.scratchstudio.kith_andoid.Activities.EntryActivity
+import com.project.scratchstudio.kith_andoid.Activities.HomeActivity
 import com.project.scratchstudio.kith_andoid.CustomViews.CustomFontEditText
 import com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
 import com.project.scratchstudio.kith_andoid.EntryPresenter
 import com.project.scratchstudio.kith_andoid.R
-import com.project.scratchstudio.kith_andoid.service.HttpService
+import com.project.scratchstudio.kith_andoid.app.BaseFragment
 import com.project.scratchstudio.kith_andoid.network.model.BaseResponse
 import com.project.scratchstudio.kith_andoid.network.model.entry.EntryResponse
-import com.project.scratchstudio.kith_andoid.ui.entry_package.main.MainActivity
 
-class SmsActivity : AppCompatActivity() {
+class CheckSmsFragment : BaseFragment() {
 
-    private var httpService: HttpService? = null
     private lateinit var entryPresenter: EntryPresenter
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        entryPresenter = EntryPresenter(applicationContext)
-        setContentView(R.layout.activity_sms)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        entryPresenter = EntryPresenter(context!!)
+        return inflater.inflate(R.layout.fragment_check_sms, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         sendSMS()
+        initButtons(view)
     }
 
     private fun sendSMS() {
         entryPresenter.sendSMS(object : EntryPresenter.BaseCallback {
             override fun onSuccess(baseResponse: BaseResponse) {
                 if (!baseResponse.status) {
-                    Toast.makeText(applicationContext, "Ошибка отправки запроса", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Ошибка отправки запроса", Toast.LENGTH_SHORT).show()
                 }
             }
 
             override fun onError(networkError: NetworkErrorException) {
-                Toast.makeText(applicationContext, "Ошибка отправки запроса", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Ошибка отправки запроса", Toast.LENGTH_SHORT).show()
             }
         }, HomeActivity.mainUser.login)
     }
 
+    private fun initButtons(view: View) {
+        view.findViewById<TextView>(R.id.check_sms_back).setOnClickListener(this::onClickBackButton)
+        view.findViewById<Button>(R.id.check_sms_confirm).setOnClickListener(this::checkButton)
+        view.findViewById<TextView>(R.id.check_sms_repeat).setOnClickListener(this::againButton)
+    }
+
     fun onClickBackButton(view: View) {
         view.isEnabled = false
-        val intent = Intent(this@SmsActivity, MainActivity::class.java)
-        intent.putExtra("another_user", false)
-        startActivity(intent)
-        finish()
+        (activity as EntryActivity).backFragment()
     }
 
     fun checkButton(view: View) {
         view.isEnabled = false
-        val smsCode = findViewById<CustomFontEditText>(R.id.editText7)
+        val smsCode = view.findViewById<CustomFontEditText>(R.id.editText7)
         entryPresenter.checkSMS(object : EntryPresenter.EntryCallback {
             override fun onSuccess(entryResponse: EntryResponse) {
                 if (entryResponse.status) {
                     HomeActivity.mainUser.token = entryResponse.tokenType + " " + entryResponse.token
-                    val intent = Intent(applicationContext, HomeActivity::class.java)
-//                    intent.putExtra("another_user", false)
+                    val intent = Intent(context, HomeActivity::class.java)
                     startActivity(intent)
-                    Toast.makeText(applicationContext, "SMS код подтвержден", Toast.LENGTH_SHORT).show()
-                    finish()
+                    Toast.makeText(context, "SMS код подтвержден", Toast.LENGTH_SHORT).show()
+                    activity?.finish()
                 } else {
-                    Toast.makeText(applicationContext, "Ошибка отправки запроса", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Ошибка отправки запроса", Toast.LENGTH_SHORT).show()
                     view.isEnabled = true
                 }
             }
 
             override fun onError(networkError: NetworkErrorException) {
-                Toast.makeText(applicationContext, "Ошибка отправки запроса", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Ошибка отправки запроса", Toast.LENGTH_SHORT).show()
                 view.isEnabled = true
             }
         }, HomeActivity.mainUser.login, HomeActivity.mainUser.password, smsCode.text.toString())
@@ -98,12 +106,10 @@ class SmsActivity : AppCompatActivity() {
 
     }
 
-    override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            val intent = Intent(this@SmsActivity, MainActivity::class.java)
-            startActivity(intent)
-            return true
+    companion object {
+
+        fun newInstance(): CheckSmsFragment {
+            return CheckSmsFragment()
         }
-        return super.onKeyDown(keyCode, event)
     }
 }

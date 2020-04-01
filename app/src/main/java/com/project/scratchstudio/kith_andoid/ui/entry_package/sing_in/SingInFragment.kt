@@ -1,42 +1,50 @@
-package com.project.scratchstudio.kith_andoid.Activities
+package com.project.scratchstudio.kith_andoid.ui.entry_package.sing_in
 
 import android.content.Intent
-import android.graphics.Typeface
 import android.os.Bundle
-import android.view.KeyEvent
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
+import com.project.scratchstudio.kith_andoid.Activities.EntryActivity
+import com.project.scratchstudio.kith_andoid.Activities.HomeActivity
 import com.project.scratchstudio.kith_andoid.CustomViews.CustomFontEditText
 import com.project.scratchstudio.kith_andoid.R
+import com.project.scratchstudio.kith_andoid.app.BaseFragment
 import com.project.scratchstudio.kith_andoid.network.ApiClient
 import com.project.scratchstudio.kith_andoid.network.apiService.EntryApi
 import com.project.scratchstudio.kith_andoid.network.model.entry.EntryResponse
-import com.project.scratchstudio.kith_andoid.ui.entry_package.main.MainActivity
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableSingleObserver
 import io.reactivex.schedulers.Schedulers
 
-class SignInActivity : AppCompatActivity() {
+class SingInFragment : BaseFragment() {
 
     private lateinit var entryApi: EntryApi
     private val disposable = CompositeDisposable()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_sign_in)
-        entryApi = ApiClient.getClient(applicationContext).create<EntryApi>(EntryApi::class.java)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        entryApi = ApiClient.getClient(context!!).create<EntryApi>(EntryApi::class.java)
+        return inflater.inflate(R.layout.fragment_sign_in, container, false)
+    }
 
-        val button = findViewById<Button>(R.id.button2)
-        button.typeface = Typeface.createFromAsset(assets, "fonts/intro_regular.ttf")
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initButtons(view)
+    }
+
+    private fun initButtons(view: View) {
+        view.findViewById<Button>(R.id.sing_in).setOnClickListener(this::signInButton)
+        view.findViewById<ImageButton>(R.id.sing_in_back).setOnClickListener(this::onClickBack)
     }
 
     fun signInButton(view: View) {
         view.isEnabled = false
-        val login = findViewById<CustomFontEditText>(R.id.editText2)
-        val password = findViewById<CustomFontEditText>(R.id.editText3)
+        val login = view.findViewById<CustomFontEditText>(R.id.editText2)
+        val password = view.findViewById<CustomFontEditText>(R.id.editText3)
         HomeActivity.cleanMainUser()
 
         disposable.add(
@@ -53,9 +61,9 @@ class SignInActivity : AppCompatActivity() {
                                     val intent = Intent(view.context, HomeActivity::class.java)
                                     intent.putExtra("another_user", false)
                                     startActivity(intent)
-                                    finish()
+                                    activity?.finish()
                                 } else {
-                                    Toast.makeText(applicationContext, "Ошибка отправки запроса", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(context, "Ошибка отправки запроса", Toast.LENGTH_SHORT).show()
                                 }
                                 view.isEnabled = true
                             }
@@ -71,27 +79,21 @@ class SignInActivity : AppCompatActivity() {
 //                                }
 
                             override fun onError(e: Throwable) {
-                                Toast.makeText(applicationContext, "Ошибка отправки запроса", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(context, "Ошибка отправки запроса", Toast.LENGTH_SHORT).show()
                                 view.isEnabled = true
                             }
                         })
         )
     }
 
-    override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            val intent = Intent(this@SignInActivity, MainActivity::class.java)
-            startActivity(intent)
-            finish()
-            return true
-        }
-
-        return super.onKeyDown(keyCode, event)
+    fun onClickBack(view: View) {
+        (activity as EntryActivity).backFragment()
     }
 
-    fun onClickBack(view: View) {
-        val intent = Intent(this@SignInActivity, MainActivity::class.java)
-        startActivity(intent)
-        finish()
+    companion object {
+
+        fun newInstance(): SingInFragment {
+            return SingInFragment()
+        }
     }
 }

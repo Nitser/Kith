@@ -1,4 +1,4 @@
-package com.project.scratchstudio.kith_andoid.Activities
+package com.project.scratchstudio.kith_andoid.ui.entry_package.sing_up
 
 import android.app.Activity
 import android.content.Intent
@@ -6,29 +6,33 @@ import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.os.SystemClock
+import android.provider.MediaStore
 import android.text.SpannableStringBuilder
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
-import android.view.KeyEvent
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
-import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
+import com.project.scratchstudio.kith_andoid.Activities.AgreementActivity
+import com.project.scratchstudio.kith_andoid.Activities.EntryActivity
+import com.project.scratchstudio.kith_andoid.Activities.HomeActivity
+import com.project.scratchstudio.kith_andoid.Activities.TermActivity
 import com.project.scratchstudio.kith_andoid.CustomViews.CustomFontEditText
 import com.project.scratchstudio.kith_andoid.R
-import com.project.scratchstudio.kith_andoid.service.PhotoService
-import com.project.scratchstudio.kith_andoid.databinding.ActivityCheckInBinding
+import com.project.scratchstudio.kith_andoid.app.BaseFragment
+import com.project.scratchstudio.kith_andoid.app.FragmentType
+import com.project.scratchstudio.kith_andoid.databinding.FragmentSingUpBinding
 import com.project.scratchstudio.kith_andoid.network.ApiClient
 import com.project.scratchstudio.kith_andoid.network.apiService.EntryApi
 import com.project.scratchstudio.kith_andoid.network.model.entry.EntryResponse
-import com.project.scratchstudio.kith_andoid.ui.entry_package.main.MainActivity
-import de.hdodenhof.circleimageview.CircleImageView
+import com.project.scratchstudio.kith_andoid.service.PhotoService
+import com.project.scratchstudio.kith_andoid.ui.entry_package.sms_check.CheckSmsFragment
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableSingleObserver
@@ -38,28 +42,34 @@ import java.io.InputStream
 import java.util.HashMap
 import java.util.regex.Pattern
 
-class CheckInActivity : AppCompatActivity() {
+class SingUpFragment : BaseFragment() {
 
-    private var buttonCount: Long = 0
+    private lateinit var binding: FragmentSingUpBinding
     private val requiredFields = HashMap<String, CustomFontEditText>()
     private lateinit var entryApi: EntryApi
     private val disposable = CompositeDisposable()
-    private lateinit var binding: ActivityCheckInBinding
-
     private lateinit var photoButton: ImageButton
     private lateinit var checkInButton: Button
     private var currentBitmap: Bitmap? = null
+    private var status = true
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        entryApi = ApiClient.getClient(applicationContext).create<EntryApi>(EntryApi::class.java)
-        binding = ActivityCheckInBinding.inflate(layoutInflater)
-//        setContentView(R.layout.activity_check_in)
-        setContentView(binding.root)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        binding = FragmentSingUpBinding.inflate(layoutInflater)
+        entryApi = ApiClient.getClient(context!!).create<EntryApi>(EntryApi::class.java)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         editTextInitialized()
-
+        initButtons()
         customTextView()
-//        button.typeface = Typeface.createFromAsset(assets, "fonts/intro_regular.ttf")
+    }
+
+    private fun initButtons() {
+        binding.back.setOnClickListener(this::onClickBack)
+        binding.buttonPhoto.setOnClickListener(this::chooseImageButton)
+        binding.singUp.setOnClickListener(this::onClickCheckInButton)
     }
 
     private fun customTextView() {
@@ -67,10 +77,7 @@ class CheckInActivity : AppCompatActivity() {
         spanTxt.append("пользовательским соглашением")
         spanTxt.setSpan(object : ClickableSpan() {
             override fun onClick(widget: View) {
-                if (SystemClock.elapsedRealtime() - buttonCount < 1000) return
-                buttonCount = SystemClock.elapsedRealtime()
-
-                val intent = Intent(this@CheckInActivity, AgreementActivity::class.java)
+                val intent = Intent(context, AgreementActivity::class.java)
                 startActivityForResult(intent, 1)
             }
         }, spanTxt.length - "пользовательским соглашением".length, spanTxt.length, 0)
@@ -78,10 +85,7 @@ class CheckInActivity : AppCompatActivity() {
         spanTxt.append("политикой конфиденциальности")
         spanTxt.setSpan(object : ClickableSpan() {
             override fun onClick(widget: View) {
-                if (SystemClock.elapsedRealtime() - buttonCount < 1000) return
-                buttonCount = SystemClock.elapsedRealtime()
-
-                val intent = Intent(this@CheckInActivity, TermActivity::class.java)
+                val intent = Intent(context, TermActivity::class.java)
                 startActivityForResult(intent, 2)
             }
         }, spanTxt.length - "политикой конфиденциальности".length, spanTxt.length, 0)
@@ -116,9 +120,6 @@ class CheckInActivity : AppCompatActivity() {
     }
 
     fun onClickCheckInButton(view: View) {
-        if (SystemClock.elapsedRealtime() - buttonCount < 1000) return
-        buttonCount = SystemClock.elapsedRealtime()
-
         checkInButton = view as Button
         view.isEnabled = false
         status = true
@@ -136,7 +137,7 @@ class CheckInActivity : AppCompatActivity() {
                                 } else {
                                     checkFields()
                                     binding.refCode.setBackgroundResource(R.drawable.entri_field_error_check_in)
-                                    Toast.makeText(applicationContext, "Ошибка отправки запроса", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(context, "Ошибка отправки запроса", Toast.LENGTH_SHORT).show()
                                     view.isEnabled = true
                                 }
                             }
@@ -144,7 +145,7 @@ class CheckInActivity : AppCompatActivity() {
                             override fun onError(e: Throwable) {
                                 checkFields()
                                 binding.refCode.setBackgroundResource(R.drawable.entri_field_error_check_in)
-                                Toast.makeText(applicationContext, "Ошибка отправки запроса", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(context, "Ошибка отправки запроса", Toast.LENGTH_SHORT).show()
                                 view.isEnabled = true
                             }
                         })
@@ -164,20 +165,19 @@ class CheckInActivity : AppCompatActivity() {
                 if (key == "user_password" && value.length() < 6) {
                     value.setBackgroundResource(R.drawable.entri_field_error_check_in)
                     status = false
-                    Toast.makeText(this, "Пароль должен быть не короче 6 символов ", Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, "Пароль должен быть не короче 6 символов ", Toast.LENGTH_LONG).show()
                 }
                 if (key == "user_phone" && !m.find()) {
                     //                    Log.i("PHONE: ", field.getValue().getText().toString());
                     value.setBackgroundResource(R.drawable.entri_field_error_check_in)
                     status = false
-                    Toast.makeText(this, "Неверный формат телефона", Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, "Неверный формат телефона", Toast.LENGTH_LONG).show()
                 }
             }
         }
-        val check = findViewById<CheckBox>(R.id.checkbox)
-        if (!check.isChecked) {
+        if (!binding.checkbox.isChecked) {
             status = false
-            check.buttonTintList = ColorStateList.valueOf(resources.getColor(R.color.colorError))
+            binding.checkbox.buttonTintList = ColorStateList.valueOf(resources.getColor(R.color.colorError))
             checkInButton.isEnabled = true
         }
     }
@@ -185,7 +185,7 @@ class CheckInActivity : AppCompatActivity() {
     fun checkIn(parent_id: Int) {
         if (status) {
             checkInButton.isEnabled = false
-            val photoService = PhotoService(this)
+            val photoService = PhotoService(context!!)
             val res = photoService.base64Photo(currentBitmap)
 
             disposable.add(
@@ -202,52 +202,44 @@ class CheckInActivity : AppCompatActivity() {
                                         HomeActivity.mainUser.login = binding.login.text.toString()
                                         HomeActivity.mainUser.image = currentBitmap
                                         HomeActivity.mainUser.password = binding.password.text.toString()
-                                        val intent = Intent(applicationContext, SmsActivity::class.java)
-                                        startActivity(intent)
-                                        finish()
+                                        (activity as EntryActivity).replaceFragment(CheckSmsFragment.newInstance(), FragmentType.SMS.name)
                                     } else {
-                                        Toast.makeText(applicationContext, "Ошибка отправки запроса", Toast.LENGTH_SHORT).show()
+                                        Toast.makeText(context, "Ошибка отправки запроса", Toast.LENGTH_SHORT).show()
                                         checkInButton.isEnabled = true
                                     }
                                 }
 
                                 override fun onError(e: Throwable) {
-                                    Toast.makeText(applicationContext, "Ошибка отправки запроса", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(context, "Ошибка отправки запроса", Toast.LENGTH_SHORT).show()
                                     checkInButton.isEnabled = true
                                 }
                             })
             )
         } else {
-            val scrollView = findViewById<ScrollView>(R.id.scroll)
-            scrollView.fullScroll(ScrollView.FOCUS_UP)
+            binding.scroll.fullScroll(ScrollView.FOCUS_UP)
             checkInButton.isEnabled = true
         }
     }
 
     fun chooseImageButton(view: View) {
-        if (SystemClock.elapsedRealtime() - buttonCount < 1000) return
-        buttonCount = SystemClock.elapsedRealtime()
-
         view.isEnabled = false
-
-        val intent = Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         startActivityForResult(intent, 0)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
         super.onActivityResult(requestCode, resultCode, intent)
         if (requestCode == 0 && resultCode == Activity.RESULT_OK && intent != null && intent.data != null) {
-            val image = findViewById<CircleImageView>(R.id.portfolio)
             val imageUri = intent.data
             val imageStream: InputStream?
-            val photoService = PhotoService(this)
+            val photoService = PhotoService(context!!)
             try {
-                imageStream = contentResolver.openInputStream(imageUri!!)
+                imageStream = activity?.contentResolver?.openInputStream(imageUri!!)
                 currentBitmap = BitmapFactory.decodeStream(imageStream)
                 if (currentBitmap != null) {
-                    currentBitmap = photoService.changePhoto(currentBitmap!!, imageUri)
+                    currentBitmap = photoService.changePhoto(currentBitmap!!, imageUri!!)
                     currentBitmap = photoService.compressPhoto(currentBitmap!!)
-                    image.setImageBitmap(currentBitmap)
+                    binding.photo.setImageBitmap(currentBitmap)
                 }
             } catch (e: FileNotFoundException) {
                 e.printStackTrace()
@@ -259,34 +251,18 @@ class CheckInActivity : AppCompatActivity() {
         }
     }
 
-    override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            val intent = Intent(this@CheckInActivity, MainActivity::class.java)
-            startActivity(intent)
-            finish()
-            return true
-        }
-        return super.onKeyDown(keyCode, event)
-    }
-
     fun onCheckButton() {
-        if (SystemClock.elapsedRealtime() - buttonCount < 1000) return
-        buttonCount = SystemClock.elapsedRealtime()
-
-        val check = findViewById<CheckBox>(R.id.checkbox)
-        check.buttonTintList = ColorStateList.valueOf(resources.getColor(R.color.colorDark))
+        binding.checkbox.buttonTintList = ColorStateList.valueOf(resources.getColor(R.color.colorDark))
     }
 
     fun onClickBack(view: View) {
-        if (SystemClock.elapsedRealtime() - buttonCount < 1000) return
-        buttonCount = SystemClock.elapsedRealtime()
-
-        val intent = Intent(this@CheckInActivity, MainActivity::class.java)
-        startActivity(intent)
-        finish()
+        (activity as EntryActivity).backFragment()
     }
 
     companion object {
-        private var status = true
+
+        fun newInstance(): SingUpFragment {
+            return SingUpFragment()
+        }
     }
 }

@@ -11,7 +11,6 @@ import com.project.scratchstudio.kith_andoid.ui.home_package.BoardList.BoardsFra
 import com.project.scratchstudio.kith_andoid.ui.home_package.Comments.CommentListFragment
 import com.project.scratchstudio.kith_andoid.app.FragmentType
 import com.project.scratchstudio.kith_andoid.network.model.user.User
-import com.project.scratchstudio.kith_andoid.ui.entry_package.main.MainActivity
 
 import java.util.ArrayList
 
@@ -70,7 +69,7 @@ class HomeActivity : BaseActivity() {
 //        val internalStorageService = InternalStorageService(this)
 //        internalStorageService.setISetInternalData(ClearUserIdAndToken())
 //        internalStorageService.execute()
-        val intent = Intent(this@HomeActivity, MainActivity::class.java)
+        val intent = Intent(this@HomeActivity, EntryActivity::class.java)
         startActivity(intent)
         finish()
     }

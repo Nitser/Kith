@@ -27,8 +27,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.project.scratchstudio.kith_andoid.Activities.CodeActivity
+import com.project.scratchstudio.kith_andoid.Activities.EntryActivity
 import com.project.scratchstudio.kith_andoid.Activities.HomeActivity
-import com.project.scratchstudio.kith_andoid.ui.entry_package.main.MainActivity
 import com.project.scratchstudio.kith_andoid.Adapters.SearchAdapter
 import com.project.scratchstudio.kith_andoid.CustomViews.CustomFontTextView
 import com.project.scratchstudio.kith_andoid.R
@@ -161,7 +161,7 @@ class TreeFragment : Fragment() {
 //        val internalStorageService = InternalStorageService(activity!!)
 //        internalStorageService.setISetInternalData(ClearUserIdAndToken())
 //        internalStorageService.execute()
-        val intent = Intent(context, MainActivity::class.java)
+        val intent = Intent(context, EntryActivity::class.java)
         startActivity(intent)
     }
 

@@ -9,5 +9,8 @@ enum class FragmentType {
     NEW_COMMENT,
     PROFILE,
     SPLASH,
-    MAIN
+    MAIN,
+    SING_UP,
+    SING_IN,
+    SMS
 }
