@@ -12,7 +12,7 @@ import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.project.scratchstudio.kith_andoid.custom_views.CustomFontTextView
+import com.project.scratchstudio.kith_andoid.custom_views.to_trash.CustomFontTextView
 import com.project.scratchstudio.kith_andoid.R
 import com.project.scratchstudio.kith_andoid.UserPresenter
 import com.project.scratchstudio.kith_andoid.network.ApiClient

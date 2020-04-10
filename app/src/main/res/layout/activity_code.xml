@@ -42,7 +42,7 @@
             android:src="@drawable/ic_share" />
     </RelativeLayout>
 
-    <com.project.scratchstudio.kith_andoid.custom_views.CustomFontTextView
+    <com.project.scratchstudio.kith_andoid.custom_views.to_trash.CustomFontTextView
         android:id="@+id/customFontTextView7"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -61,7 +61,7 @@
         app:layout_constraintTop_toBottomOf="@+id/relativeLayout"
         app:layout_constraintVertical_bias="0.934" />
 
-    <com.project.scratchstudio.kith_andoid.custom_views.CustomFontTextView
+    <com.project.scratchstudio.kith_andoid.custom_views.to_trash.CustomFontTextView
         android:id="@+id/customFontTextView6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

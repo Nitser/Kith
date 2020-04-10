@@ -1,9 +1,9 @@
-package com.project.scratchstudio.kith_andoid.custom_views
+package com.project.scratchstudio.kith_andoid.custom_views.to_trash
 
 import android.content.Context
 import android.util.AttributeSet
 
-class CustomFontEditText(context: Context, attrs: AttributeSet) : androidx.appcompat.widget.AppCompatEditText(context, attrs) {
+class CustomFontTextView(context: Context, attrs: AttributeSet) : androidx.appcompat.widget.AppCompatTextView(context, attrs) {
 
     init {
 
@@ -17,6 +17,7 @@ class CustomFontEditText(context: Context, attrs: AttributeSet) : androidx.appco
     }
 
     companion object {
+
         private const val sScheme = "http://schemas.android.com/apk/res-auto"
         private const val sAttribute = "customFont"
     }

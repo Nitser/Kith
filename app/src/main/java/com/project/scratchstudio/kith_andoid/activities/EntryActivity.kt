@@ -36,9 +36,6 @@ class EntryActivity : BaseActivity() {
                 } else {
                     Handler().postDelayed({
                         replaceFragment(MainFragment.newInstance(), FragmentType.MAIN.name)
-//                        val intent = Intent(applicationContext, MainActivity::class.java)
-//                        startActivity(intent)
-//                        finish()
                     }, SPLASH_DISPLAY_LENGTH.toLong())
                 }
             }

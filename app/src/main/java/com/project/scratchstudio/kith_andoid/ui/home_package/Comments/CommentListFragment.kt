@@ -12,7 +12,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.project.scratchstudio.kith_andoid.activities.HomeActivity
-import com.project.scratchstudio.kith_andoid.custom_views.CustomFontTextView
+import com.project.scratchstudio.kith_andoid.custom_views.to_trash.CustomFontTextView
 import com.project.scratchstudio.kith_andoid.custom_views.EndlessRecyclerViewScrollListener
 import com.project.scratchstudio.kith_andoid.R
 import com.project.scratchstudio.kith_andoid.app.BaseFragment

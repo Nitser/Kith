@@ -6,7 +6,7 @@ import android.widget.ImageView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.project.scratchstudio.kith_andoid.adapters.TreeAdapter
-import com.project.scratchstudio.kith_andoid.custom_views.CustomFontTextView
+import com.project.scratchstudio.kith_andoid.custom_views.to_trash.CustomFontTextView
 import com.project.scratchstudio.kith_andoid.R
 import com.project.scratchstudio.kith_andoid.network.model.user.User
 

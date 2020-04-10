@@ -1,138 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
-    xmlns:customAttrs="http://schemas.android.com/apk/res-auto">
+    android:orientation="vertical">
 
-    <ImageButton
-        android:id="@+id/sing_in_back"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:background="@null"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="36dp"
-        android:src="@drawable/ic_left"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-
-    <ImageView
-        android:id="@+id/view2"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:maxHeight="7dp"
-        android:maxWidth="7dp"
-        android:layout_marginStart="75dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="75dp"
-        android:background="@drawable/ic_logo"
-        app:layout_constraintBottom_toTopOf="@+id/constraintLayout4"
-        app:layout_constraintDimensionRatio="W,3:3"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.285" />
-
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout4"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.86"
-        tools:layout_editor_absoluteX="0dp">
+        android:layout_height="wrap_content">
 
-        <com.project.scratchstudio.kith_andoid.custom_views.CustomFontTextView
-            android:id="@+id/customFontTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="31dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="8dp"
-            android:text="@string/kith"
-            android:textColor="@color/colorAccent"
-            android:textSize="23sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.501"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            customAttrs:customFont="jura" />
+        <ImageButton
+            android:id="@+id/sing_in_back"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@null"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="36dp"
+            android:src="@drawable/ic_left"/>
 
-        <com.project.scratchstudio.kith_andoid.custom_views.CustomFontEditText
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:weightSum="3"
+        android:layout_marginStart="50dp"
+        android:layout_marginEnd="50dp"
+        android:layout_marginBottom="30dp">
+
+        <ImageView
+            android:id="@+id/view2"
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            app:layout_constraintDimensionRatio="1:1"
+            android:adjustViewBounds="true"
+            android:background="@drawable/ic_logo" />
+
+        <EditText
             android:id="@+id/editText2"
-            android:layout_width="260dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="56dp"
-            android:layout_marginEnd="8dp"
-            android:background="@drawable/entry_field"
+            android:layout_marginTop="30dp"
             android:hint="@string/login"
             android:inputType="textPersonName|textEmailAddress"
-            android:lines="1"
-            android:paddingLeft="20dp"
-            android:paddingTop="10dp"
-            android:paddingRight="20dp"
-            android:paddingBottom="15dp"
-            android:textColor="@color/colorPrimaryDark"
-            android:textColorHint="@color/colorHint"
-            android:textSize="14sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/customFontTextView"
-            customAttrs:customFont="intro_regular" />
+            style="@style/FieldDark" />
 
-        <com.project.scratchstudio.kith_andoid.custom_views.CustomFontEditText
+        <EditText
             android:id="@+id/editText3"
-            android:layout_width="260dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
-            android:layout_marginEnd="8dp"
-            android:background="@drawable/entry_field"
             android:hint="@string/password"
             android:inputType="textPassword"
-            android:lines="1"
-            android:paddingLeft="20dp"
-            android:paddingTop="10dp"
-            android:paddingRight="20dp"
-            android:paddingBottom="15dp"
-            android:textColor="@color/colorPrimaryDark"
-            android:textColorHint="@color/colorHint"
-            android:textSize="14sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editText2"
-            customAttrs:customFont="intro_regular" />
+            style="@style/FieldDark"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/forgot_password"
+            android:layout_gravity="end"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            style="@style/CustomForgetPasswordText"/>
 
         <Button
             android:id="@+id/sing_in"
-            android:layout_width="265dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="32dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:background="@drawable/button_basic"
-            android:padding="10dp"
-            android:textAllCaps="false"
+            android:layout_width="match_parent"
+            style="@style/ButtonDark"
             android:text="@string/sign_in"
-            android:textColor="@color/colorAccent"
-            android:textSize="20sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editText3"
-            app:layout_constraintVertical_bias="0.087" />
+            android:layout_marginTop="30dp"/>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

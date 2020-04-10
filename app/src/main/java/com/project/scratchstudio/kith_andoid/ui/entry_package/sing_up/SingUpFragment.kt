@@ -23,7 +23,7 @@ import com.project.scratchstudio.kith_andoid.activities.AgreementActivity
 import com.project.scratchstudio.kith_andoid.activities.EntryActivity
 import com.project.scratchstudio.kith_andoid.activities.HomeActivity
 import com.project.scratchstudio.kith_andoid.activities.TermActivity
-import com.project.scratchstudio.kith_andoid.custom_views.CustomFontEditText
+import com.project.scratchstudio.kith_andoid.custom_views.to_trash.CustomFontEditText
 import com.project.scratchstudio.kith_andoid.R
 import com.project.scratchstudio.kith_andoid.app.BaseFragment
 import com.project.scratchstudio.kith_andoid.app.FragmentType
@@ -33,6 +33,7 @@ import com.project.scratchstudio.kith_andoid.network.apiService.EntryApi
 import com.project.scratchstudio.kith_andoid.network.model.entry.EntryResponse
 import com.project.scratchstudio.kith_andoid.service.PhotoService
 import com.project.scratchstudio.kith_andoid.ui.entry_package.sms_check.CheckSmsFragment
+import de.hdodenhof.circleimageview.CircleImageView
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableSingleObserver
@@ -68,7 +69,7 @@ class SingUpFragment : BaseFragment() {
 
     private fun initButtons() {
         binding.back.setOnClickListener(this::onClickBack)
-        binding.buttonPhoto.setOnClickListener(this::chooseImageButton)
+        binding.photo.findViewById<ImageButton>(R.id.custom_circle_image_view_add_photo).setOnClickListener(this::chooseImageButton)
         binding.singUp.setOnClickListener(this::onClickCheckInButton)
     }
 
@@ -112,10 +113,10 @@ class SingUpFragment : BaseFragment() {
 
     private fun editTextListener(field: EditText) {
         field.setOnFocusChangeListener { view, b ->
-            if (b)
-                view.setBackgroundResource(R.drawable.entri_field_focus_check_in)
-            else
-                view.setBackgroundResource(R.drawable.entry_field_check_in)
+//            if (b)
+//                view.setBackgroundResource(R.drawable.entri_field_focus_check_in)
+//            else
+//                view.setBackgroundResource(R.drawable.entry_field_check_in)
         }
     }
 
@@ -239,7 +240,7 @@ class SingUpFragment : BaseFragment() {
                 if (currentBitmap != null) {
                     currentBitmap = photoService.changePhoto(currentBitmap!!, imageUri!!)
                     currentBitmap = photoService.compressPhoto(currentBitmap!!)
-                    binding.photo.setImageBitmap(currentBitmap)
+                    binding.photo.findViewById<CircleImageView>(R.id.custom_circle_image_view_photo).setImageBitmap(currentBitmap)
                 }
             } catch (e: FileNotFoundException) {
                 e.printStackTrace()

@@ -23,34 +23,21 @@
         android:layout_weight="1.1"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:paddingTop="20dp">
+        android:padding="50dp">
 
         <Button
             android:id="@+id/sing_in"
-            android:layout_width="265dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:background="@drawable/button_basic"
-            android:padding="10dp"
+            android:layout_width="match_parent"
             android:text="@string/sign_in"
-            android:textAllCaps="false"
-            android:textColor="@color/colorAccent"
-            android:textSize="20sp" />
+            android:layout_marginBottom="10dp"
+            style="@style/ButtonDark"/>
 
         <Button
             android:id="@+id/sing_up"
-            android:layout_width="265dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:background="@drawable/button_basic"
-            android:padding="10dp"
+            android:layout_width="match_parent"
             android:text="@string/registration"
-            android:textAllCaps="false"
-            android:textColor="@color/colorAccent"
-            android:textSize="20sp" />
-    </LinearLayout>
+            style="@style/ButtonLight"/>
 
+    </LinearLayout>
 
 </LinearLayout>

@@ -10,8 +10,8 @@ import android.widget.ImageView
 import android.widget.Toast
 
 import com.project.scratchstudio.kith_andoid.activities.HomeActivity
-import com.project.scratchstudio.kith_andoid.custom_views.CustomFontEditText
-import com.project.scratchstudio.kith_andoid.custom_views.CustomFontTextView
+import com.project.scratchstudio.kith_andoid.custom_views.to_trash.CustomFontEditText
+import com.project.scratchstudio.kith_andoid.custom_views.to_trash.CustomFontTextView
 import com.project.scratchstudio.kith_andoid.R
 import com.project.scratchstudio.kith_andoid.service.PicassoCircleTransformation
 import com.project.scratchstudio.kith_andoid.app.BaseFragment

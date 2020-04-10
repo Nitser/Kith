@@ -4,7 +4,7 @@ import android.view.View
 import android.widget.CheckBox
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
-import com.project.scratchstudio.kith_andoid.custom_views.CustomFontTextView
+import com.project.scratchstudio.kith_andoid.custom_views.to_trash.CustomFontTextView
 import com.project.scratchstudio.kith_andoid.R
 import com.project.scratchstudio.kith_andoid.network.model.board.Board
 

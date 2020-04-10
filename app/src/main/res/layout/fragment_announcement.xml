@@ -20,7 +20,7 @@
             android:layout_marginTop="15dp"
             android:layout_marginBottom="10dp">
 
-            <com.project.scratchstudio.kith_andoid.custom_views.CustomFontTextView
+            <com.project.scratchstudio.kith_andoid.custom_views.to_trash.CustomFontTextView
                 android:id="@+id/title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

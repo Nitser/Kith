@@ -4,13 +4,15 @@
     <item android:state_pressed="true" android:state_focused="false">
         <shape android:shape="oval">
             <solid android:color="@color/colorPress" />
+            <stroke android:color="@color/colorAccent" android:width="2dp"/>
             <size android:width="50dp" android:height="50dp" />
         </shape>
     </item>
 
     <item>
         <shape android:shape="oval">
-            <solid android:color="@color/colorDark" />
+            <solid android:color="@color/colorPrimary" />
+            <stroke android:color="@color/colorAccent" android:width="2dp"/>
             <size android:width="50dp" android:height="50dp" />
         </shape>
     </item>

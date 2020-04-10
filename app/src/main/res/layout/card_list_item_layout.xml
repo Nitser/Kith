@@ -41,7 +41,7 @@
                 android:layout_height="match_parent"
                 android:background="#BF144B69"/>
 
-            <com.project.scratchstudio.kith_andoid.custom_views.CustomFontTextView
+            <com.project.scratchstudio.kith_andoid.custom_views.to_trash.CustomFontTextView
                 android:id="@+id/title"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"

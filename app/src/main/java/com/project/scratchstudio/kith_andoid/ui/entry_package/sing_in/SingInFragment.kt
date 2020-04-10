@@ -10,7 +10,7 @@ import android.widget.ImageButton
 import android.widget.Toast
 import com.project.scratchstudio.kith_andoid.activities.EntryActivity
 import com.project.scratchstudio.kith_andoid.activities.HomeActivity
-import com.project.scratchstudio.kith_andoid.custom_views.CustomFontEditText
+import com.project.scratchstudio.kith_andoid.custom_views.to_trash.CustomFontEditText
 import com.project.scratchstudio.kith_andoid.R
 import com.project.scratchstudio.kith_andoid.app.BaseFragment
 import com.project.scratchstudio.kith_andoid.network.ApiClient

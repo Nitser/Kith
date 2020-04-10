@@ -30,7 +30,7 @@ import com.project.scratchstudio.kith_andoid.activities.CodeActivity
 import com.project.scratchstudio.kith_andoid.activities.EntryActivity
 import com.project.scratchstudio.kith_andoid.activities.HomeActivity
 import com.project.scratchstudio.kith_andoid.adapters.SearchAdapter
-import com.project.scratchstudio.kith_andoid.custom_views.CustomFontTextView
+import com.project.scratchstudio.kith_andoid.custom_views.to_trash.CustomFontTextView
 import com.project.scratchstudio.kith_andoid.R
 import com.project.scratchstudio.kith_andoid.service.HttpService
 import com.project.scratchstudio.kith_andoid.service.PicassoCircleTransformation

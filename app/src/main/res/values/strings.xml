@@ -25,6 +25,7 @@
     <string name="label_messages">Сообщения</string>
     <string name="label_new_password">Новый пароль</string>
     <string name="edit">Редактировать</string>
+    <string name="forgot_password">Забыли пароль?</string>
 
     <string name="signature">&#169; Знакомые 2020</string>
 

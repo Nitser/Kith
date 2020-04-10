@@ -36,7 +36,7 @@
                 android:src="@drawable/ic_left"
                 android:visibility="visible" />
 
-            <com.project.scratchstudio.kith_andoid.custom_views.CustomFontTextView
+            <com.project.scratchstudio.kith_andoid.custom_views.to_trash.CustomFontTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 customAttrs:layout_constraintTop_toTopOf="parent"
@@ -97,7 +97,7 @@
                     android:layout_height="match_parent"
                     android:background="#BF144B69"/>
 
-                <com.project.scratchstudio.kith_andoid.custom_views.CustomFontTextView
+                <com.project.scratchstudio.kith_andoid.custom_views.to_trash.CustomFontTextView
                     android:id="@+id/title"
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
