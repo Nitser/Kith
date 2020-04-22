@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/navigation"
+    app:startDestination="@id/splashFragment">
+
+    <fragment
+        android:id="@+id/splashFragment"
+        android:name="com.project.scratchstudio.kith_andoid.ui.entry_package.splash.SplashFragment"
+        android:label="SplashFragment" >
+        <action
+            android:id="@+id/action_splashFragment_to_mainFragment"
+            app:destination="@id/mainFragment"
+            app:popUpTo="@id/splashFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="com.project.scratchstudio.kith_andoid.ui.entry_package.main.MainFragment"
+        android:label="MainFragment" >
+        <action
+            android:id="@+id/action_mainFragment_to_singInFragment"
+            app:destination="@id/singInFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_singUpRefCode"
+            app:destination="@id/singUpRefCode" />
+    </fragment>
+    <fragment
+        android:id="@+id/singInFragment"
+        android:name="com.project.scratchstudio.kith_andoid.ui.entry_package.sing_in.SingInFragment"
+        android:label="SingInFragment" />
+    <fragment
+        android:id="@+id/singUpFragment"
+        android:name="com.project.scratchstudio.kith_andoid.ui.entry_package.sing_up.SingUpFragmentFirst"
+        android:label="SingUpFragment">
+        <action
+            android:id="@+id/action_singUpFragment_to_singUpFragmentSecond"
+            app:destination="@id/singUpFragmentSecond" />
+    </fragment>
+    <fragment
+        android:id="@+id/singUpFragmentSecond"
+        android:name="com.project.scratchstudio.kith_andoid.ui.entry_package.sing_up.SingUpFragmentSecond"
+        android:label="SingUpFragmentSecond" >
+        <action
+            android:id="@+id/action_singUpFragmentSecond_to_singUpFragmentThird"
+            app:destination="@id/singUpFragmentThird" />
+        <argument
+            android:name="user"
+            app:argType="com.project.scratchstudio.kith_andoid.model.UserModelView" />
+    </fragment>
+    <fragment
+        android:id="@+id/singUpFragmentThird"
+        android:name="com.project.scratchstudio.kith_andoid.ui.entry_package.sing_up.SingUpFragmentThird"
+        android:label="SingUpFragmentThird" >
+        <argument
+            android:name="user"
+            app:argType="com.project.scratchstudio.kith_andoid.model.UserModelView" />
+    </fragment>
+    <fragment
+        android:id="@+id/singUpRefCode"
+        android:name="com.project.scratchstudio.kith_andoid.ui.entry_package.sing_up.SingUpRefCodeFragment"
+        android:label="SingUpRefCode" >
+        <action
+            android:id="@+id/action_singUpRefCode_to_singUpFragment"
+            app:destination="@id/singUpFragment" />
+    </fragment>
+</navigation>

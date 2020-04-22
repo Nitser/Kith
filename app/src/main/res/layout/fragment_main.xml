@@ -36,7 +36,7 @@
             android:id="@+id/sing_up"
             android:layout_width="match_parent"
             android:text="@string/registration"
-            style="@style/ButtonLight"/>
+            style="@style/ButtonEmpty"/>
 
     </LinearLayout>
 

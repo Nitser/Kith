@@ -51,7 +51,8 @@ object ApiClient {
             val requestBuilder = original.newBuilder()
                     .addHeader("Accept", "application/json")
                     .addHeader("Content-Type", "application/json")
-                    .addHeader("Authorization", HomeActivity.mainUser!!.token!!)
+            if(Const.isEntry)
+                requestBuilder.addHeader("Authorization", HomeActivity.mainUser.token)
 
             val request = requestBuilder.build()
             chain.proceed(request)

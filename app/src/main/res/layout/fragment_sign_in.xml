@@ -5,32 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
-    android:orientation="vertical">
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <ImageButton
-            android:id="@+id/sing_in_back"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@null"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="36dp"
-            android:src="@drawable/ic_left"/>
-
-    </FrameLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:gravity="center_horizontal"
-        android:weightSum="3"
-        android:layout_marginStart="50dp"
-        android:layout_marginEnd="50dp"
-        android:layout_marginBottom="30dp">
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:weightSum="3"
+    android:layout_marginStart="50dp"
+    android:layout_marginEnd="50dp"
+    android:layout_marginBottom="30dp">
 
         <ImageView
             android:id="@+id/view2"
@@ -69,8 +49,6 @@
             style="@style/ButtonDark"
             android:text="@string/sign_in"
             android:layout_marginTop="30dp"/>
-
-    </LinearLayout>
 
 
 </LinearLayout>

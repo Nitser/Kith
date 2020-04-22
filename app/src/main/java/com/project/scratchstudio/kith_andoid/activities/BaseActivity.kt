@@ -1,9 +1,11 @@
 package com.project.scratchstudio.kith_andoid.activities
 
 import android.os.Bundle
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
+import com.google.android.material.appbar.AppBarLayout
 import com.project.scratchstudio.kith_andoid.R
 import java.util.ArrayList
 
@@ -15,7 +17,9 @@ open class BaseActivity : AppCompatActivity() {
         val stackBundles = ArrayList<Bundle>()
     }
 
-    open fun getStackBundles(): MutableList<Bundle> { return stackBundles }
+    open fun getStackBundles(): MutableList<Bundle> {
+        return stackBundles
+    }
 
     override fun onBackPressed() {
         val count = supportFragmentManager.backStackEntryCount

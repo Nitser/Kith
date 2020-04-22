@@ -45,4 +45,8 @@ class User : Serializable {
 
     @Transient
     var image: Bitmap? = null
+
+    var city: String = ""
+    var region: String = ""
+    var country: String = ""
 }

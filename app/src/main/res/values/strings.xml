@@ -8,6 +8,7 @@
     <string name="password">Пароль</string>
     <string name="Name">Имя</string>
     <string name="lastName">Фамилия</string>
+    <string name="middleName">Отчество</string>
     <string name="email">Эл. почта</string>
     <string name="phone">Телефон</string>
     <string name="refCode">Реферальный код</string>
@@ -60,4 +61,20 @@
     <string name="load_photo">Загрузить фото</string>
     <string name="cost">Стоимость</string>
     <string name="title">Заголовок</string>
+
+<!--Registration-->
+    <string name="registration_firstName">Имя*</string>
+    <string name="registration_lastName">Фамилия*</string>
+    <string name="registration_middleName">Отчество</string>
+    <string name="registration_activity">Сфера деятельности</string>
+    <string name="registration_next">Далее</string>
+    <string name="registration_done">Готово</string>
+    <string name="registration_email">Email*</string>
+    <string name="registration_login">Логин*</string>
+    <string name="registration_password">Пароль*</string>
+    <string name="registration_doublePassword">Пароль повторно*</string>
+    <string name="registration_country">Страна</string>
+    <string name="registration_region">Регион</string>
+    <string name="registration_city">Город</string>
+    <string name="registration_phone">Телефон*</string>
 </resources>

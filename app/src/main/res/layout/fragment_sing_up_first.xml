@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:id="@+id/root"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:padding="40dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorAccent">
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <include
+                android:id="@+id/photo"
+                layout="@layout/custom_circle_image_view" />
+
+        </FrameLayout>
+
+        <EditText
+            android:id="@+id/first_name"
+            style="@style/FieldLight"
+            android:layout_marginTop="40dp"
+            android:hint="@string/registration_firstName"
+            android:inputType="text" />
+
+        <EditText
+            android:id="@+id/last_name"
+            style="@style/FieldLight"
+            android:layout_marginTop="25dp"
+            android:hint="@string/registration_lastName"
+            android:inputType="text" />
+
+        <EditText
+            android:id="@+id/middle_name"
+            style="@style/FieldLight"
+            android:layout_marginTop="25dp"
+            android:hint="@string/registration_middleName"
+            android:inputType="text" />
+
+        <EditText
+            android:id="@+id/organisation"
+            style="@style/FieldLight"
+            android:layout_marginTop="25dp"
+            android:hint="@string/registration_activity"
+            android:inputType="text" />
+
+        <Button
+            android:id="@+id/next"
+            android:layout_marginTop="40dp"
+            android:text="@string/registration_next"
+            style="@style/ButtonLight"/>
+
+    </LinearLayout>
+
+</layout>

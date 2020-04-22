@@ -1,7 +1,8 @@
 package com.project.scratchstudio.kith_andoid.app
 
 object Const {
-    const val BASE_URL = "http://kith.ga/"
+    var isEntry = false
+    const val BASE_URL = "http://znakomye.com/"
     const val APP_URL = "https://play.google.com/store/apps/details?id=com.project.scratchstudio.kith"
 
     fun getErrorMessage(code: Int): String {

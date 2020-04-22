@@ -8,11 +8,13 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.appbar.AppBarLayout
+import com.project.scratchstudio.kith_andoid.R
 import com.project.scratchstudio.kith_andoid.activities.EntryActivity
 import com.project.scratchstudio.kith_andoid.activities.HomeActivity
-import com.project.scratchstudio.kith_andoid.custom_views.to_trash.CustomFontEditText
-import com.project.scratchstudio.kith_andoid.R
 import com.project.scratchstudio.kith_andoid.app.BaseFragment
+import com.project.scratchstudio.kith_andoid.custom_views.to_trash.CustomFontEditText
 import com.project.scratchstudio.kith_andoid.network.ApiClient
 import com.project.scratchstudio.kith_andoid.network.apiService.EntryApi
 import com.project.scratchstudio.kith_andoid.network.model.entry.EntryResponse
@@ -28,6 +30,7 @@ class SingInFragment : BaseFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         entryApi = ApiClient.getClient(context!!).create<EntryApi>(EntryApi::class.java)
+        (activity as AppCompatActivity).supportActionBar!!.title = ""
         return inflater.inflate(R.layout.fragment_sign_in, container, false)
     }
 
@@ -38,7 +41,6 @@ class SingInFragment : BaseFragment() {
 
     private fun initButtons(view: View) {
         view.findViewById<Button>(R.id.sing_in).setOnClickListener(this::signInButton)
-        view.findViewById<ImageButton>(R.id.sing_in_back).setOnClickListener(this::onClickBack)
     }
 
     fun signInButton(view: View) {

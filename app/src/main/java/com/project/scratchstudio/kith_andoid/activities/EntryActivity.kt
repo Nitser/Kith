@@ -3,13 +3,12 @@ package com.project.scratchstudio.kith_andoid.activities
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
+import androidx.navigation.findNavController
+import androidx.navigation.ui.NavigationUI
 import com.project.scratchstudio.kith_andoid.R
-import com.project.scratchstudio.kith_andoid.app.FragmentType
 import com.project.scratchstudio.kith_andoid.service.internal_storage.InternalStorageService
 import com.project.scratchstudio.kith_andoid.service.internal_storage.get_internal_data.GetCountData
 import com.project.scratchstudio.kith_andoid.service.internal_storage.get_internal_data.GetUserIdAndToken
-import com.project.scratchstudio.kith_andoid.ui.entry_package.main.MainFragment
-import com.project.scratchstudio.kith_andoid.ui.entry_package.splash.SplashFragment
 
 class EntryActivity : BaseActivity() {
 
@@ -18,9 +17,15 @@ class EntryActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_entry)
-        replaceFragment(SplashFragment.newInstance(), FragmentType.SPLASH.name)
+        val navController = findNavController(R.id.nav_host_fragment)
+        NavigationUI.setupActionBarWithNavController(this, navController)
         loadUserFromStorage()
         loadCountFromStorage()
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        val navController = findNavController(R.id.nav_host_fragment)
+        return navController.navigateUp()
     }
 
     private fun loadUserFromStorage() {
@@ -35,7 +40,7 @@ class EntryActivity : BaseActivity() {
                     }, SPLASH_DISPLAY_LENGTH.toLong())
                 } else {
                     Handler().postDelayed({
-                        replaceFragment(MainFragment.newInstance(), FragmentType.MAIN.name)
+                        findNavController(R.id.nav_host_fragment).navigate(R.id.action_splashFragment_to_mainFragment)
                     }, SPLASH_DISPLAY_LENGTH.toLong())
                 }
             }

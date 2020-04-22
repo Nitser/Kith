@@ -1,6 +1,7 @@
 package com.project.scratchstudio.kith_andoid.network.apiService
 
 import com.project.scratchstudio.kith_andoid.network.model.BaseResponse
+import com.project.scratchstudio.kith_andoid.network.model.NewBaseResponse
 import com.project.scratchstudio.kith_andoid.network.model.entry.EntryResponse
 import com.project.scratchstudio.kith_andoid.network.model.favorite.FavoriteResponse
 import io.reactivex.Single
@@ -26,10 +27,6 @@ interface EntryApi {
                @Field("user_position") position: String, @Field("user_description") description: String,
                @Field("photo") photo: String?): Single<EntryResponse>
 
-    @POST("api/check_referral")
-    @FormUrlEncoded
-    fun checkReferralCode(@Field("user_referral") referralCode: String): Single<EntryResponse>
-
     @POST("api/users/confirm")
     @FormUrlEncoded
     fun sendSMS(@Field("user_login") login: String): Single<BaseResponse>
@@ -38,4 +35,12 @@ interface EntryApi {
     @FormUrlEncoded
     fun checkSMS(@Field("user_login") login: String, @Field("user_password") password: String,
                  @Field("sms_code") smsCode: String): Single<EntryResponse>
+
+    @POST("api/signup/check")
+    @FormUrlEncoded
+    fun checkField(@Field("field") field: String, @Field("value") value: String): Single<NewBaseResponse>
+
+    @POST("api/users/referral")
+    @FormUrlEncoded
+    fun checkReferralCode(@Field("user_referral") referralCode: String): Single<NewBaseResponse>
 }

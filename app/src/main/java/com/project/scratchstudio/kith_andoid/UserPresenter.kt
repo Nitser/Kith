@@ -159,7 +159,7 @@ class UserPresenter(private val context: Context) {
 
     companion object {
 
-        private lateinit var userApi: UserApi
+        internal lateinit var userApi: UserApi
         private val disposable = CompositeDisposable()
     }
 
