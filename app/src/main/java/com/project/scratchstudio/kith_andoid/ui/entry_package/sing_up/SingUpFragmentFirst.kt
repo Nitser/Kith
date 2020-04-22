@@ -9,6 +9,7 @@ import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
@@ -43,6 +44,9 @@ class SingUpFragmentFirst : BaseFragment() {
 
     private fun onClickNext(view: View) {
         if (checkImportantFields()) {
+            val imm = context!!.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(binding.root.windowToken, 0)
+
             val user = parseUser()
             view.findNavController().navigate(SingUpFragmentFirstDirections.actionSingUpFragmentToSingUpFragmentSecond(user))
         }

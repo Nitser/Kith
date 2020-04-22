@@ -11,26 +11,28 @@
         android:layout_height="match_parent"
         android:background="@color/colorAccent">
 
-        <EditText
+        <AutoCompleteTextView
             android:id="@+id/country"
             style="@style/FieldLight"
             android:layout_marginTop="40dp"
             android:hint="@string/registration_country"
             android:inputType="text" />
 
-        <EditText
+        <AutoCompleteTextView
             android:id="@+id/region"
             style="@style/FieldLight"
             android:layout_marginTop="25dp"
             android:hint="@string/registration_region"
-            android:inputType="text" />
+            android:inputType="text"
+            android:visibility="gone"/>
 
-        <EditText
+        <AutoCompleteTextView
             android:id="@+id/city"
             style="@style/FieldLight"
             android:layout_marginTop="25dp"
             android:hint="@string/registration_city"
-            android:inputType="text" />
+            android:inputType="text"
+            android:visibility="gone"/>
 
         <EditText
             android:id="@+id/phone"

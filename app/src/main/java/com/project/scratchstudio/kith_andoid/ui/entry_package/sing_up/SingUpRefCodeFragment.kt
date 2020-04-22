@@ -1,10 +1,12 @@
 package com.project.scratchstudio.kith_andoid.ui.entry_package.sing_up
 
 import android.accounts.NetworkErrorException
+import android.app.Activity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import com.project.scratchstudio.kith_andoid.R
@@ -39,6 +41,9 @@ class SingUpRefCodeFragment : BaseFragment() {
     private fun checkReferralCode(view: View) {
         presenter.checkReferralCode(object : SingUpPresenter.GetUserCallback {
             override fun onSuccess(baseResponse: NewBaseResponse) {
+                val imm = context!!.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(binding.root.windowToken, 0)
+
                 view.findNavController().navigate(SingUpRefCodeFragmentDirections.actionSingUpRefCodeToSingUpFragment())
             }
 

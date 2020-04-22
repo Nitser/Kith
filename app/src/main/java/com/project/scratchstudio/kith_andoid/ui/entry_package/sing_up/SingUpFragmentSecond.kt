@@ -1,10 +1,12 @@
 package com.project.scratchstudio.kith_andoid.ui.entry_package.sing_up
 
 import android.accounts.NetworkErrorException
+import android.app.Activity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import com.project.scratchstudio.kith_andoid.R
@@ -43,6 +45,9 @@ class SingUpFragmentSecond : BaseFragment() {
                         override fun onSuccess(baseResponse: NewBaseResponse) {
                             if (checkPasswordLength()) {
                                 if (editTextBehavior.equalsFieldsWithText(binding.password, binding.doublePassword, "Пароли не совпадают")) {
+                                    val imm = context!!.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+                                    imm.hideSoftInputFromWindow(binding.root.windowToken, 0)
+
                                     parseUser()
                                     view.findNavController().navigate(SingUpFragmentSecondDirections.actionSingUpFragmentSecondToSingUpFragmentThird(user))
                                 }

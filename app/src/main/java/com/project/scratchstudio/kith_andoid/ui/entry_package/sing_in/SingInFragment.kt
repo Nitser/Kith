@@ -6,10 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.ImageButton
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.appbar.AppBarLayout
+import androidx.navigation.Navigation
 import com.project.scratchstudio.kith_andoid.R
 import com.project.scratchstudio.kith_andoid.activities.EntryActivity
 import com.project.scratchstudio.kith_andoid.activities.HomeActivity
@@ -18,6 +18,7 @@ import com.project.scratchstudio.kith_andoid.custom_views.to_trash.CustomFontEdi
 import com.project.scratchstudio.kith_andoid.network.ApiClient
 import com.project.scratchstudio.kith_andoid.network.apiService.EntryApi
 import com.project.scratchstudio.kith_andoid.network.model.entry.EntryResponse
+import com.project.scratchstudio.kith_andoid.ui.entry_package.main.MainFragmentDirections
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableSingleObserver
@@ -41,6 +42,9 @@ class SingInFragment : BaseFragment() {
 
     private fun initButtons(view: View) {
         view.findViewById<Button>(R.id.sing_in).setOnClickListener(this::signInButton)
+        view.findViewById<TextView>(R.id.forgotten_password).setOnClickListener(
+                Navigation.createNavigateOnClickListener(SingInFragmentDirections.actionSingInFragmentToPasswordRecoveryEnterLoginOrEmailFragment())
+        )
     }
 
     fun signInButton(view: View) {

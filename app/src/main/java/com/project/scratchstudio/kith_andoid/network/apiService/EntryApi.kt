@@ -2,6 +2,7 @@ package com.project.scratchstudio.kith_andoid.network.apiService
 
 import com.project.scratchstudio.kith_andoid.network.model.BaseResponse
 import com.project.scratchstudio.kith_andoid.network.model.NewBaseResponse
+import com.project.scratchstudio.kith_andoid.network.model.entry.CountriesResponse
 import com.project.scratchstudio.kith_andoid.network.model.entry.EntryResponse
 import com.project.scratchstudio.kith_andoid.network.model.favorite.FavoriteResponse
 import io.reactivex.Single
@@ -9,6 +10,8 @@ import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.PUT
+import retrofit2.http.Query
 
 interface EntryApi {
 
@@ -43,4 +46,20 @@ interface EntryApi {
     @POST("api/users/referral")
     @FormUrlEncoded
     fun checkReferralCode(@Field("user_referral") referralCode: String): Single<NewBaseResponse>
+
+    @GET("api/countries")
+    fun getCountries(@Query("search") search: String, @Query("offset") offset: Int, @Query("size") size: Int): Single<CountriesResponse>
+
+    @POST("api/password/recovery")
+    @FormUrlEncoded
+    fun sendConfirmCode(@Field("user") user: String): Single<NewBaseResponse>
+
+    @POST("api/password/confirm")
+    @FormUrlEncoded
+    fun checkConfirmCode(@Field("user_id") userId: Int, @Field("email_code") confirmCode: String): Single<NewBaseResponse>
+
+    @PUT("api/password/change")
+    @FormUrlEncoded
+    fun changeNewPassword(@Field("user_id") userId: Int, @Field("first_password") password: String,
+                          @Field("second_password") doublePassword: String): Single<NewBaseResponse>
 }

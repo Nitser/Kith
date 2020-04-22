@@ -62,6 +62,19 @@
     <string name="cost">Стоимость</string>
     <string name="title">Заголовок</string>
 
+<!--Password recovery-->
+    <string name="password_recovery">Восстановление пароля</string>
+    <string name="password_recovery_enter_login_or_email">Введите ваш логин или email</string>
+    <string name="password_recovery_enter_login_or_email_hint">Логин или email</string>
+    <string name="password_recovery_enter_confirmation_code">Введите полученный код</string>
+    <string name="password_recovery_enter_confirmation_code_hint">Полученный код</string>
+    <string name="password_recovery_reset_confirmation_code">Отправить код повторно</string>
+    <string name="password_recovery_enter_new_password">Введите новый пароль</string>
+    <string name="password_recovery_new_password_hint">Новый пароль</string>
+    <string name="password_recovery_confirm_new_password_hint">Пароль повторно</string>
+    <string name="password_recovery_next">Далее</string>
+    <string name="password_recovery_change">Изменить</string>
+
 <!--Registration-->
     <string name="registration_firstName">Имя*</string>
     <string name="registration_lastName">Фамилия*</string>

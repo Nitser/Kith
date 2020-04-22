@@ -3,7 +3,7 @@
     <style name="KithAppTheme" parent="Theme.AppCompat">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimary</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorAccent">@color/colorPrimary</item>
         <item name="actionBarStyle">@style/KithDarkActionBarTheme</item>
         <item name="android:actionBarStyle">@style/KithDarkActionBarTheme</item>
     </style>
@@ -31,6 +31,13 @@
 
     <style name="CustomReferralCodeText" parent="TextAppearance.AppCompat.Button">
         <item name="android:textSize">28sp</item>
+        <item name="android:fontFamily">@font/intro_regular</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@color/colorAccent</item>
+    </style>
+
+    <style name="CustomRecoveryPasswordCodeText" parent="TextAppearance.AppCompat.Button">
+        <item name="android:textSize">24sp</item>
         <item name="android:fontFamily">@font/intro_regular</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:textColor">@color/colorAccent</item>

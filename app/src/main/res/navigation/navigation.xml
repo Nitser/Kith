@@ -29,7 +29,11 @@
     <fragment
         android:id="@+id/singInFragment"
         android:name="com.project.scratchstudio.kith_andoid.ui.entry_package.sing_in.SingInFragment"
-        android:label="SingInFragment" />
+        android:label="SingInFragment" >
+        <action
+            android:id="@+id/action_singInFragment_to_passwordRecoveryEnterLoginOrEmailFragment"
+            app:destination="@id/passwordRecoveryEnterLoginOrEmailFragment" />
+    </fragment>
     <fragment
         android:id="@+id/singUpFragment"
         android:name="com.project.scratchstudio.kith_andoid.ui.entry_package.sing_up.SingUpFragmentFirst"
@@ -64,5 +68,39 @@
         <action
             android:id="@+id/action_singUpRefCode_to_singUpFragment"
             app:destination="@id/singUpFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/passwordRecoveryEnterLoginOrEmailFragment"
+        android:name="com.project.scratchstudio.kith_andoid.ui.entry_package.password_recovery.PasswordRecoveryEnterLoginOrEmailFragment"
+        android:label="PasswordRecoveryEnterLoginOrEmailFragment" >
+        <action
+            android:id="@+id/action_passwordRecoveryEnterLoginOrEmailFragment_to_passwordRecoveryEnterConfirmCodeFragment"
+            app:destination="@id/passwordRecoveryEnterConfirmCodeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/passwordRecoveryEnterConfirmCodeFragment"
+        android:name="com.project.scratchstudio.kith_andoid.ui.entry_package.password_recovery.PasswordRecoveryEnterConfirmCodeFragment"
+        android:label="PasswordRecoveryEnterConfirmCodeFragment" >
+        <action
+            android:id="@+id/action_passwordRecoveryEnterConfirmCodeFragment_to_passwordRecoveryEnterNewPasswordFragment"
+            app:destination="@id/passwordRecoveryEnterNewPasswordFragment" />
+        <argument
+            android:name="userId"
+            app:argType="integer" />
+        <argument
+            android:name="loginOrEmail"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/passwordRecoveryEnterNewPasswordFragment"
+        android:name="com.project.scratchstudio.kith_andoid.ui.entry_package.password_recovery.PasswordRecoveryEnterNewPasswordFragment"
+        android:label="PasswordRecoveryEnterNewPasswordFragment" >
+        <argument android:name="userId"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_passwordRecoveryEnterNewPasswordFragment_to_singInFragment"
+            app:destination="@id/singInFragment"
+            app:popUpTo="@+id/singInFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 </navigation>
