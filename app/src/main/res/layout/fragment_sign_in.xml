@@ -42,7 +42,8 @@
             android:layout_gravity="end"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
-            style="@style/CustomForgetPasswordText"/>
+            android:textSize="14dp"
+            style="@style/ButtonEmpty"/>
 
         <Button
             android:id="@+id/sing_in"

@@ -2,9 +2,11 @@ package com.project.scratchstudio.kith_andoid.network.apiService
 
 import com.project.scratchstudio.kith_andoid.network.model.BaseResponse
 import com.project.scratchstudio.kith_andoid.network.model.NewBaseResponse
-import com.project.scratchstudio.kith_andoid.network.model.entry.CountriesResponse
+import com.project.scratchstudio.kith_andoid.network.model.city.CitiesResponse
+import com.project.scratchstudio.kith_andoid.network.model.country.CountriesResponse
 import com.project.scratchstudio.kith_andoid.network.model.entry.EntryResponse
 import com.project.scratchstudio.kith_andoid.network.model.favorite.FavoriteResponse
+import com.project.scratchstudio.kith_andoid.network.model.region.RegionsResponse
 import io.reactivex.Single
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -49,6 +51,12 @@ interface EntryApi {
 
     @GET("api/countries")
     fun getCountries(@Query("search") search: String, @Query("offset") offset: Int, @Query("size") size: Int): Single<CountriesResponse>
+
+    @GET("api/regions")
+    fun getRegions(@Query("country") countryId: Int, @Query("search") search: String, @Query("offset") offset: Int, @Query("size") size: Int): Single<RegionsResponse>
+
+    @GET("api/cities")
+    fun getCities(@Query("region") regionId: Int, @Query("search") search: String, @Query("offset") offset: Int, @Query("size") size: Int): Single<CitiesResponse>
 
     @POST("api/password/recovery")
     @FormUrlEncoded

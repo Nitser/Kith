@@ -37,6 +37,7 @@ class PasswordRecoveryEnterNewPasswordFragment : BaseFragment() {
         if (checkLegalPassword()) {
             presenter.changeNewPassword(object : PasswordRecoveryPresenter.SendCodeCallback {
                 override fun onSuccess(baseResponse: NewBaseResponse) {
+                    activity!!.currentFocus?.clearFocus()
                     Toast.makeText(context, "Пароль изменен", Toast.LENGTH_SHORT).show()
                     val imm = context!!.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
                     imm.hideSoftInputFromWindow(view.windowToken, 0)

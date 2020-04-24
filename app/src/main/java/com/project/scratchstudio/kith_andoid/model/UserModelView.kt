@@ -31,7 +31,7 @@ import java.io.Serializable
     var photo = ""
 
     //    @Transient
-    var image: Bitmap? = null
+    var photoBitmap: Bitmap? = null
 
     var city = ""
     var region = ""

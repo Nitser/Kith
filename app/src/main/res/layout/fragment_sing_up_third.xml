@@ -11,22 +11,23 @@
         android:layout_height="match_parent"
         android:background="@color/colorAccent">
 
-        <AutoCompleteTextView
+        <com.project.scratchstudio.kith_andoid.custom_views.CustomAutoCompleteTextView
             android:id="@+id/country"
             style="@style/FieldLight"
             android:layout_marginTop="40dp"
             android:hint="@string/registration_country"
-            android:inputType="text" />
+            android:inputType="text"
+            android:completionThreshold="1"/>
 
-        <AutoCompleteTextView
+        <com.project.scratchstudio.kith_andoid.custom_views.CustomAutoCompleteTextView
             android:id="@+id/region"
             style="@style/FieldLight"
             android:layout_marginTop="25dp"
             android:hint="@string/registration_region"
             android:inputType="text"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
-        <AutoCompleteTextView
+        <com.project.scratchstudio.kith_andoid.custom_views.CustomAutoCompleteTextView
             android:id="@+id/city"
             style="@style/FieldLight"
             android:layout_marginTop="25dp"

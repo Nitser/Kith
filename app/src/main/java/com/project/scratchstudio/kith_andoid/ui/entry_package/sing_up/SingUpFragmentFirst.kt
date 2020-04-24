@@ -63,8 +63,16 @@ class SingUpFragmentFirst : BaseFragment() {
             lastName = binding.lastName.text.toString()
             middleName = binding.middleName.text.toString()
             position = binding.organisation.text.toString()
+            photoBitmap = currentBitmap
         }
         return user
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (currentBitmap != null) {
+            binding.photo.findViewById<CircleImageView>(R.id.custom_circle_image_view_photo).setImageBitmap(currentBitmap)
+        }
     }
 
     private fun chooseImageButton(view: View) {

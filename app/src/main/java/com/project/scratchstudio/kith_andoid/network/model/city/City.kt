@@ -1,9 +1,13 @@
-package com.project.scratchstudio.kith_andoid.network.model.entry
+package com.project.scratchstudio.kith_andoid.network.model.city
 
 import com.google.gson.annotations.SerializedName
 import com.project.scratchstudio.kith_andoid.network.model.BaseResponse
 
-class Country : BaseResponse() {
+class City : BaseResponse() {
+
+//    "important": false,
+//    "region": 1011109,
+//    "country": 1
 
     @SerializedName("id")
     var id: Int = 0
@@ -13,8 +17,5 @@ class Country : BaseResponse() {
 
     @SerializedName("name_native")
     lateinit var nameRu: String
-
-    @SerializedName("phone_code")
-    lateinit var phoneCode: String
 
 }

@@ -76,6 +76,7 @@
     <string name="password_recovery_change">Изменить</string>
 
 <!--Registration-->
+    <string name="registration_ref_code_hint">Реферальный код знакомого</string>
     <string name="registration_firstName">Имя*</string>
     <string name="registration_lastName">Фамилия*</string>
     <string name="registration_middleName">Отчество</string>

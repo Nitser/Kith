@@ -8,6 +8,27 @@
             <LayoutPositions>
               <option name="myPositions">
                 <map>
+                  <entry key="checkSmsFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="1180" />
+                            <option name="y" value="162" />
+                          </Point>
+                        </option>
+                        <option name="myPositions">
+                          <map>
+                            <entry key="action_checkSmsFragment_to_singInFragment">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                          </map>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
                   <entry key="mainFragment">
                     <value>
                       <LayoutPositions>
@@ -43,6 +64,15 @@
                             <option name="y" value="-156" />
                           </Point>
                         </option>
+                        <option name="myPositions">
+                          <map>
+                            <entry key="action_passwordRecoveryEnterConfirmCodeFragment_to_passwordRecoveryEnterNewPasswordFragment">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                          </map>
+                        </option>
                       </LayoutPositions>
                     </value>
                   </entry>
@@ -54,6 +84,15 @@
                             <option name="x" value="499" />
                             <option name="y" value="-158" />
                           </Point>
+                        </option>
+                        <option name="myPositions">
+                          <map>
+                            <entry key="action_passwordRecoveryEnterLoginOrEmailFragment_to_passwordRecoveryEnterConfirmCodeFragment">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                          </map>
                         </option>
                       </LayoutPositions>
                     </value>
@@ -67,6 +106,15 @@
                             <option name="y" value="-154" />
                           </Point>
                         </option>
+                        <option name="myPositions">
+                          <map>
+                            <entry key="action_passwordRecoveryEnterNewPasswordFragment_to_singInFragment">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                          </map>
+                        </option>
                       </LayoutPositions>
                     </value>
                   </entry>
@@ -78,6 +126,15 @@
                             <option name="x" value="301" />
                             <option name="y" value="-163" />
                           </Point>
+                        </option>
+                        <option name="myPositions">
+                          <map>
+                            <entry key="action_singInFragment_to_passwordRecoveryEnterLoginOrEmailFragment">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                          </map>
                         </option>
                       </LayoutPositions>
                     </value>
@@ -132,6 +189,15 @@
                             <option name="x" value="958" />
                             <option name="y" value="159" />
                           </Point>
+                        </option>
+                        <option name="myPositions">
+                          <map>
+                            <entry key="action_singUpFragmentThird_to_checkSmsFragment">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                          </map>
                         </option>
                       </LayoutPositions>
                     </value>
