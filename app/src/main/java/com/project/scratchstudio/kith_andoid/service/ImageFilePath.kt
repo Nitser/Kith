@@ -11,8 +11,6 @@ import android.os.Environment
 import android.provider.DocumentsContract
 import android.provider.MediaStore
 
-@SuppressLint("NewApi")
-@TargetApi(Build.VERSION_CODES.KITKAT)
 object ImageFilePath {
 
     private var nopath = "Select Video Only"

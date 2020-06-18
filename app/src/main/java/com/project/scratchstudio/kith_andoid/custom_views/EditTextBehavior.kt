@@ -19,11 +19,11 @@ class EditTextBehavior(val context: Context) {
 
     fun equalsFieldsWithText(editText1: EditText, editText2: EditText, errorText: String): Boolean {
         return if (editText1.text.toString() != editText2.text.toString()) {
-            fieldError(editText1)
+//            fieldError(editText1)
             fieldErrorWithText(editText2, errorText)
             false
         } else {
-            fieldClear(editText1)
+//            fieldClear(editText1)
             fieldClear(editText2)
             true
         }

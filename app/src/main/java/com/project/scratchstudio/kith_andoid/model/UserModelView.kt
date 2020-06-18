@@ -2,6 +2,7 @@ package com.project.scratchstudio.kith_andoid.model
 
 import android.graphics.Bitmap
 import androidx.annotation.Keep
+import java.io.File
 import java.io.Serializable
 
 @Keep class UserModelView : Serializable {
@@ -10,7 +11,7 @@ import java.io.Serializable
     var token = ""
     var password = ""
     var url = ""
-    var usersCount: Int = 0
+    var usersCount = 0
 
     var firstName = ""
 
@@ -28,12 +29,16 @@ import java.io.Serializable
 
     var email = ""
 
-    var photo = ""
+    var photo: String? = ""
+    var photoPath = ""
+    var photoFile : File? = null
 
-    //    @Transient
     var photoBitmap: Bitmap? = null
 
-    var city = ""
-    var region = ""
-    var country = ""
+    var cityId: Int? = 0
+    var regionId: Int? = 0
+    var countryId: Int? = 0
+    var invitedUserId = 0
+
+    var referralCode = ""
 }

@@ -1,14 +1,15 @@
 package com.project.scratchstudio.kith_andoid.network.apiService
 
-import com.project.scratchstudio.kith_andoid.network.model.BaseResponse
 import com.project.scratchstudio.kith_andoid.network.model.NewBaseResponse
 import com.project.scratchstudio.kith_andoid.network.model.city.CitiesResponse
 import com.project.scratchstudio.kith_andoid.network.model.country.CountriesResponse
-import com.project.scratchstudio.kith_andoid.network.model.entry.EntryResponse
 import com.project.scratchstudio.kith_andoid.network.model.favorite.FavoriteResponse
 import com.project.scratchstudio.kith_andoid.network.model.region.RegionsResponse
+import com.project.scratchstudio.kith_andoid.network.model.user.User
+import com.project.scratchstudio.kith_andoid.network.model.user.UserSingIn
 import io.reactivex.Single
 import retrofit2.http.Field
+import retrofit2.http.FieldMap
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -17,29 +18,24 @@ import retrofit2.http.Query
 
 interface EntryApi {
 
-    @GET("api/users/count")
-    fun numberOfUsers(): Single<FavoriteResponse>
-
-    @POST("api/singin")
+    @POST("api/auth")
     @FormUrlEncoded
-    fun singIn(@Field("login") login: String, @Field("password") password: String): Single<EntryResponse>
+    fun singIn(@Field("login") login: String, @Field("password") password: String): Single<UserSingIn>
 
-    @POST("api/singup")
+    //    @Multipart
+    @POST("api/signup")
     @FormUrlEncoded
-    fun singUp(@Field("user_firstname") firstName: String, @Field("user_lastname") lastName: String,
-               @Field("user_middlename") middleName: String, @Field("user_phone") phone: String, @Field("user_login") login: String,
-               @Field("user_password") password: String, @Field("invitation_user_id") invitationUserId: Int,
-               @Field("user_position") position: String, @Field("user_description") description: String,
-               @Field("photo") photo: String?): Single<EntryResponse>
+//    @JvmSuppressWildcards
+    fun singUp(@FieldMap optionsString: Map<String, String>): Single<NewBaseResponse>
 
+    //    , @Part optionsFile: List<MultipartBody.Part>
     @POST("api/users/confirm")
     @FormUrlEncoded
-    fun sendSMS(@Field("user_login") login: String): Single<BaseResponse>
+    fun sendSMS(@Field("user_id") userId: Int): Single<NewBaseResponse>
 
     @POST("api/users/checkcode")
     @FormUrlEncoded
-    fun checkSMS(@Field("user_login") login: String, @Field("user_password") password: String,
-                 @Field("sms_code") smsCode: String): Single<EntryResponse>
+    fun checkSMS(@Field("user_id") userId: Int, @Field("sms_code") smsCode: String): Single<NewBaseResponse>
 
     @POST("api/signup/check")
     @FormUrlEncoded

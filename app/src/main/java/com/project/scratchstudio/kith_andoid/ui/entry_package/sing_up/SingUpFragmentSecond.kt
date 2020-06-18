@@ -7,9 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
-import com.project.scratchstudio.kith_andoid.R
 import com.project.scratchstudio.kith_andoid.app.BaseFragment
 import com.project.scratchstudio.kith_andoid.custom_views.EditTextBehavior
 import com.project.scratchstudio.kith_andoid.databinding.FragmentSingUpSecondBinding
@@ -29,7 +27,6 @@ class SingUpFragmentSecond : BaseFragment() {
         presenter = SingUpPresenter(context!!)
         editTextBehavior = EditTextBehavior(context!!)
         user = SingUpFragmentSecondArgs.fromBundle(arguments!!).user
-        (activity as AppCompatActivity).supportActionBar!!.title = resources.getString(R.string.registration)
         return binding.root
     }
 
@@ -59,7 +56,7 @@ class SingUpFragmentSecond : BaseFragment() {
                         override fun onError(networkError: NetworkErrorException) {
                             editTextBehavior.fieldErrorWithText(binding.login, "Логин уже занят")
                         }
-                    },"login", binding.login.text.toString() )
+                    }, "login", binding.login.text.toString())
                 }
 
                 override fun onError(networkError: NetworkErrorException) {

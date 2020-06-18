@@ -9,4 +9,8 @@ open class BaseResponse {
     @SerializedName("status")
     var status: Boolean = false
         internal set
+
+    @SerializedName("message")
+    var message: String = ""
+        internal set
 }

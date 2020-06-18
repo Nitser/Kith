@@ -1,7 +1,9 @@
 package com.project.scratchstudio.kith_andoid.ui.entry_package.sing_up
 
+import android.Manifest
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
@@ -11,7 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageButton
-import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.navigation.findNavController
 import com.project.scratchstudio.kith_andoid.R
 import com.project.scratchstudio.kith_andoid.app.BaseFragment
@@ -20,6 +22,7 @@ import com.project.scratchstudio.kith_andoid.databinding.FragmentSingUpFirstBind
 import com.project.scratchstudio.kith_andoid.model.UserModelView
 import com.project.scratchstudio.kith_andoid.service.PhotoService
 import de.hdodenhof.circleimageview.CircleImageView
+import java.io.File
 import java.io.FileNotFoundException
 import java.io.InputStream
 
@@ -28,12 +31,14 @@ class SingUpFragmentFirst : BaseFragment() {
     private lateinit var binding: FragmentSingUpFirstBinding
     private var currentBitmap: Bitmap? = null
     lateinit var editTextBehavior: EditTextBehavior
+    private lateinit var user: UserModelView
+    private val READ_EXTERNAL_STORAGE_REQUEST_CODE = 101
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentSingUpFirstBinding.inflate(layoutInflater)
         initButtons()
+        user = SingUpFragmentFirstArgs.fromBundle(arguments!!).user
         editTextBehavior = EditTextBehavior(context!!)
-        (activity as AppCompatActivity).supportActionBar!!.title = resources.getString(R.string.registration)
         return binding.root
     }
 
@@ -57,7 +62,6 @@ class SingUpFragmentFirst : BaseFragment() {
     }
 
     private fun parseUser(): UserModelView {
-        val user = UserModelView()
         with(user) {
             firstName = binding.firstName.text.toString()
             lastName = binding.lastName.text.toString()
@@ -76,21 +80,45 @@ class SingUpFragmentFirst : BaseFragment() {
     }
 
     private fun chooseImageButton(view: View) {
+        if (ContextCompat.checkSelfPermission(context!!, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), READ_EXTERNAL_STORAGE_REQUEST_CODE)
+            if (ContextCompat.checkSelfPermission(context!!, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                choosePhoto()
+            }
+        } else {
+            choosePhoto()
+        }
+    }
+
+    private fun choosePhoto() {
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         startActivityForResult(intent, 0)
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        when (requestCode) {
+            READ_EXTERNAL_STORAGE_REQUEST_CODE -> {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    choosePhoto()
+                }
+            }
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
         super.onActivityResult(requestCode, resultCode, intent)
         if (requestCode == 0 && resultCode == Activity.RESULT_OK && intent != null && intent.data != null) {
             val imageUri = intent.data
+            user.photoPath = imageUri!!.path.toString()
+            user.photoFile = File(imageUri.path.toString())
+
             val imageStream: InputStream?
             val photoService = PhotoService(context!!)
             try {
-                imageStream = activity?.contentResolver?.openInputStream(imageUri!!)
+                imageStream = activity?.contentResolver?.openInputStream(imageUri)
                 currentBitmap = BitmapFactory.decodeStream(imageStream)
                 if (currentBitmap != null) {
-                    currentBitmap = photoService.changePhoto(currentBitmap!!, imageUri!!)
+                    currentBitmap = photoService.changePhoto(currentBitmap!!, imageUri)
                     currentBitmap = photoService.compressPhoto(currentBitmap!!)
                     binding.photo.findViewById<CircleImageView>(R.id.custom_circle_image_view_photo).setImageBitmap(currentBitmap)
                 }

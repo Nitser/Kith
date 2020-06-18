@@ -7,7 +7,7 @@ import java.util.ArrayList
 
 class UserListResponse : BaseResponse() {
 
-    @SerializedName("users")
+    @SerializedName("list")
     lateinit var users: ArrayList<User>
 
 }

@@ -1,118 +1,140 @@
 package com.project.scratchstudio.kith_andoid.activities
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-
+import android.view.View
+import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
+import androidx.activity.viewModels
+import androidx.navigation.findNavController
+import androidx.navigation.ui.NavigationUI
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.project.scratchstudio.kith_andoid.R
-import com.project.scratchstudio.kith_andoid.ui.home_package.BoardInfo.BoardInfoFragment
-import com.project.scratchstudio.kith_andoid.ui.home_package.BoardList.BoardsFragment
-import com.project.scratchstudio.kith_andoid.ui.home_package.Comments.CommentListFragment
-import com.project.scratchstudio.kith_andoid.app.FragmentType
+import com.project.scratchstudio.kith_andoid.UserPresenter
+import com.project.scratchstudio.kith_andoid.app.Const
+import com.project.scratchstudio.kith_andoid.model.UserModelView
+import com.project.scratchstudio.kith_andoid.network.ApiClient
+import com.project.scratchstudio.kith_andoid.network.apiService.BoardApi
+import com.project.scratchstudio.kith_andoid.network.apiService.UserApi
 import com.project.scratchstudio.kith_andoid.network.model.user.User
-
-import java.util.ArrayList
+import com.project.scratchstudio.kith_andoid.service.internal_storage.InternalStorageService
+import com.project.scratchstudio.kith_andoid.service.internal_storage.set_internal_data.ClearUserIdAndToken
+import com.project.scratchstudio.kith_andoid.service.internal_storage.set_internal_data.SetUserIdAndToken
+import com.project.scratchstudio.kith_andoid.view_model.MainUserViewModel
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.observers.DisposableSingleObserver
+import io.reactivex.schedulers.Schedulers
 
 class HomeActivity : BaseActivity() {
 
-    private lateinit var boardsFragment: BoardsFragment
-    private lateinit var navigationView: BottomNavigationView
+    companion object {
+        lateinit var userApi: UserApi
+        lateinit var boardApi: BoardApi
+        val disposable = CompositeDisposable()
 
-    private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener{ item ->
-        when (item.getItemId()) {
-            R.id.navigation_tree -> {
-                bundle = stackBundles[stackBundles.size - 1]
-//                replaceFragment(TreeFragment.newInstance(bundle), FragmentType.TREE.name)
+        fun hideKeyboard(activity: Activity) {
+            val imm = activity.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+            var view = activity.currentFocus
+            if (view == null) {
+                view = View(activity)
             }
-            R.id.navigation_announcements -> {
-//                boardsFragment = BoardsFragment.newInstance(bundle, FragmentType.BOARD_LIST.name)
-                replaceFragment(boardsFragment, FragmentType.BOARD_LIST.name)
-            }
+            imm.hideSoftInputFromWindow(view.windowToken, 0)
         }
-        false
+
+        fun showKeyboard(activity: Activity, editTextView: View) {
+            val imm = activity.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.showSoftInput(editTextView, InputMethodManager.SHOW_IMPLICIT)
+        }
+
+        fun exit(activity: Activity) {
+            val internalStorageService = InternalStorageService(activity, null)
+            internalStorageService.setISetInternalData(ClearUserIdAndToken())
+            internalStorageService.execute()
+            val intent = Intent(activity, EntryActivity::class.java)
+            activity.startActivity(intent)
+            Const.isEntry = false
+            activity.finish()
+        }
     }
 
-    private val mOnNavigationItemReSelectedListener = BottomNavigationView.OnNavigationItemReselectedListener{
-        //        fragmentTransaction.
-        supportFragmentManager.popBackStackImmediate()
-    }
-
-    fun setInvitedUsers(list: List<User>) {
-        invitedUsers = list
-    }
-
-
-    fun setTreeNavigation() {
-        navigationView.menu.getItem(0).isChecked = true
-    }
+    private val mainUserViewModel: MainUserViewModel by viewModels()
+    private lateinit var userPresenter: UserPresenter
+    private lateinit var navigationView: BottomNavigationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
-//        val internalStorageService = InternalStorageService(this)
-//        internalStorageService.setISetInternalData(SetUserIdAndToken())
-//        internalStorageService.execute()
+        if (intent.getSerializableExtra("user") != null) {
+            mainUserViewModel.setMainUser(intent.getSerializableExtra("user") as UserModelView)
+        }
 
-        bundle = if (intent.extras != null) intent.extras else Bundle()
-//        stackBundles.add(bundle)
-//        replaceFragment(TreeFragment.newInstance(bundle), FragmentType.TREE.name)
+        Const.isEntry = true
 
-        navigationView = findViewById(R.id.navigation)
+        userApi = ApiClient.getClient(applicationContext).create<UserApi>(UserApi::class.java)
+        boardApi = ApiClient.getClient(applicationContext).create<BoardApi>(BoardApi::class.java)
+        userPresenter = UserPresenter(this)
+
+        val navController = findNavController(R.id.nav_host_fragment_home)
+        NavigationUI.setupActionBarWithNavController(this, navController)
+
+        navigationView = findViewById(R.id.bottom_navigation_home)
         navigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
         navigationView.setOnNavigationItemReselectedListener(mOnNavigationItemReSelectedListener)
+
+        initializeUserHomePage()
     }
 
-    fun exit() {
-        cleanMainUser()
-//        val internalStorageService = InternalStorageService(this)
-//        internalStorageService.setISetInternalData(ClearUserIdAndToken())
-//        internalStorageService.execute()
-        val intent = Intent(this@HomeActivity, EntryActivity::class.java)
-        startActivity(intent)
-        finish()
+    override fun onSupportNavigateUp(): Boolean {
+        val navController = findNavController(R.id.nav_host_fragment_home)
+        return navController.navigateUp()
     }
 
-    fun changedBoardPhoto() {
-        //        BoardsFragment boardsFragment = (BoardsFragment) getSupportFragmentManager().findFragmentByTag(FragmentType.BOARD_LIST.name());
-        val boardInfoFragment = supportFragmentManager.findFragmentByTag(FragmentType.BOARD_INFO.name) as BoardInfoFragment?
-        if (boardInfoFragment != null) {
-            Log.i("RELOAD", "BOARD_INFO NOT NULL")
-            boardInfoFragment.reloadPhoto()
-        } else {
-            Log.i("RELOAD", "BOARD_INFO IS NULL")
+    private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
+        when (item.itemId) {
+            R.id.navigation_tree -> {
+                findNavController(R.id.nav_host_fragment_home).navigate(R.id.action_boardsFragment_to_homeFragment)
+                item.isChecked = true
+            }
+            R.id.navigation_announcements -> {
+                findNavController(R.id.nav_host_fragment_home).navigate(R.id.action_homeFragment_to_boardsFragment)
+                item.isChecked = true
+            }
         }
-        Log.i("RELOAD", "BOARD_LIST NOT NULL")
-        boardsFragment.reloadPhotoById()
+        false
     }
 
-    fun updateComments() {
-        val commentListFragment = supportFragmentManager
-                .findFragmentByTag(FragmentType.COMMENT_LIST.name) as CommentListFragment?
-        commentListFragment?.reloadComments()
+    private val mOnNavigationItemReSelectedListener = BottomNavigationView.OnNavigationItemReselectedListener {
+        supportFragmentManager.popBackStackImmediate()
     }
 
-    fun updateBoards() {
-        boardsFragment.reloadBoards()
+    private fun initializeUserHomePage() {
+        disposable.add(
+                userApi.getUser(mainUserViewModel.getMainUser().value!!.id)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(object : DisposableSingleObserver<User>() {
+                            override fun onSuccess(response: User) {
+                                mainUserViewModel.setMainUser(userPresenter.userParser(response, mainUserViewModel.getMainUser().value!!))
+                                saveUserOnPhoneStorage()
+                            }
+
+                            override fun onError(e: Throwable) {
+                                Toast.makeText(applicationContext, "Ошибка отправки запроса", Toast.LENGTH_SHORT).show()
+                            }
+                        })
+        )
     }
 
-    companion object {
-        lateinit var mainUser: User
-        private var invitedUsers: List<User> = ArrayList()
-
-
-        fun cleanMainUser() {
-            mainUser = User()
+    private fun saveUserOnPhoneStorage() {
+        val internalStorageService = InternalStorageService(this, null)
+        with(mainUserViewModel.getMainUser().value!!) {
+            internalStorageService.setUserData(id, token, password)
         }
-
-        fun createMainUser() {
-            mainUser = User()
-        }
-
-        fun createInvitedUsers() {
-            invitedUsers = ArrayList()
-        }
+        internalStorageService.setISetInternalData(SetUserIdAndToken())
+        internalStorageService.execute()
     }
 
 }

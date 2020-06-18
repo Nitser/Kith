@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import android.os.AsyncTask
 import android.preference.PreferenceManager
 import com.project.scratchstudio.kith_andoid.model.Cache
+import com.project.scratchstudio.kith_andoid.model.UserModelView
 import com.project.scratchstudio.kith_andoid.service.internal_storage.get_internal_data.IGetInternalData
 import com.project.scratchstudio.kith_andoid.service.internal_storage.set_internal_data.ISetInternalData
 
@@ -13,8 +14,18 @@ class InternalStorageService(private val context: Activity, private val callback
     private var iGetInternalData: IGetInternalData? = null
     private var iSetInternalData: ISetInternalData? = null
 
+    private var id: Int = 0
+    private var token: String? = ""
+    private var password: String? = ""
+    fun setUserData(idq: Int, tokenq: String, passwordq: String) {
+        id = idq
+        token = tokenq
+        password = passwordq
+    }
+
     companion object {
         var entryStatus = false
+        var user = UserModelView()
     }
 
     override fun onPostExecute(i: Int?) {
@@ -28,14 +39,14 @@ class InternalStorageService(private val context: Activity, private val callback
 
     override fun doInBackground(vararg strings: String): Int {
         val sp = PreferenceManager.getDefaultSharedPreferences(context)
-        if (!sp.contains("count_users")) {
+        if (!sp.contains("cur_user_id")) {
             initializingStorage(sp)
         }
         return if (iGetInternalData != null) {
             iGetInternalData!![sp]
             0
         } else {
-            iSetInternalData!!.set(sp)
+            iSetInternalData!!.set(sp, id, token, password)
             1
         }
     }
@@ -50,7 +61,7 @@ class InternalStorageService(private val context: Activity, private val callback
 
     private fun initializingStorage(sp: SharedPreferences) {
         val ed: SharedPreferences.Editor = sp.edit()
-        ed.putInt("count_users", 0)
+//        ed.putInt("count_users", 0)
         ed.putInt("cur_user_id", -1)
         ed.putString("user_token", "")
         ed.apply()

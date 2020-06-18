@@ -6,6 +6,6 @@ import com.project.scratchstudio.kith_andoid.network.model.city.City
 
 class CountriesResponse : BaseResponse() {
     @SerializedName("countries")
-    lateinit var countries: ArrayList<City>
+    lateinit var countries: ArrayList<Country>
 
 }

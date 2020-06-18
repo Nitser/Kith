@@ -1,6 +1,7 @@
 package com.project.scratchstudio.kith_andoid.network
 
 import android.content.Context
+import android.util.Log
 
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import com.project.scratchstudio.kith_andoid.activities.HomeActivity
@@ -52,8 +53,7 @@ object ApiClient {
                     .addHeader("Accept", "application/json")
                     .addHeader("Content-Type", "application/json")
             if(Const.isEntry)
-                requestBuilder.addHeader("Authorization", HomeActivity.mainUser.token)
-
+                requestBuilder.addHeader("Authorization", "${Const.TOKEN_TYPE} ${Const.token}")
             val request = requestBuilder.build()
             chain.proceed(request)
         }

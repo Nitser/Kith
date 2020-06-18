@@ -7,12 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
-import com.project.scratchstudio.kith_andoid.R
 import com.project.scratchstudio.kith_andoid.app.BaseFragment
 import com.project.scratchstudio.kith_andoid.custom_views.EditTextBehavior
 import com.project.scratchstudio.kith_andoid.databinding.FragmentSingUpRefCodeBinding
+import com.project.scratchstudio.kith_andoid.model.UserModelView
 import com.project.scratchstudio.kith_andoid.network.model.NewBaseResponse
 
 class SingUpRefCodeFragment : BaseFragment() {
@@ -20,11 +19,11 @@ class SingUpRefCodeFragment : BaseFragment() {
     private lateinit var binding: FragmentSingUpRefCodeBinding
     private lateinit var editTextBehavior: EditTextBehavior
     private lateinit var presenter: SingUpPresenter
+    private val user = UserModelView()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentSingUpRefCodeBinding.inflate(layoutInflater)
         editTextBehavior = EditTextBehavior(context!!)
-        (activity as AppCompatActivity).supportActionBar!!.title = resources.getString(R.string.registration)
         presenter = SingUpPresenter(context!!)
         initButtons()
         return binding.root
@@ -43,14 +42,14 @@ class SingUpRefCodeFragment : BaseFragment() {
             override fun onSuccess(baseResponse: NewBaseResponse) {
                 val imm = context!!.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
                 imm.hideSoftInputFromWindow(binding.root.windowToken, 0)
-
-                view.findNavController().navigate(SingUpRefCodeFragmentDirections.actionSingUpRefCodeToSingUpFragment())
+                user.invitedUserId = baseResponse.userId
+                view.findNavController().navigate(SingUpRefCodeFragmentDirections.actionSingUpRefCodeToSingUpFragment(user))
             }
 
             override fun onError(networkError: NetworkErrorException) {
                 editTextBehavior.fieldErrorWithText(binding.refCode, "Реферальный код не найден")
             }
-        },binding.refCode.text.toString())
+        }, binding.refCode.text.toString())
     }
 
     companion object {

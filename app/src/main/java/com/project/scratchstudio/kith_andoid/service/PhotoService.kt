@@ -10,6 +10,7 @@ import android.net.Uri
 import android.provider.MediaStore
 import android.util.Base64
 import android.util.Log
+import com.project.scratchstudio.kith_andoid.model.PhotoModelView
 
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -23,28 +24,28 @@ import java.nio.charset.StandardCharsets.UTF_8
 
 class PhotoService(private val context: Context) {
 
-    @Throws(UnsupportedEncodingException::class)
-    fun base64Photo(photo: Bitmap?): String {
-        if (photo == null) {
-            return ""
+    fun fullPreparingPhoto(bitmap: Bitmap, uri: Uri): PhotoModelView? {
+        val newBitmap: Bitmap
+        val path = getRealPathFromURI(uri)
+        val f = File(path!!)
+        val angel: Int
+
+        val file = File(context.filesDir, "kith")
+        if (!file.exists()) {
+            file.mkdirs()
         }
+        val img = File(file, "kith_img")
+        val out = FileOutputStream(img)
+        angel = getExifAngle(f)
+        newBitmap = changeOrientation(file, bitmap, angel)
+        newBitmap.compress(Bitmap.CompressFormat.JPEG, 50, out)
 
-        val byteArrayOS = ByteArrayOutputStream()
-        photo.compress(Bitmap.CompressFormat.JPEG, 30, byteArrayOS)
-        val result = Base64.encode(byteArrayOS.toByteArray(), Base64.NO_WRAP)
-        return String(result, UTF_8)
-    }
+        val newPhoto = PhotoModelView()
+        newPhoto.photoBitmap = bitmap
+        newPhoto.photoPhoneStoragePath = img.path
+        newPhoto.phoneStorageFile = img
 
-    fun resizeBitmap(bm: Bitmap, newWidth: Int, newHeight: Int): Bitmap {
-        val width = bm.width
-        val height = bm.height
-        val scaleWidth = newWidth.toFloat() / width
-        val scaleHeight = newHeight.toFloat() / height
-        val matrix = Matrix()
-        matrix.postScale(scaleWidth, scaleHeight)
-        val resizedBitmap = Bitmap.createBitmap(bm, 0, 0, width, height, matrix, false)
-        bm.recycle()
-        return resizedBitmap
+        return newPhoto
     }
 
     fun compressPhoto(bitmap: Bitmap): Bitmap {
@@ -84,7 +85,6 @@ class PhotoService(private val context: Context) {
     }
 
     fun changePhoto(bitmap: Bitmap, uri: Uri): Bitmap {
-        var bitmap = bitmap
         var angel = -1
         val path = getRealPathFromURI(uri)
         val f = File(path)
@@ -93,13 +93,11 @@ class PhotoService(private val context: Context) {
         } catch (e: Exception) {
             Log.i("ERROR IN ANGEL:", e.message)
         }
-
-        bitmap = changeOrientation(f, bitmap, angel)
-        return bitmap
+        return changeOrientation(f, bitmap, angel)
     }
 
     private fun changeOrientation(f: File, bitmap: Bitmap, angle: Int): Bitmap {
-        var bitmap = bitmap
+        var newBitmap = bitmap
         val mat = Matrix()
         mat.postRotate(angle.toFloat())
         val options = BitmapFactory.Options()
@@ -107,16 +105,16 @@ class PhotoService(private val context: Context) {
 
         try {
             val bmp = BitmapFactory.decodeStream(FileInputStream(f), null, options)
-            bitmap = Bitmap.createBitmap(bmp!!, 0, 0, bmp.width,
+            newBitmap = Bitmap.createBitmap(bmp!!, 0, 0, bmp.width,
                     bmp.height, mat, true)
             val outstudentstreamOutputStream = ByteArrayOutputStream()
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100,
+            newBitmap.compress(Bitmap.CompressFormat.PNG, 100,
                     outstudentstreamOutputStream)
         } catch (e: IOException) {
             Log.w("TAG", "-- Error in setting image")
         }
 
-        return bitmap
+        return newBitmap
     }
 
     private fun getExifAngle(f: File): Int {
@@ -143,8 +141,7 @@ class PhotoService(private val context: Context) {
         return angle
     }
 
-    private fun getRealPathFromURI(contentURI: Uri): String? {
-
+    fun getRealPathFromURI(contentURI: Uri): String? {
         val result: String?
         val cursor = context.contentResolver.query(contentURI, null, null, null, null)
         if (cursor == null) { // Source is Dropbox or other similar local file path
@@ -156,6 +153,30 @@ class PhotoService(private val context: Context) {
             cursor.close()
         }
         return result
+    }
+
+    @Throws(UnsupportedEncodingException::class)
+    fun base64Photo(photo: Bitmap?): String {
+        if (photo == null) {
+            return ""
+        }
+
+        val byteArrayOS = ByteArrayOutputStream()
+        photo.compress(Bitmap.CompressFormat.JPEG, 30, byteArrayOS)
+        val result = Base64.encode(byteArrayOS.toByteArray(), Base64.NO_WRAP)
+        return String(result, UTF_8)
+    }
+
+    fun resizeBitmap(bm: Bitmap, newWidth: Int, newHeight: Int): Bitmap {
+        val width = bm.width
+        val height = bm.height
+        val scaleWidth = newWidth.toFloat() / width
+        val scaleHeight = newHeight.toFloat() / height
+        val matrix = Matrix()
+        matrix.postScale(scaleWidth, scaleHeight)
+        val resizedBitmap = Bitmap.createBitmap(bm, 0, 0, width, height, matrix, false)
+        bm.recycle()
+        return resizedBitmap
     }
 
     @Throws(UnsupportedEncodingException::class)

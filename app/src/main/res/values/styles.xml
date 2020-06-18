@@ -1,5 +1,7 @@
 <resources>
 
+<!-- \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\-APP STYLES-\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ -->
+
     <style name="KithAppTheme" parent="Theme.AppCompat">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimary</item>
@@ -21,6 +23,7 @@
         <item name="android:fontFamily">@font/intro_regular</item>
     </style>
 
+<!-- \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\-TEXT STYLES-\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ -->
 
     <style name="CustomTitleText" parent="TextAppearance.AppCompat.Button">
         <item name="android:textSize">17sp</item>
@@ -63,6 +66,144 @@
         <item name="android:textAllCaps">false</item>
         <item name="android:textColor">@color/colorAccent</item>
     </style>
+
+    <style name="CustomPermissionText" parent="Widget.AppCompat.TextView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fontFamily">@font/intro_regular</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+
+    <style name="HomeBoardCreateTitleText" parent="Widget.AppCompat.TextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fontFamily">@font/intro_regular</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@color/colorGrey</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+
+    <style name="HomeBoardInfoTitleText" parent="Widget.AppCompat.TextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fontFamily">@font/intro_regular</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@color/colorHomeTextCommon</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="HomeBoardInfoCommentText" parent="Widget.AppCompat.TextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fontFamily">@font/intro_regular</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@color/colorHomeTextCommon</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="HomeBoardInfoCommentOwnerNameText" parent="Widget.AppCompat.TextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fontFamily">@font/intro_regular</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@color/colorHomeTextCommon</item>
+        <item name="android:textSize">13sp</item>
+    </style>
+
+    <style name="HomeBoardInfoCommentDateText" parent="Widget.AppCompat.TextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fontFamily">@font/intro_regular</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@color/colorGrey</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="HomeBoardInfoOwnerNameText" parent="Widget.AppCompat.TextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fontFamily">@font/intro_regular</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@color/colorHomeTextCommon</item>
+        <item name="android:textSize">17sp</item>
+    </style>
+
+    <style name="HomeBoardInfoDateText" parent="Widget.AppCompat.TextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fontFamily">@font/intro_regular</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@color/colorGrey</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="HomeBoardInfoPriceText" parent="Widget.AppCompat.TextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fontFamily">@font/intro_regular</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@color/colorHomeTextPrice</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="HomeBoardInfoDescriptionText" parent="Widget.AppCompat.TextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fontFamily">@font/intro_regular</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@color/colorHomeTextCommon</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:lineSpacingExtra">10dp</item>
+        <item name="android:layout_marginStart">20dp</item>
+        <item name="android:layout_marginEnd">20dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
+    </style>
+
+
+
+
+    <style name="HomeBoardCardTitleText" parent="Widget.AppCompat.TextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fontFamily">@font/intro_regular</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@color/colorHomeTextCommon</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="HomeBoardCardOwnerNameText" parent="Widget.AppCompat.TextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fontFamily">@font/intro_regular</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@color/colorHomeTextCommon</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="HomeBoardCardDateText" parent="Widget.AppCompat.TextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fontFamily">@font/intro_regular</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@color/colorGrey</item>
+        <item name="android:textSize">10sp</item>
+    </style>
+
+    <style name="HomeBoardCardPriceText" parent="Widget.AppCompat.TextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fontFamily">@font/intro_regular</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@color/colorHomeTextPrice</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+<!-- \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\-BUTTON STYLES-\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ -->
 
     <style name="ButtonDark" parent="Widget.AppCompat.Button">
         <item name="android:layout_width">wrap_content</item>
@@ -108,11 +249,29 @@
         <item name="android:fontFamily">@font/intro_regular</item>
     </style>
 
+<!-- \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\-FIELD STYLES-\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ -->
+
+    <style name="FieldDarkBlue" parent="Widget.AppCompat.EditText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/field_dark_blue</item>
+        <item name="android:inputType">text</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:paddingTop">12dp</item>
+        <item name="android:paddingBottom">12dp</item>
+        <item name="android:paddingStart">20dp</item>
+        <item name="android:paddingEnd">20dp</item>
+        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:textColorHint">@color/colorHint</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
     <style name="FieldDark" parent="Widget.AppCompat.EditText">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:background">@drawable/field_dark</item>
-        <item name="android:lines">1</item>
+        <item name="android:inputType">text</item>
+        <item name="android:singleLine">true</item>
         <item name="android:paddingTop">12dp</item>
         <item name="android:paddingBottom">12dp</item>
         <item name="android:paddingStart">20dp</item>
@@ -124,11 +283,27 @@
         <item name="android:elevation">2dp</item>
     </style>
 
+    <style name="FieldEmptyDark" parent="Widget.AppCompat.EditText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@color/colorPrimaryDark</item>
+        <item name="android:inputType">text</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:paddingTop">12dp</item>
+        <item name="android:paddingBottom">12dp</item>
+        <item name="android:paddingStart">20dp</item>
+        <item name="android:paddingEnd">20dp</item>
+        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:textColorHint">@color/colorHint</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
     <style name="FieldLight" parent="Widget.AppCompat.EditText">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:background">@drawable/field_light</item>
-        <item name="android:lines">1</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:inputType">text</item>
         <item name="android:paddingTop">15dp</item>
         <item name="android:paddingBottom">15dp</item>
         <item name="android:paddingStart">20dp</item>
@@ -137,6 +312,68 @@
         <item name="android:layout_marginEnd">10dp</item>
         <item name="android:textColor">@color/colorPrimary</item>
         <item name="android:textColorHint">@color/colorHint</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:translationZ">2dp</item>
+        <item name="android:elevation">4dp</item>
+    </style>
+
+    <style name="FieldEmptyLight" parent="Widget.AppCompat.EditText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@color/colorAccent</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:inputType">text</item>
+        <item name="android:paddingTop">15dp</item>
+        <item name="android:paddingBottom">15dp</item>
+        <item name="android:paddingStart">20dp</item>
+        <item name="android:paddingEnd">20dp</item>
+        <item name="android:layout_marginStart">10dp</item>
+        <item name="android:layout_marginEnd">10dp</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textColorHint">@color/colorHint</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="FieldEmptyLightTitleBoardCreate" parent="Widget.AppCompat.EditText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@color/colorAccent</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:inputType">text</item>
+        <item name="android:paddingTop">15dp</item>
+        <item name="android:paddingBottom">15dp</item>
+        <item name="android:paddingStart">20dp</item>
+        <item name="android:paddingEnd">20dp</item>
+        <item name="android:layout_marginStart">10dp</item>
+        <item name="android:layout_marginEnd">10dp</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textColorHint">@color/colorHint</item>
+        <item name="android:textSize">17sp</item>
+    </style>
+
+    <style name="FieldEmptyLightBoardCreate" parent="Widget.AppCompat.EditText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@color/colorAccent</item>
+        <item name="android:inputType">text</item>
+        <item name="android:paddingTop">15dp</item>
+        <item name="android:paddingBottom">15dp</item>
+        <item name="android:paddingStart">20dp</item>
+        <item name="android:paddingEnd">20dp</item>
+        <item name="android:layout_marginStart">10dp</item>
+        <item name="android:layout_marginEnd">10dp</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textColorHint">@color/colorHint</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="SpinnerLight" parent="Widget.AppCompat.EditText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/spinner_light</item>
+        <item name="android:layout_marginStart">10dp</item>
+        <item name="android:layout_marginEnd">10dp</item>
+        <item name="android:textColor">@color/colorPrimary</item>
         <item name="android:textSize">14sp</item>
         <item name="android:translationZ">2dp</item>
         <item name="android:elevation">4dp</item>

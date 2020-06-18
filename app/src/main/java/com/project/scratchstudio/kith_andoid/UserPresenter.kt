@@ -3,17 +3,14 @@ package com.project.scratchstudio.kith_andoid
 import android.accounts.NetworkErrorException
 import android.content.Context
 import android.graphics.Bitmap
-import android.os.Bundle
-import com.project.scratchstudio.kith_andoid.activities.HomeActivity
-import com.project.scratchstudio.kith_andoid.service.PhotoService
-import com.project.scratchstudio.kith_andoid.app.FragmentType
+import com.project.scratchstudio.kith_andoid.model.UserModelView
 import com.project.scratchstudio.kith_andoid.network.ApiClient
 import com.project.scratchstudio.kith_andoid.network.apiService.UserApi
 import com.project.scratchstudio.kith_andoid.network.model.BaseResponse
 import com.project.scratchstudio.kith_andoid.network.model.referral.ReferralResponse
 import com.project.scratchstudio.kith_andoid.network.model.user.User
-import com.project.scratchstudio.kith_andoid.network.model.user.UserResponse
-import com.project.scratchstudio.kith_andoid.ui.home_package.UserProfile.ProfileFragment
+import com.project.scratchstudio.kith_andoid.network.model.user.UserListResponse
+import com.project.scratchstudio.kith_andoid.service.PhotoService
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableSingleObserver
@@ -24,6 +21,29 @@ class UserPresenter(private val context: Context) {
 
     init {
         userApi = ApiClient.getClient(context).create(UserApi::class.java)
+    }
+
+    fun userParser(userBD: User, userModel: UserModelView): UserModelView {
+        with(userModel) {
+            id = userBD.id
+            password = userBD.password
+            url = userBD.url
+            usersCount = userBD.usersCount
+            firstName = userBD.firstName
+            lastName = userBD.lastName
+            middleName = userBD.middleName
+            login = userBD.login
+            phone = userBD.phone
+            description = userBD.description
+            position = userBD.position
+            email = userBD.email
+            photo = userBD.photo
+            cityId = userBD.cityId
+            countryId = userBD.countryId
+            regionId = userBD.regionId
+            referralCode = userBD.referralCode
+        }
+        return userModel
     }
 
     fun changePassword(callback: BaseCallback, userId: Int, oldPassword: String, newPassword: String) {
@@ -43,26 +63,13 @@ class UserPresenter(private val context: Context) {
         )
     }
 
-    fun openProfile(user: User) {
-        val bundle = Bundle()
-
-        if (user.id == HomeActivity.mainUser.id) {
-            bundle.putBoolean("another_user", false)
-            bundle.putSerializable("user", HomeActivity.mainUser)
-        } else {
-            bundle.putBoolean("another_user", true)
-            bundle.putSerializable("user", user)
-        }
-        (context as HomeActivity).addFragment(ProfileFragment.newInstance(bundle), FragmentType.PROFILE.name)
-    }
-
     fun getUser(callback: GetUserCallback, userId: Int) {
         disposable.add(
                 userApi.getUser(userId)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribeWith(object : DisposableSingleObserver<UserResponse>() {
-                            override fun onSuccess(response: UserResponse) {
+                        .subscribeWith(object : DisposableSingleObserver<User>() {
+                            override fun onSuccess(response: User) {
                                 callback.onSuccess(response)
                             }
 
@@ -73,7 +80,7 @@ class UserPresenter(private val context: Context) {
         )
     }
 
-    fun editUser(callback: BaseCallback, newUser: User, newPhoto: Bitmap?) {
+    fun editUser(callback: BaseCallback, newUser: UserModelView, newPhoto: Bitmap?) {
         var res = ""
         try {
             val photoService = PhotoService(context)
@@ -133,14 +140,37 @@ class UserPresenter(private val context: Context) {
         )
     }
 
+    fun searchUsers(callback: GetSearchUserListCallback, filterString: String) {
+        disposable.add(
+                userApi.searchUsers(filterString, "0", "50")
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(object : DisposableSingleObserver<UserListResponse>() {
+                            override fun onSuccess(response: UserListResponse) {
+                                callback.onSuccess(response)
+                            }
+
+                            override fun onError(e: Throwable) {
+                                callback.onError(NetworkErrorException(e))
+                            }
+                        })
+        )
+    }
+
     interface GetUserCallback {
-        fun onSuccess(userResponse: UserResponse)
+        fun onSuccess(userResponse: User)
 
         fun onError(networkError: NetworkErrorException)
     }
 
     interface BaseCallback {
         fun onSuccess(baseResponse: BaseResponse)
+
+        fun onError(networkError: NetworkErrorException)
+    }
+
+    interface GetSearchUserListCallback {
+        fun onSuccess(userResponse: UserListResponse)
 
         fun onError(networkError: NetworkErrorException)
     }

@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import com.project.scratchstudio.kith_andoid.R
 import com.project.scratchstudio.kith_andoid.app.BaseFragment
@@ -26,7 +25,6 @@ class PasswordRecoveryEnterConfirmCodeFragment : BaseFragment() {
     private lateinit var userLoginOrEmail: String
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        (activity as AppCompatActivity).supportActionBar!!.title = resources.getString(R.string.password_recovery)
         binding = FragmentPasswordRecoveryEnterConfirmCodeBinding.inflate(layoutInflater)
         presenter = PasswordRecoveryPresenter(context!!)
         editTextBehavior = EditTextBehavior(context!!)
@@ -76,9 +74,12 @@ class PasswordRecoveryEnterConfirmCodeFragment : BaseFragment() {
             }
 
             override fun onFinish() {
-                binding.resetConfirmCode.text = "Отправить код повторно"
-                binding.resetConfirmCode.setTextColor(resources.getColor(R.color.colorAccent))
-                binding.resetConfirmCode.isEnabled = true
+                if (binding.resetConfirmCode.isAttachedToWindow) {
+                    binding.resetConfirmCode.text = "Отправить код повторно"
+                    binding.resetConfirmCode.setTextColor(resources.getColor(R.color.colorAccent))
+                    binding.resetConfirmCode.isEnabled = true
+                }
+
             }
         }.start()
 

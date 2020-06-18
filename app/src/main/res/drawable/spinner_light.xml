@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list android:opacity="transparent" xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item>
+        <shape>
+            <corners android:radius="7dp" />
+            <solid android:color="@color/colorAccent" />
+        </shape>
+    </item>
+
+    <item android:drawable="@drawable/ic_arrow_drop_down" android:gravity="right" android:start="140dp"/>
+</layer-list>

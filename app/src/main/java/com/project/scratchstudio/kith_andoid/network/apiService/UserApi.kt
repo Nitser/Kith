@@ -4,19 +4,18 @@ import com.project.scratchstudio.kith_andoid.network.model.BaseResponse
 import com.project.scratchstudio.kith_andoid.network.model.referral.ReferralResponse
 import com.project.scratchstudio.kith_andoid.network.model.user.User
 import com.project.scratchstudio.kith_andoid.network.model.user.UserListResponse
-import com.project.scratchstudio.kith_andoid.network.model.user.UserResponse
-
 import io.reactivex.Single
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface UserApi {
 
     @GET("api/users/{id}")
-    fun getUser(@Path("id") id: Int): Single<UserResponse>
+    fun getUser(@Path("id") id: Int): Single<User>
 
     @FormUrlEncoded
     @POST("api/users/referral")
@@ -26,10 +25,9 @@ interface UserApi {
     @POST("api/users/referral_count")
     fun getReferralCount(@Field("user_id") id: Int, @Field("only_mine") isMine: Int?): Single<ReferralResponse>
 
-    @FormUrlEncoded
-    @POST("api/users/search")
-    fun searchUsers(@Field("user_id") id: Int, @Field("search") search: String, @Field("page") page: String,
-                    @Field("size") size: String): Single<UserListResponse>
+    @GET("api/users")
+    fun searchUsers(@Query("search") search: String, @Query("page") page: String,
+                    @Query("size") size: String): Single<UserListResponse>
 
     @FormUrlEncoded
     @POST("api/users/referral_users")

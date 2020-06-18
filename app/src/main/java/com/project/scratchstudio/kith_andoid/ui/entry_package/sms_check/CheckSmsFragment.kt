@@ -1,32 +1,36 @@
 package com.project.scratchstudio.kith_andoid.ui.entry_package.sms_check
 
 import android.accounts.NetworkErrorException
-import android.content.Intent
+import android.app.Activity
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
-import com.project.scratchstudio.kith_andoid.activities.EntryActivity
-import com.project.scratchstudio.kith_andoid.activities.HomeActivity
-import com.project.scratchstudio.kith_andoid.custom_views.to_trash.CustomFontEditText
-import com.project.scratchstudio.kith_andoid.custom_views.to_trash.CustomFontTextView
-import com.project.scratchstudio.kith_andoid.EntryPresenter
+import androidx.navigation.findNavController
 import com.project.scratchstudio.kith_andoid.R
 import com.project.scratchstudio.kith_andoid.app.BaseFragment
-import com.project.scratchstudio.kith_andoid.network.model.BaseResponse
-import com.project.scratchstudio.kith_andoid.network.model.entry.EntryResponse
+import com.project.scratchstudio.kith_andoid.custom_views.EditTextBehavior
+import com.project.scratchstudio.kith_andoid.databinding.FragmentCheckSmsBinding
+import com.project.scratchstudio.kith_andoid.model.UserModelView
+import com.project.scratchstudio.kith_andoid.network.model.NewBaseResponse
+import com.project.scratchstudio.kith_andoid.ui.entry_package.sing_up.SingUpPresenter
 
 class CheckSmsFragment : BaseFragment() {
 
-    private lateinit var entryPresenter: EntryPresenter
+    private lateinit var presenter: SingUpPresenter
+    private lateinit var binding: FragmentCheckSmsBinding
+    private lateinit var editTextBehavior: EditTextBehavior
+    private lateinit var user: UserModelView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        entryPresenter = EntryPresenter(context!!)
-        return inflater.inflate(R.layout.fragment_check_sms, container, false)
+        binding = FragmentCheckSmsBinding.inflate(layoutInflater)
+        presenter = SingUpPresenter(context!!)
+        editTextBehavior = EditTextBehavior(context!!)
+        user = CheckSmsFragmentArgs.fromBundle(arguments!!).user
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -36,71 +40,56 @@ class CheckSmsFragment : BaseFragment() {
     }
 
     private fun sendSMS() {
-        entryPresenter.sendSMS(object : EntryPresenter.BaseCallback {
-            override fun onSuccess(baseResponse: BaseResponse) {
-                if (!baseResponse.status) {
-                    Toast.makeText(context, "Ошибка отправки запроса", Toast.LENGTH_SHORT).show()
-                }
+        presenter.sendSMS(object : SingUpPresenter.BaseCallback {
+            override fun onSuccess(baseResponse: NewBaseResponse) {
             }
 
             override fun onError(networkError: NetworkErrorException) {
                 Toast.makeText(context, "Ошибка отправки запроса", Toast.LENGTH_SHORT).show()
             }
-        }, HomeActivity.mainUser.login)
+        }, user.id)
     }
 
     private fun initButtons(view: View) {
-        view.findViewById<TextView>(R.id.check_sms_back).setOnClickListener(this::onClickBackButton)
-        view.findViewById<Button>(R.id.check_sms_confirm).setOnClickListener(this::checkButton)
-        view.findViewById<TextView>(R.id.check_sms_repeat).setOnClickListener(this::againButton)
+        binding.next.setOnClickListener(this::checkButton)
+        binding.resetConfirmCode.setOnClickListener(this::onClickResetConfirmCode)
     }
 
-    fun onClickBackButton(view: View) {
+    private fun checkButton(view: View) {
         view.isEnabled = false
-        (activity as EntryActivity).backFragment()
-    }
+        presenter.checkSMS(object : SingUpPresenter.BaseCallback {
+            override fun onSuccess(baseResponse: NewBaseResponse) {
+                activity!!.currentFocus?.clearFocus()
+                Toast.makeText(context, "SMS код подтвержден", Toast.LENGTH_SHORT).show()
+                val imm = context!!.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(view.windowToken, 0)
 
-    fun checkButton(view: View) {
-        view.isEnabled = false
-        val smsCode = view.findViewById<CustomFontEditText>(R.id.editText7)
-        entryPresenter.checkSMS(object : EntryPresenter.EntryCallback {
-            override fun onSuccess(entryResponse: EntryResponse) {
-                if (entryResponse.status) {
-                    HomeActivity.mainUser.token = entryResponse.tokenType + " " + entryResponse.token
-                    val intent = Intent(context, HomeActivity::class.java)
-                    startActivity(intent)
-                    Toast.makeText(context, "SMS код подтвержден", Toast.LENGTH_SHORT).show()
-                    activity?.finish()
-                } else {
-                    Toast.makeText(context, "Ошибка отправки запроса", Toast.LENGTH_SHORT).show()
-                    view.isEnabled = true
-                }
+                view.findNavController().navigate(CheckSmsFragmentDirections
+                        .actionCheckSmsFragmentToMainFragment())
             }
 
             override fun onError(networkError: NetworkErrorException) {
-                Toast.makeText(context, "Ошибка отправки запроса", Toast.LENGTH_SHORT).show()
-                view.isEnabled = true
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
-        }, HomeActivity.mainUser.login, HomeActivity.mainUser.password, smsCode.text.toString())
+        }, user.id, binding.confirmCode.text.toString())
     }
 
-    fun againButton(view: View) {
-        view.isEnabled = false
+    private fun onClickResetConfirmCode(view: View) {
+        binding.resetConfirmCode.isEnabled = false
         sendSMS()
 
-        val text = view as CustomFontTextView
-        text.setTextColor(resources.getColor(R.color.colorHint))
+        binding.resetConfirmCode.setTextColor(resources.getColor(R.color.colorHint))
         object : CountDownTimer(20000, 1000) {
 
             override fun onTick(millisUntilFinished: Long) {
                 val s = "Отправить повторно через: " + millisUntilFinished / 1000
-                text.text = s
+                binding.resetConfirmCode.text = s
             }
 
             override fun onFinish() {
-                text.text = "Отправить повторно"
-                text.setTextColor(resources.getColor(R.color.colorAccent))
-                text.isEnabled = true
+                binding.resetConfirmCode.text = "Отправить код повторно"
+                binding.resetConfirmCode.setTextColor(resources.getColor(R.color.colorAccent))
+                binding.resetConfirmCode.isEnabled = true
             }
         }.start()
 

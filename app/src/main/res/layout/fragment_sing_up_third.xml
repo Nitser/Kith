@@ -42,9 +42,14 @@
             android:hint="@string/registration_phone"
             android:inputType="phone" />
 
+        <TextView
+            android:id="@+id/permissions"
+            style="@style/CustomPermissionText"
+            android:layout_marginTop="25dp"/>
+
         <Button
             android:id="@+id/next"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="25dp"
             android:text="@string/registration_done"
             style="@style/ButtonLight"/>
 

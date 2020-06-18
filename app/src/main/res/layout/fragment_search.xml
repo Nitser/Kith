@@ -7,7 +7,7 @@
     android:orientation="horizontal"
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/colorPrimary"
-    tools:context="com.project.scratchstudio.kith_andoid.fragments.TreeFragment">
+    tools:context="com.project.scratchstudio.kith_andoid.ui.home_package.home.HomeFragment">
 
     <LinearLayout
         android:layout_width="match_parent"

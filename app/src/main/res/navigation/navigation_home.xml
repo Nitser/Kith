@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/navigation_home"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.project.scratchstudio.kith_andoid.ui.home_package.home.HomeFragment"
+        android:label="@string/home_title">
+        <action
+            android:id="@+id/action_homeFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_boardsFragment"
+            app:destination="@id/boardsFragment"
+            app:launchSingleTop="true"
+            app:popUpTo="@+id/homeFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_homeFragment_to_shareCodeFragment"
+            app:destination="@id/shareCodeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.project.scratchstudio.kith_andoid.ui.home_package.user_profile.ProfileFragment"
+        android:label="@string/profile_title" >
+        <action
+            android:id="@+id/action_profileFragment_to_editProfileFragment"
+            app:destination="@id/editProfileFragment" />
+        <argument
+            android:name="userType"
+            app:argType="com.project.scratchstudio.kith_andoid.app.UserType" />
+    </fragment>
+    <fragment
+        android:id="@+id/boardsFragment"
+        android:name="com.project.scratchstudio.kith_andoid.ui.home_package.board_list.BoardsFragment"
+        android:label="@string/board_list_title" >
+        <action
+            android:id="@+id/action_boardsFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:launchSingleTop="true"
+            app:popUpTo="@+id/boardsFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_boardsFragment_to_boardInfoFragment"
+            app:destination="@id/boardInfoFragment" />
+        <action
+            android:id="@+id/action_boardsFragment_to_newEditBoardFragment"
+            app:destination="@id/newEditBoardFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/boardInfoFragment"
+        android:name="com.project.scratchstudio.kith_andoid.ui.home_package.board_info.BoardInfoFragment"
+        android:label="@string/board_info_title">
+        <action
+            android:id="@+id/action_boardInfoFragment_to_newEditBoardFragment"
+            app:destination="@id/newEditBoardFragment" />
+        <action
+            android:id="@+id/action_boardInfoFragment_to_commentListFragment"
+            app:destination="@id/commentListFragment" />
+        <action
+            android:id="@+id/action_boardInfoFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+        <argument
+            android:name="userType"
+            app:argType="com.project.scratchstudio.kith_andoid.app.UserType" />
+    </fragment>
+    <fragment
+        android:id="@+id/newEditBoardFragment"
+        android:name="com.project.scratchstudio.kith_andoid.ui.home_package.board_create.NewEditBoardFragment"
+        android:label="@string/board_create_title" >
+        <argument
+            android:name="userType"
+            app:argType="com.project.scratchstudio.kith_andoid.app.UserType" />
+    </fragment>
+    <fragment
+        android:id="@+id/shareCodeFragment"
+        android:name="com.project.scratchstudio.kith_andoid.ui.home_package.share_code.ShareCodeFragment"
+        android:label="@string/share_code_title" >
+        <argument
+            android:name="referral_code"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/editProfileFragment"
+        android:name="com.project.scratchstudio.kith_andoid.ui.home_package.user_edit_profile.EditProfileFragment"
+        android:label="@string/edit_profile_title" >
+        <action
+            android:id="@+id/action_editProfileFragment_to_changePasswordFragment"
+            app:destination="@id/changePasswordFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/changePasswordFragment"
+        android:name="com.project.scratchstudio.kith_andoid.ui.home_package.user_change_password.ChangePasswordFragment"
+        android:label="@string/change_password_title" >
+        <action
+            android:id="@+id/action_changePasswordFragment_to_editProfileFragment"
+            app:destination="@id/editProfileFragment"
+            app:popUpTo="@+id/editProfileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/commentListFragment"
+        android:name="com.project.scratchstudio.kith_andoid.ui.home_package.board_info_comments.BoardInfoCommentsFragment"
+        android:label="@string/board_info_comment_list_title" />
+
+</navigation>

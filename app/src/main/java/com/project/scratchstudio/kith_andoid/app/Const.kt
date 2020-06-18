@@ -4,6 +4,11 @@ object Const {
     var isEntry = false
     const val BASE_URL = "http://znakomye.com/"
     const val APP_URL = "https://play.google.com/store/apps/details?id=com.project.scratchstudio.kith"
+    const val POLICY_URL = "http://kith.ga/policy"
+    const val TERMS_URL = "http://kith.ga/terms"
+
+    const val TOKEN_TYPE = "JWT"
+    var token = ""
 
     fun getErrorMessage(code: Int): String {
         return when (code) {

@@ -8,40 +8,50 @@ import java.io.Serializable
 
 class User : Serializable {
 
-    @SerializedName("user_id")
+    @SerializedName("id")
     var id: Int = 0
 
-    lateinit var token: String
-    lateinit var password: String
-    lateinit var url: String
+    var token: String = ""
+    var password: String = ""
+    var url: String = ""
     var usersCount: Int = 0
 
-    @SerializedName("user_firstname")
+    @SerializedName("firstname")
     var firstName: String = ""
 
-    @SerializedName("user_lastname")
-    lateinit var lastName: String
+    @SerializedName("lastname")
+    var lastName: String = ""
 
-    @SerializedName("user_middlename")
+    @SerializedName("middlename")
     var middleName: String = ""
 
-    @SerializedName("user_login")
-    lateinit var login: String
+    @SerializedName("login")
+    var login: String = ""
 
-    @SerializedName("user_phone")
-    lateinit var phone: String
+    @SerializedName("phone")
+    var phone: String = ""
 
-    @SerializedName("user_description")
+    @SerializedName("description")
     var description: String = ""
 
-    @SerializedName("user_position")
-    lateinit var position: String
+    @SerializedName("position")
+    var position: String = ""
 
-    @SerializedName("user_email")
+    @SerializedName("email")
     var email: String = ""
 
     @SerializedName("photo")
-    var photo: String = ""
+    var photo: String? = ""
+
+    @SerializedName("city_id")
+    var cityId: Int? = 0
+    @SerializedName("region_id")
+    var regionId: Int? = 0
+    @SerializedName("country_id")
+    var countryId: Int? = 0
+
+    @SerializedName("referral")
+    var referralCode = ""
 
     @Transient
     var image: Bitmap? = null

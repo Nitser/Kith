@@ -22,8 +22,6 @@ class MainFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        Permissions.readExternalStorage(context!!, activity!!)
         initButtons(view)
     }
 

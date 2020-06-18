@@ -6,8 +6,8 @@ import android.os.Handler
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.project.scratchstudio.kith_andoid.R
+import com.project.scratchstudio.kith_andoid.app.Const
 import com.project.scratchstudio.kith_andoid.service.internal_storage.InternalStorageService
-import com.project.scratchstudio.kith_andoid.service.internal_storage.get_internal_data.GetCountData
 import com.project.scratchstudio.kith_andoid.service.internal_storage.get_internal_data.GetUserIdAndToken
 
 class EntryActivity : BaseActivity() {
@@ -20,7 +20,6 @@ class EntryActivity : BaseActivity() {
         val navController = findNavController(R.id.nav_host_fragment)
         NavigationUI.setupActionBarWithNavController(this, navController)
         loadUserFromStorage()
-        loadCountFromStorage()
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -33,8 +32,9 @@ class EntryActivity : BaseActivity() {
             override fun doAfter() {
                 if (InternalStorageService.entryStatus) {
                     Handler().postDelayed({
+                        Const.token = InternalStorageService.user.token
                         val intent = Intent(applicationContext, HomeActivity::class.java)
-                        intent.putExtra("another_user", false)
+                        intent.putExtra("user", InternalStorageService.user)
                         startActivity(intent)
                         finish()
                     }, SPLASH_DISPLAY_LENGTH.toLong())
@@ -47,12 +47,6 @@ class EntryActivity : BaseActivity() {
         })
         getUser.setIGetInternalData(GetUserIdAndToken())
         getUser.execute()
-    }
-
-    private fun loadCountFromStorage() {
-        val getCount = InternalStorageService(this, null)
-        getCount.setIGetInternalData(GetCountData())
-        getCount.execute()
     }
 
 }

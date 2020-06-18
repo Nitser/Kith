@@ -4,6 +4,6 @@ import android.content.SharedPreferences
 
 interface ISetInternalData {
 
-    fun set(sp: SharedPreferences)
+    fun set(sp: SharedPreferences, id: Int?, token: String?, password: String?)
 
 }

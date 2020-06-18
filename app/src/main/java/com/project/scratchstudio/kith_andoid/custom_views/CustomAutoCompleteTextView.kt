@@ -2,19 +2,25 @@ package com.project.scratchstudio.kith_andoid.custom_views
 
 import android.content.Context
 import android.util.AttributeSet
-import android.util.Log
 import android.view.View
 import android.widget.AutoCompleteTextView
 import java.util.Locale
 
 class CustomAutoCompleteTextView(internal val context: Context, attrs: AttributeSet) : AutoCompleteTextView(context, attrs) {
 
-    private lateinit var currentItem: CustomAutoCompleteModel
     private var isSelect: Boolean = false
     private var editTextBehavior: EditTextBehavior = EditTextBehavior(context)
     private lateinit var dependentField: CustomAutoCompleteTextView
+    private var items = HashMap<String, CustomAutoCompleteModel>()
 
-    private var items = ArrayList<CustomAutoCompleteModel>()
+    fun getItems(): HashMap<String, CustomAutoCompleteModel> {
+        return items
+    }
+
+    fun initItems(map: HashMap<String, CustomAutoCompleteModel>) {
+        items.clear()
+        items.putAll(map)
+    }
 
     fun initialize(errorMessage: String, dependentField: CustomAutoCompleteTextView?) {
         if (dependentField != null) {
@@ -24,24 +30,8 @@ class CustomAutoCompleteTextView(internal val context: Context, attrs: Attribute
         this.setOnClickListener()
     }
 
-    fun getItems(): ArrayList<CustomAutoCompleteModel> {
-        return items
-    }
-
-    fun getCurrentItem(): CustomAutoCompleteModel? {
-        return if (::currentItem.isInitialized) {
-            currentItem
-        } else {
-            null
-        }
-    }
-
     private fun setDependentField(field: CustomAutoCompleteTextView) {
         dependentField = field
-    }
-
-    private fun setSelect(select: Boolean) {
-        isSelect = select
     }
 
     private fun hide() {
@@ -60,58 +50,47 @@ class CustomAutoCompleteTextView(internal val context: Context, attrs: Attribute
     fun getSelected(): Boolean = isSelect
 
     fun isItemsContainText(text: String): Boolean {
-        return if (items.map { it.text.toLowerCase(Locale.ROOT) }.contains(text.toLowerCase(Locale.ROOT))) {
-            if (::dependentField.isInitialized) {
-                dependentField.show()
-            }
-            true
-        } else {
-            false
+        return items.containsKey(text.toLowerCase(Locale.ROOT))
+    }
+
+    fun setSelectedIfItemsContainText(text: String) {
+        if(isItemsContainText(text))
+            selectedField()
+    }
+
+    private fun hideDependentField() {
+        if (::dependentField.isInitialized) {
+            (dependentField).hide()
         }
     }
 
-    fun isValidText(text: String): Boolean {
-        val testText = if (::currentItem.isInitialized) {
-            currentItem.text
-        } else {
-            "null"
-        }
-        Log.i("test", "$text ==$testText ?= " + (items.map { it.text.toLowerCase(Locale.ROOT) }.contains(text.toLowerCase(Locale.ROOT))))
-
+    private fun showDependentField() {
         if (::dependentField.isInitialized) {
-            dependentField.hide()
+            (dependentField).show()
         }
+    }
 
-        return if (text.isNotEmpty()
-                && (::currentItem.isInitialized && !items.map { it.text.toLowerCase(Locale.ROOT) }.contains(text.toLowerCase(Locale.ROOT))
-                        || !::currentItem.isInitialized)) {
-            this.setSelect(false)
-            if (!::currentItem.isInitialized) {
-                currentItem = CustomAutoCompleteModel(-1, text)
-            } else {
-                currentItem.id = -1
-                currentItem.text = text
-            }
+    private fun unselectedField() {
+        hideDependentField()
+        isSelect = false
+    }
+
+    private fun selectedField() {
+        showDependentField()
+        isSelect = true
+    }
+
+    fun isViewSelected() : Boolean {
+        return isSelect
+    }
+
+    fun isValidText(text: String): Boolean {
+        return if (text.isNotEmpty() && !items.containsKey(text)) {
+            unselectedField()
             true
         } else {
-            if (::currentItem.isInitialized && !items.map { it.text.toLowerCase(Locale.ROOT) }.contains(text.toLowerCase(Locale.ROOT))) {
-                setSelect(false)
-                currentItem.text = ""
-            } else if (::currentItem.isInitialized && items.map { it.text.toLowerCase(Locale.ROOT) }.contains(text.toLowerCase(Locale.ROOT))) {
-                setSelect(true)
-                for (i in 0 until items.size) {
-                    if (items[i].text.toLowerCase(Locale.ROOT) == text.toLowerCase(Locale.ROOT)) {
-                        if (!::currentItem.isInitialized) {
-                            currentItem = CustomAutoCompleteModel(items[i].id, items[i].text)
-                        } else {
-                            currentItem.id = items[i].id
-                            currentItem.text = items[i].text
-                        }
-                    }
-                }
-                if (::dependentField.isInitialized) {
-                    dependentField.show()
-                }
+            if (items.containsKey(text.toLowerCase(Locale.ROOT))) {
+                selectedField()
             }
             false
         }
@@ -122,16 +101,14 @@ class CustomAutoCompleteTextView(internal val context: Context, attrs: Attribute
             if (hasFocus) {
                 editTextBehavior.fieldClear(this)
             } else {
-                if (this.getSelected()) {
+                if (getSelected()) {
                     editTextBehavior.fieldClear(this)
                 } else {
-                    if (items.map { it.text.toLowerCase(Locale.ROOT) }.contains(this.text.toString().toLowerCase(Locale.ROOT)) || this.text.isEmpty()) {
+                    if (items.containsKey(this.text.toString().toLowerCase(Locale.ROOT)) || this.text.isEmpty()) {
                         editTextBehavior.fieldClear(this)
                     } else {
                         editTextBehavior.fieldErrorWithText(this, errorMessage)
-                        if (::dependentField.isInitialized) {
-                            dependentField.hide()
-                        }
+                        hideDependentField()
                     }
                 }
             }
@@ -139,17 +116,13 @@ class CustomAutoCompleteTextView(internal val context: Context, attrs: Attribute
     }
 
     private fun setOnClickListener() {
-        this.setOnItemClickListener { parent, view, position, id ->
-            this.setSelect(true)
-            currentItem = parent.getItemAtPosition(position) as CustomAutoCompleteModel
-            if (::dependentField.isInitialized) {
-                dependentField.show()
-            }
+        this.setOnItemClickListener { _, _, _, _ ->
+            selectedField()
         }
     }
 
     class CustomAutoCompleteModel(idd: Int, textt: String) {
-        var id = 0
+        var id = -1
         var text = ""
 
         init {

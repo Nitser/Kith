@@ -2,13 +2,13 @@
 <navigation
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation"
     app:startDestination="@id/splashFragment">
 
     <fragment
         android:id="@+id/splashFragment"
-        android:name="com.project.scratchstudio.kith_andoid.ui.entry_package.splash.SplashFragment"
-        android:label="SplashFragment" >
+        android:name="com.project.scratchstudio.kith_andoid.ui.entry_package.splash.SplashFragment">
         <action
             android:id="@+id/action_splashFragment_to_mainFragment"
             app:destination="@id/mainFragment"
@@ -17,8 +17,7 @@
     </fragment>
     <fragment
         android:id="@+id/mainFragment"
-        android:name="com.project.scratchstudio.kith_andoid.ui.entry_package.main.MainFragment"
-        android:label="MainFragment" >
+        android:name="com.project.scratchstudio.kith_andoid.ui.entry_package.main.MainFragment">
         <action
             android:id="@+id/action_mainFragment_to_singInFragment"
             app:destination="@id/singInFragment" />
@@ -28,16 +27,18 @@
     </fragment>
     <fragment
         android:id="@+id/singInFragment"
-        android:name="com.project.scratchstudio.kith_andoid.ui.entry_package.sing_in.SingInFragment"
-        android:label="SingInFragment" >
+        android:name="com.project.scratchstudio.kith_andoid.ui.entry_package.sing_in.SingInFragment">
         <action
             android:id="@+id/action_singInFragment_to_passwordRecoveryEnterLoginOrEmailFragment"
             app:destination="@id/passwordRecoveryEnterLoginOrEmailFragment" />
+        <action
+            android:id="@+id/action_singInFragment_to_homeActivity"
+            app:destination="@id/homeActivity" />
     </fragment>
     <fragment
         android:id="@+id/singUpFragment"
         android:name="com.project.scratchstudio.kith_andoid.ui.entry_package.sing_up.SingUpFragmentFirst"
-        android:label="SingUpFragment">
+        android:label="@string/registration">
         <action
             android:id="@+id/action_singUpFragment_to_singUpFragmentSecond"
             app:destination="@id/singUpFragmentSecond"
@@ -45,11 +46,14 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
+        <argument
+            android:name="user"
+            app:argType="com.project.scratchstudio.kith_andoid.model.UserModelView" />
     </fragment>
     <fragment
         android:id="@+id/singUpFragmentSecond"
         android:name="com.project.scratchstudio.kith_andoid.ui.entry_package.sing_up.SingUpFragmentSecond"
-        android:label="SingUpFragmentSecond" >
+        android:label="@string/registration">
         <action
             android:id="@+id/action_singUpFragmentSecond_to_singUpFragmentThird"
             app:destination="@id/singUpFragmentThird"
@@ -64,18 +68,23 @@
     <fragment
         android:id="@+id/singUpFragmentThird"
         android:name="com.project.scratchstudio.kith_andoid.ui.entry_package.sing_up.SingUpFragmentThird"
-        android:label="SingUpFragmentThird" >
+        android:label="@string/registration">
+        <action
+            android:id="@+id/action_singUpFragmentThird_to_checkSmsFragment"
+            app:destination="@id/checkSmsFragment"
+            app:popUpTo="@+id/mainFragment"
+            app:popUpToInclusive="false" />
+        <action
+            android:id="@+id/action_singUpFragmentThird_to_singUpShowPermissionFragment"
+            app:destination="@id/singUpShowPermissionFragment" />
         <argument
             android:name="user"
             app:argType="com.project.scratchstudio.kith_andoid.model.UserModelView" />
-        <action
-            android:id="@+id/action_singUpFragmentThird_to_checkSmsFragment"
-            app:destination="@id/checkSmsFragment" />
     </fragment>
     <fragment
         android:id="@+id/singUpRefCode"
         android:name="com.project.scratchstudio.kith_andoid.ui.entry_package.sing_up.SingUpRefCodeFragment"
-        android:label="SingUpRefCode" >
+        android:label="@string/registration">
         <action
             android:id="@+id/action_singUpRefCode_to_singUpFragment"
             app:destination="@id/singUpFragment" />
@@ -83,7 +92,7 @@
     <fragment
         android:id="@+id/passwordRecoveryEnterLoginOrEmailFragment"
         android:name="com.project.scratchstudio.kith_andoid.ui.entry_package.password_recovery.PasswordRecoveryEnterLoginOrEmailFragment"
-        android:label="PasswordRecoveryEnterLoginOrEmailFragment" >
+        android:label="@string/password_recovery">
         <action
             android:id="@+id/action_passwordRecoveryEnterLoginOrEmailFragment_to_passwordRecoveryEnterConfirmCodeFragment"
             app:destination="@id/passwordRecoveryEnterConfirmCodeFragment" />
@@ -91,7 +100,7 @@
     <fragment
         android:id="@+id/passwordRecoveryEnterConfirmCodeFragment"
         android:name="com.project.scratchstudio.kith_andoid.ui.entry_package.password_recovery.PasswordRecoveryEnterConfirmCodeFragment"
-        android:label="PasswordRecoveryEnterConfirmCodeFragment" >
+        android:label="@string/password_recovery">
         <action
             android:id="@+id/action_passwordRecoveryEnterConfirmCodeFragment_to_passwordRecoveryEnterNewPasswordFragment"
             app:destination="@id/passwordRecoveryEnterNewPasswordFragment"
@@ -107,23 +116,43 @@
     <fragment
         android:id="@+id/passwordRecoveryEnterNewPasswordFragment"
         android:name="com.project.scratchstudio.kith_andoid.ui.entry_package.password_recovery.PasswordRecoveryEnterNewPasswordFragment"
-        android:label="PasswordRecoveryEnterNewPasswordFragment" >
-        <argument android:name="userId"
-            app:argType="integer" />
+        android:label="@string/password_recovery">
         <action
             android:id="@+id/action_passwordRecoveryEnterNewPasswordFragment_to_singInFragment"
             app:destination="@id/singInFragment"
             app:popUpTo="@+id/singInFragment"
             app:popUpToInclusive="true" />
+        <argument
+            android:name="userId"
+            app:argType="integer" />
     </fragment>
     <fragment
         android:id="@+id/checkSmsFragment"
         android:name="com.project.scratchstudio.kith_andoid.ui.entry_package.sms_check.CheckSmsFragment"
-        android:label="CheckSmsFragment" >
+        android:label="@string/registration_phone_confirmation">
         <action
-            android:id="@+id/action_checkSmsFragment_to_singInFragment"
-            app:destination="@id/singInFragment"
-            app:popUpTo="@+id/singInFragment"
+            android:id="@+id/action_checkSmsFragment_to_mainFragment"
+            app:destination="@id/mainFragment"
+            app:popUpTo="@+id/mainFragment"
             app:popUpToInclusive="true" />
+        <argument
+            android:name="user"
+            app:argType="com.project.scratchstudio.kith_andoid.model.UserModelView" />
     </fragment>
+    <fragment
+        android:id="@+id/singUpShowPermissionFragment"
+        android:name="com.project.scratchstudio.kith_andoid.ui.entry_package.sing_up.SingUpShowPermissionFragment"
+        android:label="SingUpShowPermissionFragment">
+        <argument
+            android:name="webLink"
+            app:argType="string" />
+    </fragment>
+    <activity
+        android:id="@+id/homeActivity"
+        android:name="com.project.scratchstudio.kith_andoid.activities.HomeActivity"
+        tools:layout="@layout/activity_home" >
+        <argument
+            android:name="user"
+            app:argType="com.project.scratchstudio.kith_andoid.model.UserModelView" />
+    </activity>
 </navigation>
