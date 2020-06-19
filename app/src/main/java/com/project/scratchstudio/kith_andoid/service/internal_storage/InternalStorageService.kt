@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.SharedPreferences
 import android.os.AsyncTask
 import android.preference.PreferenceManager
-import android.util.Log
 import com.project.scratchstudio.kith_andoid.model.Cache
 import com.project.scratchstudio.kith_andoid.model.UserModelView
 import com.project.scratchstudio.kith_andoid.service.internal_storage.get_internal_data.IGetInternalData
@@ -15,7 +14,7 @@ class InternalStorageService(private val context: Activity, private val callback
     private var iGetInternalData: IGetInternalData? = null
     private var iSetInternalData: ISetInternalData? = null
 
-    private var id: Int = 0
+    private var id: Int = -1
     private var token: String? = ""
     private var password: String? = ""
     fun setUserData(idq: Int, tokenq: String, passwordq: String) {
@@ -43,7 +42,6 @@ class InternalStorageService(private val context: Activity, private val callback
         if (!sp.contains("cur_user_id")) {
             initializingStorage(sp)
         }
-        Log.i("ISS ", "$id , $token , $password")
         return if (iGetInternalData != null) {
             iGetInternalData!![sp]
             0
@@ -63,7 +61,6 @@ class InternalStorageService(private val context: Activity, private val callback
 
     private fun initializingStorage(sp: SharedPreferences) {
         val ed: SharedPreferences.Editor = sp.edit()
-//        ed.putInt("count_users", 0)
         ed.putInt("cur_user_id", -1)
         ed.putString("user_token", "")
         ed.apply()
