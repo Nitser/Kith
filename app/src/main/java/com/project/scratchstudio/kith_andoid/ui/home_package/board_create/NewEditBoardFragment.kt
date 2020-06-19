@@ -34,6 +34,7 @@ import com.project.scratchstudio.kith_andoid.databinding.FragmentBoardCreateBind
 import com.project.scratchstudio.kith_andoid.model.BoardModelView
 import com.project.scratchstudio.kith_andoid.model.PhotoModelView
 import com.project.scratchstudio.kith_andoid.network.model.BaseResponse
+import com.project.scratchstudio.kith_andoid.network.model.board.Image
 import com.project.scratchstudio.kith_andoid.network.model.category.Category
 import com.project.scratchstudio.kith_andoid.network.model.category.CategoryResponse
 import com.project.scratchstudio.kith_andoid.service.PhotoService
@@ -54,6 +55,7 @@ class NewEditBoardFragment : BaseFragment() {
     private var categoryPosition: Int = 0
 
     private lateinit var viewPagerAdapter: ImageViewPageAdapter
+    private val deletedUri = ArrayList<String>()
 //    private var dots = ArrayList<ImageView>()
 //    private var startDotIndex = 0
 
@@ -126,15 +128,9 @@ class NewEditBoardFragment : BaseFragment() {
                 viewPagerAdapter.imagePathList.remove(item)
                 viewPagerAdapter.notifyDataSetChanged()
                 currentBoardViewModel.getNewPhoto().value!!.remove(item)
-                val deletedVal = currentBoardViewModel.getCurrentBoard().value!!.boardPhotoUrls.find { it.src == item.photoInthernetPath }
-                currentBoardViewModel.getCurrentBoard().value!!.boardPhotoUrls.remove(deletedVal)
+                deletedUri.add(item.photoInthernetPath)
             }
-        }, object : ImageViewPageAdapter.OnItemClickListener {
-            override fun onItemClick(item: PhotoModelView) {
-                requireActivity().findNavController(R.id.nav_host_fragment_home).navigate(NewEditBoardFragmentDirections
-                        .actionNewEditBoardFragmentToBoardFullScreenImageFragment(item))
-            }
-        })
+        }, null)
         binding.boardCreateBoardPhoto.adapter = viewPagerAdapter
 
         binding.boardCreateBoardPhoto.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
@@ -264,6 +260,12 @@ class NewEditBoardFragment : BaseFragment() {
         board.cost = binding.boardCreatePrice.text!!.toString().replace(" \u20BD".toRegex(), "").toInt()
         if (categoryPosition != 0) {
             board.category = categoriesList[categoryPosition - 1]
+        }
+        if (currentBoardViewModel.getCurrentBoard().value!!.boardPhotoUrls.isNotEmpty()) {
+            val res = currentBoardViewModel.getCurrentBoard().value!!.boardPhotoUrls.filter {
+                deletedUri.contains(it.src)
+            }
+            currentBoardViewModel.getCurrentBoard().value!!.boardPhotoUrls.removeAll(res)
         }
         if (currentBoardViewModel.getNewPhoto().value!!.isNotEmpty())
             board.newPhotos.addAll(currentBoardViewModel.getNewPhoto().value!!)

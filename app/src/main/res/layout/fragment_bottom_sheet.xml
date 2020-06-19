@@ -1,35 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<layout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/bottom_sheet"
-    android:background="@color/colorAccent"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    app:behavior_hideable="true"
-    app:behavior_peekHeight="56dp"
-    app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <TextView
-        android:id="@+id/bottom_sheet_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Фильтры поиска"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        style="@style/HomeBoardCreateTitleText"/>
-
-    <Button
-        android:id="@+id/bottom_sheet_button_done"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/bottom_sheet_title"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:layout_marginStart="40dp"
-        android:layout_marginEnd="40dp"
-        style="@style/ButtonLight"
-        android:text="Готово"/>
+        android:layout_height="match_parent"
+        android:background="@drawable/field_light"
+        android:paddingBottom="50dp">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <LinearLayout
+            android:id="@+id/bottom_sheet"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:behavior_hideable="true"
+            app:behavior_peekHeight="56dp"
+            app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+            android:padding="20dp"
+            android:layout_marginBottom="10dp"
+            android:gravity="center_horizontal"
+            android:layout_alignParentTop="true">
+
+            <TextView
+                android:id="@+id/bottom_sheet_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Фильтры поиска"
+                android:textSize="24sp"
+                android:layout_marginBottom="20dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                style="@style/HomeBoardCreateTitleText" />
+
+            <Spinner
+                android:id="@+id/bottom_sheet_category"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/SpinnerLight"
+                android:layout_margin="10dp"/>
+
+            <com.project.scratchstudio.kith_andoid.custom_views.CustomAutoCompleteTextView
+                android:id="@+id/bottom_sheet_country"
+                style="@style/FieldLight"
+                android:layout_marginTop="40dp"
+                android:layout_marginBottom="10dp"
+                android:hint="@string/registration_country"
+                android:inputType="text"
+                android:completionThreshold="1"/>
+
+            <com.project.scratchstudio.kith_andoid.custom_views.CustomAutoCompleteTextView
+                android:id="@+id/bottom_sheet_region"
+                style="@style/FieldLight"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="10dp"
+                android:hint="@string/registration_region"
+                android:inputType="text"
+                android:completionThreshold="1"
+                android:visibility="gone"/>
+
+            <com.project.scratchstudio.kith_andoid.custom_views.CustomAutoCompleteTextView
+                android:id="@+id/bottom_sheet_city"
+                style="@style/FieldLight"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="10dp"
+                android:hint="@string/registration_city"
+                android:inputType="text"
+                android:completionThreshold="1"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/bottom_sheet_button_done"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:layout_marginStart="40dp"
+            android:layout_marginEnd="40dp"
+            android:layout_marginBottom="10dp"
+            style="@style/ButtonLight"
+            android:text="Готово"
+            android:layout_below="@id/bottom_sheet"/>
+
+    </RelativeLayout>
+</layout>

@@ -19,72 +19,35 @@ import okhttp3.RequestBody
 
 class SingUpPresenter(context: Context) {
 
+    private lateinit var res: MultipartBody.Part
+
     init {
         entryApi = ApiClient.getClient(context).create(EntryApi::class.java)
     }
 
-    private fun parseUserToFileOptions(user: UserModelView): List<MultipartBody.Part> {
-        val options = ArrayList<MultipartBody.Part>()
-        if (user.photoFile != null && user.photoFile!!.exists()) {
-//            val file = File("/storage/emulated/0/Download/Corrections 6.jpg")
-            val requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), user.photoFile!!)
-            val body = MultipartBody.Part.createFormData("photo", user.photoFile!!.name, requestFile)
-            options.add(body)
-        }
-        return options
-    }
-
-    private fun parseUserToStringOptions(user: UserModelView): Map<String, String> {
-        val options = HashMap<String, String>()
-        val textType = "text/plain"
-
-//        val firstName = RequestBody.create(MediaType.parse(textType), user.firstName)
-//        val lastName = RequestBody.create(MediaType.parse(textType), user.lastName)
-//        val phone = RequestBody.create(MediaType.parse(textType), user.phone)
-//        val login = RequestBody.create(MediaType.parse(textType), user.login)
-//        val password = RequestBody.create(MediaType.parse(textType), user.password)
-//        val invitedUserId = RequestBody.create(MediaType.parse(textType), user.invitedUserId.toString())
-//        val email = RequestBody.create(MediaType.parse(textType), user.email)
-
-        with(user) {
-            options["user_firstname"] = firstName
-            options["user_lastname"] = lastName
-            options["user_phone"] = phone
-            options["user_login"] = login
-            options["user_password"] = password
-            options["invitation_user_id"] = user.invitedUserId.toString()
-            options["user_email"] = email
-        }
-
-        if (user.middleName.isNotEmpty()) {
-            val middleName = RequestBody.create(MediaType.parse("multipart/form-data"), user.middleName)
-            options["user_middlename"] = user.middleName
-        }
-
-        if (user.position.isNotEmpty()) {
-            val position = RequestBody.create(MediaType.parse("multipart/form-data"), user.position)
-            options["user_position"] = user.position
-        }
-
-        if (user.countryId != -1) {
-            val countryId = RequestBody.create(MediaType.parse("multipart/form-data"), user.countryId.toString())
-            options["country_id"] = user.countryId.toString()
-            if (user.regionId != -1) {
-                val regionId = RequestBody.create(MediaType.parse("multipart/form-data"), user.regionId.toString())
-                options["region_id"] = user.regionId.toString()
-                if (user.cityId != -1) {
-                    val cityId = RequestBody.create(MediaType.parse("multipart/form-data"), user.cityId.toString())
-                    options["city_id"] = user.cityId.toString()
-                }
-            }
-        }
-        return options
-    }
-
     fun singUp(callback: GetUserCallback, user: UserModelView) {
-//        , parseUserToFileOptions(user)
+//        val photoParts = arrayOfNulls<MultipartBody.Part>(board.newPhotos.size)
+        if (user.photoFile != null) {
+            val surveyBody = RequestBody.create(MediaType.parse("image/*"), user.photoFile!!)
+            res = MultipartBody.Part.createFormData("photo", user.photoFile!!.name, surveyBody)
+        }
+
         disposable.add(
-                entryApi.singUp(parseUserToStringOptions(user))
+                entryApi.singUp(
+                        user.firstName
+                        , user.lastName
+                        , user.phone
+                        , user.login
+                        , user.password
+                        , user.invitedUserId.toString()
+                        , user.email
+                        , if (user.middleName == "") null else user.middleName
+                        , if (user.position == "") null else user.position
+                        , if (user.countryId == -1) null else user.countryId.toString()
+                        , if (user.regionId == -1) null else user.regionId.toString()
+                        , if (user.cityId == -1) null else user.cityId.toString()
+                        , if (this::res.isInitialized) res else null
+                )
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeWith(object : DisposableSingleObserver<NewBaseResponse>() {

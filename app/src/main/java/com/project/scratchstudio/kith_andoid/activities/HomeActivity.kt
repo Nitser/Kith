@@ -9,7 +9,6 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
-import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.project.scratchstudio.kith_andoid.R
 import com.project.scratchstudio.kith_andoid.UserPresenter
@@ -53,9 +52,10 @@ class HomeActivity : BaseActivity() {
             val internalStorageService = InternalStorageService(activity, null)
             internalStorageService.setISetInternalData(ClearUserIdAndToken())
             internalStorageService.execute()
+            Const.isEntry = false
+            internalStorageService.setUserData(-1, "", "")
             val intent = Intent(activity, EntryActivity::class.java)
             activity.startActivity(intent)
-            Const.isEntry = false
             activity.finish()
         }
     }

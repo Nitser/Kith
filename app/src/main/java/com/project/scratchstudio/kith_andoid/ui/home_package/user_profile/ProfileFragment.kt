@@ -49,20 +49,21 @@ class ProfileFragment : BaseFragment() {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.menu_profile, menu)
+        if (userType == UserType.MAIN_USER)
+            inflater.inflate(R.menu.menu_profile, menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.menu_profile_exit -> {
-                HomeActivity.exit(activity!!)
+                HomeActivity.exit(requireActivity())
                 return true
             }
-            R.id.menu_profile_edit -> {
-                activity!!.findNavController(R.id.nav_host_fragment_home)
-                        .navigate(ProfileFragmentDirections.actionProfileFragmentToEditProfileFragment())
-                return true
-            }
+//            R.id.menu_profile_edit -> {
+//                activity!!.findNavController(R.id.nav_host_fragment_home)
+//                        .navigate(ProfileFragmentDirections.actionProfileFragmentToEditProfileFragment())
+//                return true
+//            }
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -75,7 +76,7 @@ class ProfileFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         userPresenter = UserPresenter(context!!)
-        user = if(userType == UserType.MAIN_USER) {
+        user = if (userType == UserType.MAIN_USER) {
             mainUserViewModel.getMainUser().value!!
         } else {
             currentUserViewModel.getCurrentUser().value!!

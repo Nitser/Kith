@@ -3,12 +3,12 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item
-        android:id="@+id/menu_home_search"
-        android:icon="@drawable/ic_search"
-        app:showAsAction="ifRoom"
-        android:title="@string/home_menu_search">
-    </item>
+<!--    <item-->
+<!--        android:id="@+id/menu_home_search"-->
+<!--        android:icon="@drawable/ic_search"-->
+<!--        app:showAsAction="ifRoom"-->
+<!--        android:title="@string/home_menu_search">-->
+<!--    </item>-->
 
     <item
         android:id="@+id/menu_home_share"

@@ -65,9 +65,6 @@
         <argument
             android:name="userType"
             app:argType="com.project.scratchstudio.kith_andoid.app.UserType" />
-        <action
-            android:id="@+id/action_newEditBoardFragment_to_boardFullScreenImageFragment"
-            app:destination="@id/boardFullScreenImageFragment" />
     </fragment>
     <fragment
         android:id="@+id/shareCodeFragment"

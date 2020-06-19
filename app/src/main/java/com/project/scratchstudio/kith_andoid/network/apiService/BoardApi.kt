@@ -54,7 +54,9 @@ interface BoardApi {
 
     @GET("api/boards/enabled")
     fun searchBoards(@Query("search") search: String, @Query("category_id") categoryId: String,
-                     @Query("size") size: Int, @Query("page") page: Int): Single<BoardsResponse>
+                     @Query("country_id") countryId: String, @Query("region_id") regionId: String,
+                     @Query("city_id") cityId: String, @Query("size") size: Int,
+                     @Query("page") page: Int): Single<BoardsResponse>
 
     @GET("api/boards/getsubscribes/{id}")
     fun getFavoriteBoards(@Path("id") id: Int): Single<BoardsResponse>

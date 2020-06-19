@@ -9,11 +9,11 @@
         android:title="@string/profile_menu_exit">
     </item>
 
-    <item
-        android:id="@+id/menu_profile_edit"
-        android:icon="@drawable/ic_edit"
-        app:showAsAction="ifRoom"
-        android:title="@string/profile_menu_edit">
-    </item>
+<!--    <item-->
+<!--        android:id="@+id/menu_profile_edit"-->
+<!--        android:icon="@drawable/ic_edit"-->
+<!--        app:showAsAction="ifRoom"-->
+<!--        android:title="@string/profile_menu_edit">-->
+<!--    </item>-->
 
 </menu>

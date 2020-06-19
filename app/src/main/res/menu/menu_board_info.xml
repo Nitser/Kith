@@ -19,13 +19,11 @@
 
             <item
                 android:id="@+id/menu_board_info_action_archive_board"
-                android:icon="@android:drawable/ic_menu_help"
                 android:title="@string/board_info_menu_action_archive_board"
                 app:showAsAction="ifRoom" />
 
             <item
                 android:id="@+id/menu_board_info_action_delete_board"
-                android:icon="@android:drawable/ic_menu_preferences"
                 android:title="@string/board_info_menu_action_delete_board"
                 app:showAsAction="ifRoom" />
 

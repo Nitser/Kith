@@ -52,10 +52,10 @@ class HomeFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.menu_home_search -> {
-                onClickSearch()
-                return true
-            }
+//            R.id.menu_home_search -> {
+//                onClickSearch()
+//                return true
+//            }
             R.id.menu_home_share -> {
                 activity!!.findNavController(R.id.nav_host_fragment_home).navigate(HomeFragmentDirections.actionHomeFragmentToShareCodeFragment(mainUserViewModel.getMainUser().value!!.referralCode))
                 return true
@@ -97,18 +97,18 @@ class HomeFragment : Fragment() {
             initUserData()
         }
 
-        userPresenter.getInvitedUsers(object : UserPresenter.GetUserListCallback {
-            override fun onSuccess(userResponse: Array<User>) {
-                val response = ArrayList(listOf(*userResponse)).map {
-                    userPresenter.userParser(it, UserModelView())
-                }
-                setInvitedUsersList(response)
-            }
-
-            override fun onError(networkError: NetworkErrorException) {
-                Toast.makeText(context, "Ошибка отправки запроса", Toast.LENGTH_SHORT).show()
-            }
-        }, mainUserViewModel.getMainUser().value!!.id)
+//        userPresenter.getInvitedUsers(object : UserPresenter.GetUserListCallback {
+//            override fun onSuccess(userResponse: Array<User>) {
+//                val response = ArrayList(listOf(*userResponse)).map {
+//                    userPresenter.userParser(it, UserModelView())
+//                }
+//                setInvitedUsersList(response)
+//            }
+//
+//            override fun onError(networkError: NetworkErrorException) {
+//                Toast.makeText(context, "Ошибка отправки запроса", Toast.LENGTH_SHORT).show()
+//            }
+//        }, mainUserViewModel.getMainUser().value!!.id)
     }
 
     private fun initUserData() {
