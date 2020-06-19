@@ -70,14 +70,35 @@
                     android:text="Заголовок объявления" />
             </RelativeLayout>
 
-            <ImageView
-                android:id="@+id/board_info_comment_board_photo"
+<!--            <ImageView-->
+<!--                android:id="@+id/board_info_comment_board_photo"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:scaleType="center"-->
+<!--                android:background="@color/colorEmptyPhoto"-->
+<!--                android:src="@drawable/newspaper"-->
+<!--                android:padding="50dp"/>-->
+
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="center"
-                android:background="@color/colorEmptyPhoto"
-                android:src="@drawable/newspaper"
-                android:padding="50dp"/>
+                android:layout_height="242dp"
+                android:layout_marginBottom="8dp">
+
+                <androidx.viewpager.widget.ViewPager
+                    android:id="@+id/board_info_comment_board_photo"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/colorEmptyPhoto"/>
+
+                <LinearLayout
+                    android:id="@+id/board_info_comment_dots_slider"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="10dp"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"/>
+            </RelativeLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_marginStart="20dp"

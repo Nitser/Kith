@@ -8,12 +8,14 @@ import android.widget.ImageView
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
 import com.project.scratchstudio.kith_andoid.R
+import com.project.scratchstudio.kith_andoid.app.BoardFragmentType
 import com.project.scratchstudio.kith_andoid.app.Const
 import com.project.scratchstudio.kith_andoid.model.PhotoModelView
 import com.squareup.picasso.MemoryPolicy
 import com.squareup.picasso.Picasso
 
-class ImageViewPageAdapter(private val context: Context) : PagerAdapter() {
+class ImageViewPageAdapter(private val context: Context, private val type: BoardFragmentType
+                           , private val listener: OnItemClickListener?, private val clickImageListener: OnItemClickListener?) : PagerAdapter() {
 
     val imagePathList = ArrayList<PhotoModelView>()
     private lateinit var layoutInflater: LayoutInflater
@@ -47,13 +49,17 @@ class ImageViewPageAdapter(private val context: Context) : PagerAdapter() {
             }
         }
 
+        imageView.setOnClickListener { clickImageListener?.onItemClick(imagePathList[position]) }
+
         val vp = container as ViewPager
         vp.addView(view, 0)
 
-        delete.setOnClickListener {
-            imagePathList.remove(imagePathList[position])
-            this.notifyDataSetChanged()
+        if (type == BoardFragmentType.BOARD_EDIT) {
+            delete.setOnClickListener { listener?.onItemClick(imagePathList[position]) }
+        } else {
+            delete.visibility = View.GONE
         }
+
         return view
     }
 
@@ -61,6 +67,10 @@ class ImageViewPageAdapter(private val context: Context) : PagerAdapter() {
         val vp = container as ViewPager
         val view = `object` as View
         vp.removeView(view)
+    }
+
+    interface OnItemClickListener {
+        fun onItemClick(item: PhotoModelView)
     }
 
 }

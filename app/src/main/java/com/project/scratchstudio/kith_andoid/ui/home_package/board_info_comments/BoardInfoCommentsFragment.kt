@@ -8,17 +8,22 @@ import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.viewpager.widget.ViewPager
 import com.project.scratchstudio.kith_andoid.BoardPresenter
 import com.project.scratchstudio.kith_andoid.R
 import com.project.scratchstudio.kith_andoid.UserPresenter
 import com.project.scratchstudio.kith_andoid.activities.HomeActivity
 import com.project.scratchstudio.kith_andoid.app.BaseFragment
+import com.project.scratchstudio.kith_andoid.app.BoardFragmentType
 import com.project.scratchstudio.kith_andoid.app.Const
 import com.project.scratchstudio.kith_andoid.databinding.FragmentBoardInformationCommentsBinding
 import com.project.scratchstudio.kith_andoid.model.BoardModelView
+import com.project.scratchstudio.kith_andoid.model.PhotoModelView
 import com.project.scratchstudio.kith_andoid.network.model.BaseResponse
 import com.project.scratchstudio.kith_andoid.network.model.comment.Comment
+import com.project.scratchstudio.kith_andoid.ui.home_package.board_info.ImageViewPageAdapter
 import com.project.scratchstudio.kith_andoid.ui.home_package.board_info_comments.list.CommentAdapter
 import com.project.scratchstudio.kith_andoid.view_model.CurrentBoardViewModel
 import com.squareup.picasso.MemoryPolicy
@@ -33,6 +38,7 @@ class BoardInfoCommentsFragment : BaseFragment() {
     private lateinit var binding: FragmentBoardInformationCommentsBinding
     private val currentBoardViewModel: CurrentBoardViewModel by activityViewModels()
     private lateinit var board: BoardModelView
+    private lateinit var viewPagerAdapter: ImageViewPageAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentBoardInformationCommentsBinding.inflate(inflater, container, false)
@@ -53,13 +59,60 @@ class BoardInfoCommentsFragment : BaseFragment() {
         llm.orientation = LinearLayoutManager.VERTICAL
         binding.boardInfoCommentCommentsList.layoutManager = llm
         binding.boardInfoCommentCommentsList.isNestedScrollingEnabled = false
+
+        setAdapter()
+        setViewPageAdapter()
+
+        viewPagerAdapter.imagePathList.clear()
+        viewPagerAdapter.imagePathList.addAll(
+                ArrayList(currentBoardViewModel.getCurrentBoard().value!!.boardPhotoUrls.map {
+                    val photo = PhotoModelView()
+                    photo.photoInthernetPath = it.src
+                    photo
+                }))
+        viewPagerAdapter.imagePathList.addAll(
+                currentBoardViewModel.getCurrentBoard().value!!.newPhotos.map {
+                    it
+                })
+        viewPagerAdapter.notifyDataSetChanged()
 //        val scrollListener = object : EndlessRecyclerViewScrollListener(llm) {
 //            override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView) {
 //                getComments(page, totalItemsCount)
 //            }
 //        }
 //        binding.boardInfoCommentCommentsList.addOnScrollListener(scrollListener)
-        setAdapter()
+
+    }
+
+    private fun setViewPageAdapter() {
+        viewPagerAdapter = ImageViewPageAdapter(requireContext(), BoardFragmentType.BOARD_INFO, null, object : ImageViewPageAdapter.OnItemClickListener {
+            override fun onItemClick(item: PhotoModelView) {
+                requireActivity().findNavController(R.id.nav_host_fragment_home).navigate(BoardInfoCommentsFragmentDirections
+                        .actionCommentListFragmentToBoardFullScreenImageFragment(item))
+            }
+        })
+        viewPagerAdapter.imagePathList.addAll(
+                ArrayList(currentBoardViewModel.getCurrentBoard().value!!.boardPhotoUrls.map {
+                    val photo = PhotoModelView()
+                    photo.photoInthernetPath = it.src
+                    photo
+                }))
+        binding.boardInfoCommentBoardPhoto.adapter = viewPagerAdapter
+
+        binding.boardInfoCommentBoardPhoto.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+
+            }
+
+            override fun onPageSelected(position: Int) {
+//                dots.map { it.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_not_active_circle_10dp)) }
+//                dots[position].setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_active_circle_10dp))
+            }
+
+            override fun onPageScrollStateChanged(state: Int) {
+
+            }
+        })
     }
 
     private fun onClickJoin(view: View) {
@@ -70,7 +123,6 @@ class BoardInfoCommentsFragment : BaseFragment() {
             boardPresenter.unsubscribeAnnouncement(board, view as CheckBox)
         }
     }
-
 
     private fun getComments(page: Int, size: Int) {
         boardPresenter.getComments(object : BoardPresenter.CommentsCallback {

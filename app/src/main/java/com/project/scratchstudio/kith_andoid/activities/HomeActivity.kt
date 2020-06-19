@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
+import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.project.scratchstudio.kith_andoid.R
 import com.project.scratchstudio.kith_andoid.UserPresenter
@@ -95,11 +96,11 @@ class HomeActivity : BaseActivity() {
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
             R.id.navigation_tree -> {
-                findNavController(R.id.nav_host_fragment_home).navigate(R.id.action_boardsFragment_to_homeFragment)
+                findNavController(R.id.nav_host_fragment_home).navigate(R.id.homeFragment)
                 item.isChecked = true
             }
             R.id.navigation_announcements -> {
-                findNavController(R.id.nav_host_fragment_home).navigate(R.id.action_homeFragment_to_boardsFragment)
+                findNavController(R.id.nav_host_fragment_home).navigate(R.id.boardsFragment)
                 item.isChecked = true
             }
         }

@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
@@ -55,6 +56,8 @@ class BoardsFragment : BaseFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        (activity as AppCompatActivity).supportActionBar!!.setHomeButtonEnabled(false)
+        (activity as AppCompatActivity).supportActionBar!!.setDisplayHomeAsUpEnabled(false)
         binding = FragmentBoardListBinding.inflate(inflater)
         return binding.root
     }
@@ -67,6 +70,8 @@ class BoardsFragment : BaseFragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.menu_board_list_create_board -> {
+                val model: CurrentBoardViewModel by activityViewModels()
+                model.setCurrentBoard(BoardModelView())
                 activity!!.findNavController(R.id.nav_host_fragment_home)
                         .navigate(BoardsFragmentDirections.actionBoardsFragmentToNewEditBoardFragment(UserType.MAIN_NEW_USER))
                 return true
@@ -109,7 +114,6 @@ class BoardsFragment : BaseFragment() {
             }
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                Log.i("FILTER BOARD", "text changed. $s ")
                 filterList(s.toString())
             }
 

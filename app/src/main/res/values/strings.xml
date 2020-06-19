@@ -130,6 +130,9 @@
 <!--Board Info-->
     <string name="board_info_title">Объявление</string>
     <string name="board_info_menu_edit_board">Редактировать объявление</string>
+    <string name="board_info_menu_options">Опции</string>
+    <string name="board_info_menu_action_delete_board">Удалить</string>
+    <string name="board_info_menu_action_archive_board">Архивировать</string>
     <string name="board_info_date">%1$s руб.</string>
 
 <!--Create Board-->

@@ -7,6 +7,7 @@
     <color name="colorHint">#C2C2C2</color>
     <color name="colorLightGrey">#eff1f2</color>
     <color name="colorGrey">#707070</color>
+    <color name="colorDarkGrey">#202020</color>
     <color name="colorAccent">#FFFFFF</color>
     <color name="colorError">#F36262</color>
     <color name="colorActive">#08A7FC</color>

@@ -1,9 +1,12 @@
 package com.project.scratchstudio.kith_andoid.model
 
 import android.graphics.Bitmap
+import androidx.annotation.Keep
 import java.io.File
+import java.io.Serializable
 
-class PhotoModelView {
+@Keep
+class PhotoModelView : Serializable {
 
     var photoInthernetPath = ""
     var photoPhoneStoragePath = ""

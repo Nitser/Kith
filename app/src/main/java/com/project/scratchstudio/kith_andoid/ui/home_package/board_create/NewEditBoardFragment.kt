@@ -17,18 +17,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager.widget.ViewPager
 import com.project.scratchstudio.kith_andoid.BoardPresenter
 import com.project.scratchstudio.kith_andoid.R
 import com.project.scratchstudio.kith_andoid.activities.HomeActivity
 import com.project.scratchstudio.kith_andoid.app.BaseFragment
+import com.project.scratchstudio.kith_andoid.app.BoardFragmentType
 import com.project.scratchstudio.kith_andoid.app.UserType
 import com.project.scratchstudio.kith_andoid.databinding.FragmentBoardCreateBinding
 import com.project.scratchstudio.kith_andoid.model.BoardModelView
@@ -38,23 +38,24 @@ import com.project.scratchstudio.kith_andoid.network.model.category.Category
 import com.project.scratchstudio.kith_andoid.network.model.category.CategoryResponse
 import com.project.scratchstudio.kith_andoid.service.PhotoService
 import com.project.scratchstudio.kith_andoid.ui.home_package.board_info.ImageViewPageAdapter
+import com.project.scratchstudio.kith_andoid.ui.home_package.board_info_comments.BoardInfoCommentsFragmentDirections
 import com.project.scratchstudio.kith_andoid.view_model.CurrentBoardViewModel
-import java.io.File
 import java.io.InputStream
 
 class NewEditBoardFragment : BaseFragment() {
     private lateinit var binding: FragmentBoardCreateBinding
-    private var boardPresenter: BoardPresenter? = null
     private lateinit var userType: UserType
     private val currentBoardViewModel: CurrentBoardViewModel by activityViewModels()
+
+    private var boardPresenter: BoardPresenter? = null
+
+    private lateinit var adapter: ArrayAdapter<CharSequence>
     private var categoriesList = ArrayList<Category>()
     private var categoryPosition: Int = 0
-    private lateinit var adapter: ArrayAdapter<CharSequence>
-    private lateinit var viewPagerAdapter: ImageViewPageAdapter
 
-    private var newPhotos = ArrayList<File>()
-    private var dotscount: Int = 0
-    private var dots = ArrayList<ImageView>()
+    private lateinit var viewPagerAdapter: ImageViewPageAdapter
+//    private var dots = ArrayList<ImageView>()
+//    private var startDotIndex = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setHasOptionsMenu(true)
@@ -83,40 +84,58 @@ class NewEditBoardFragment : BaseFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        verifyStoragePermissions(activity)
-        boardPresenter = BoardPresenter(context!!)
+        verifyStoragePermissions(requireActivity())
+        boardPresenter = BoardPresenter(requireContext())
+
         binding.boardCreatePrice.addTextChangedListener(CurrencyTextWatcher(binding.boardCreatePrice))
         binding.boardCreateAddPhoto.setOnClickListener(this::startGallery)
+
         initCategory()
         setViewPagerAdapter()
+
         if (userType == UserType.MAIN_USER) {
             fillFields(currentBoardViewModel.getCurrentBoard().value!!)
         }
+
+        if (currentBoardViewModel.getNewPhoto().value != null && !currentBoardViewModel.getNewPhoto().value!!.isNullOrEmpty()) {
+            currentBoardViewModel.getNewPhoto().value!!.clear()
+        } else {
+            currentBoardViewModel.setNewPhoto(ArrayList())
+        }
+        currentBoardViewModel.getNewPhoto().observe(viewLifecycleOwner, Observer<ArrayList<PhotoModelView>> { item ->
+            viewPagerAdapter.imagePathList.clear()
+            viewPagerAdapter.imagePathList.addAll(currentBoardViewModel.getCurrentBoard().value!!.boardPhotoUrls.map {
+                val photo = PhotoModelView()
+                photo.photoInthernetPath = it.src
+                photo
+            })
+            viewPagerAdapter.imagePathList.addAll(
+                    ArrayList(item.map {
+                        val photo = PhotoModelView()
+                        photo.photoBitmap = it.photoBitmap
+                        photo
+                    }))
+//            initDoteView(viewPagerAdapter.imagePathList.size, startDotIndex)
+        })
     }
 
     private fun setViewPagerAdapter() {
-        viewPagerAdapter = ImageViewPageAdapter(requireContext())
-        viewPagerAdapter.imagePathList.addAll(
-                ArrayList(currentBoardViewModel.getCurrentBoard().value!!.boardPhotoUrls.map {
-                    val photo = PhotoModelView()
-                    photo.photoInthernetPath = it.src
-                    photo
-                }))
+        viewPagerAdapter = ImageViewPageAdapter(requireContext(), BoardFragmentType.BOARD_EDIT
+                , object : ImageViewPageAdapter.OnItemClickListener {
+            override fun onItemClick(item: PhotoModelView) {
+                viewPagerAdapter.imagePathList.remove(item)
+                viewPagerAdapter.notifyDataSetChanged()
+                currentBoardViewModel.getNewPhoto().value!!.remove(item)
+                val deletedVal = currentBoardViewModel.getCurrentBoard().value!!.boardPhotoUrls.find { it.src == item.photoInthernetPath }
+                currentBoardViewModel.getCurrentBoard().value!!.boardPhotoUrls.remove(deletedVal)
+            }
+        }, object : ImageViewPageAdapter.OnItemClickListener {
+            override fun onItemClick(item: PhotoModelView) {
+                requireActivity().findNavController(R.id.nav_host_fragment_home).navigate(NewEditBoardFragmentDirections
+                        .actionNewEditBoardFragmentToBoardFullScreenImageFragment(item))
+            }
+        })
         binding.boardCreateBoardPhoto.adapter = viewPagerAdapter
-
-        dotscount = viewPagerAdapter.count
-
-        for (i in 0 until dotscount) {
-            val dot = ImageView(requireContext())
-            dot.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_not_active_circle_10dp))
-            val params = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-            params.setMargins(8, 0, 8, 0)
-            dots.add(dot)
-            binding.boardCreateBoardPhoto.addView(dot, params)
-        }
-
-        if (!dots.isNullOrEmpty())
-            dots[0].setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_active_circle_10dp))
 
         binding.boardCreateBoardPhoto.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
@@ -124,14 +143,33 @@ class NewEditBoardFragment : BaseFragment() {
             }
 
             override fun onPageSelected(position: Int) {
-                dots.map { it.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_not_active_circle_10dp)) }
-                dots[position].setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_active_circle_10dp))
+//                startDotIndex = position
+//                dots.map { it.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_not_active_circle_10dp)) }
+//                dots[position].setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_active_circle_10dp))
             }
 
             override fun onPageScrollStateChanged(state: Int) {
 
             }
         })
+    }
+
+    private fun initDoteView(size: Int, startIndex: Int) {
+//        binding.boardCreateDotsSlider.removeAllViews()
+//
+//        if (size > 0)
+//            for (i in 0 until size) {
+//                val dot = ImageView(requireContext())
+//                if (i == startIndex) {
+//                    dots[startIndex].setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_active_circle_10dp))
+//                } else {
+//                    dot.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_not_active_circle_10dp))
+//                }
+//                val params = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+//                params.setMargins(8, 0, 8, 0)
+//                dots.add(dot)
+//                binding.boardCreateDotsSlider.addView(dot, params)
+//            }
     }
 
     private fun initCategory() {
@@ -175,6 +213,14 @@ class NewEditBoardFragment : BaseFragment() {
         binding.boardCreateTitle.setText(board.title)
         binding.boardCreateDescription.setText(board.description)
         binding.boardCreatePrice.setText(board.cost.toString())
+        viewPagerAdapter.imagePathList.addAll(
+                ArrayList(currentBoardViewModel.getCurrentBoard().value!!.boardPhotoUrls.map {
+                    val photo = PhotoModelView()
+                    photo.photoInthernetPath = it.src
+                    photo
+                }))
+        viewPagerAdapter.notifyDataSetChanged()
+//        initDoteView(viewPagerAdapter.imagePathList.size, startDotIndex)
     }
 
     private fun onClickDone() {
@@ -186,7 +232,7 @@ class NewEditBoardFragment : BaseFragment() {
             if (userType == UserType.MAIN_NEW_USER) {
                 boardPresenter!!.createBoard(object : BoardPresenter.BoardCallback {
                     override fun onSuccess(baseResponse: BaseResponse) {
-                        HomeActivity.hideKeyboard(activity!!)
+                        HomeActivity.hideKeyboard(requireActivity())
                         Toast.makeText(context, "Объявление создано", Toast.LENGTH_SHORT).show()
                         findNavController().popBackStack()
                     }
@@ -194,12 +240,13 @@ class NewEditBoardFragment : BaseFragment() {
                     override fun onError(networkError: NetworkErrorException) {
                         Toast.makeText(context, "Ошибка отправки запроса", Toast.LENGTH_SHORT).show()
                     }
-                }, saveBoard(BoardModelView()))
+                }, saveBoard(currentBoardViewModel.getCurrentBoard().value!!))
             } else {
                 boardPresenter!!.editBoard(object : BoardPresenter.BoardCallback {
                     override fun onSuccess(baseResponse: BaseResponse) {
-                        HomeActivity.hideKeyboard(activity!!)
+                        HomeActivity.hideKeyboard(requireActivity())
                         Toast.makeText(context, "Объявление изменено", Toast.LENGTH_SHORT).show()
+//                        currentBoardViewModel.getCurrentBoard().value!!.newPhotos.addAll(currentBoardViewModel.getNewPhoto().value!!)
                         findNavController().popBackStack()
                     }
 
@@ -218,8 +265,8 @@ class NewEditBoardFragment : BaseFragment() {
         if (categoryPosition != 0) {
             board.category = categoriesList[categoryPosition - 1]
         }
-        if (newPhotos.isNotEmpty())
-            board.newPhotos.addAll(newPhotos)
+        if (currentBoardViewModel.getNewPhoto().value!!.isNotEmpty())
+            board.newPhotos.addAll(currentBoardViewModel.getNewPhoto().value!!)
         return board
     }
 
@@ -232,10 +279,14 @@ class NewEditBoardFragment : BaseFragment() {
 //    }
 
     private fun startGallery(view: View) {
-        val intent = Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
-        intent.type = "image/*"
-        startActivityForResult(intent, 0)
+        if (currentBoardViewModel.getCurrentBoard().value!!.boardPhotoUrls.size + currentBoardViewModel.getNewPhoto().value!!.size < 10) {
+            val intent = Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+            intent.type = "image/*"
+            startActivityForResult(intent, 0)
+        } else {
+            Toast.makeText(requireContext(), "Лимит количества фотографий достигнут", Toast.LENGTH_SHORT).show()
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
@@ -253,16 +304,17 @@ class NewEditBoardFragment : BaseFragment() {
                     val newPhoto = photoService.fullPreparingPhoto(bitmap, imageUri)
 
                     if (newPhoto != null) {
-                        val dot = ImageView(requireContext())
-                        dot.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_not_active_circle_10dp))
-                        val params = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-                        params.setMargins(8, 0, 8, 0)
-                        dots.add(dot)
-                        binding.boardCreateDotsSlider.addView(dot, params)
+                        newPhoto.photoBitmap = photoService.changePhoto(newPhoto.photoBitmap!!, newPhoto.phoneStorageFile)
+//                        val dot = ImageView(requireContext())
+//                        dot.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_not_active_circle_10dp))
+//                        val params = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+//                        params.setMargins(8, 0, 8, 0)
+//                        dots.add(dot)
+//                        binding.boardCreateDotsSlider.addView(dot, params)
                         viewPagerAdapter.imagePathList.add(newPhoto)
                         viewPagerAdapter.notifyDataSetChanged()
 
-                        newPhotos.add(newPhoto.phoneStorageFile)
+                        currentBoardViewModel.getNewPhoto().value!!.add(newPhoto)
                     }
                 }
             }
@@ -271,7 +323,7 @@ class NewEditBoardFragment : BaseFragment() {
 
     companion object {
 
-        private val REQUEST_EXTERNAL_STORAGE = 1
+        private const val REQUEST_EXTERNAL_STORAGE = 1
         private val PERMISSIONS_STORAGE = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
 
         private fun verifyStoragePermissions(activity: Activity?) {
@@ -284,12 +336,6 @@ class NewEditBoardFragment : BaseFragment() {
                         REQUEST_EXTERNAL_STORAGE
                 )
             }
-        }
-
-        fun newInstance(bundle: Bundle): NewEditBoardFragment {
-            val fragment = NewEditBoardFragment()
-            fragment.arguments = bundle
-            return fragment
         }
     }
 }

@@ -21,27 +21,27 @@ import java.io.UnsupportedEncodingException
 import java.net.HttpURLConnection
 import java.net.URL
 import java.nio.charset.StandardCharsets.UTF_8
+import java.util.Calendar
 
 class PhotoService(private val context: Context) {
 
     fun fullPreparingPhoto(bitmap: Bitmap, uri: Uri): PhotoModelView? {
+        val newPhoto = PhotoModelView()
         val newBitmap: Bitmap
         val path = getRealPathFromURI(uri)
         val f = File(path!!)
-        val angel: Int
+
+        newBitmap = changeOrientation(f, bitmap, getExifAngle(f))
 
         val file = File(context.filesDir, "kith")
         if (!file.exists()) {
             file.mkdirs()
         }
-        val img = File(file, "kith_img")
+        val img = File(file, "kith_img${Calendar.getInstance().time}")
         val out = FileOutputStream(img)
-        angel = getExifAngle(f)
-        newBitmap = changeOrientation(file, bitmap, angel)
         newBitmap.compress(Bitmap.CompressFormat.JPEG, 50, out)
 
-        val newPhoto = PhotoModelView()
-        newPhoto.photoBitmap = bitmap
+        newPhoto.photoBitmap = newBitmap
         newPhoto.photoPhoneStoragePath = img.path
         newPhoto.phoneStorageFile = img
 
@@ -66,24 +66,6 @@ class PhotoService(private val context: Context) {
         return bitmap
     }
 
-    private fun calculateInSampleSize(options: BitmapFactory.Options, reqWidth: Int, reqHeight: Int): Int {
-        val height = options.outHeight
-        val width = options.outWidth
-        var inSampleSize = 1
-
-        if (height > reqHeight || width > reqWidth) {
-
-            val halfHeight = height / 2
-            val halfWidth = width / 2
-
-            while (halfHeight / inSampleSize >= reqHeight && halfWidth / inSampleSize >= reqWidth) {
-                inSampleSize *= 2
-            }
-        }
-
-        return inSampleSize
-    }
-
     fun changePhoto(bitmap: Bitmap, uri: Uri): Bitmap {
         var angel = -1
         val path = getRealPathFromURI(uri)
@@ -94,6 +76,16 @@ class PhotoService(private val context: Context) {
             Log.i("ERROR IN ANGEL:", e.message)
         }
         return changeOrientation(f, bitmap, angel)
+    }
+
+    fun changePhoto(bitmap: Bitmap, file: File): Bitmap {
+        var angel = -1
+        try {
+            angel = getExifAngle(file)
+        } catch (e: Exception) {
+            Log.i("ERROR IN ANGEL:", e.message)
+        }
+        return changeOrientation(file, bitmap, angel)
     }
 
     private fun changeOrientation(f: File, bitmap: Bitmap, angle: Int): Bitmap {
@@ -153,6 +145,24 @@ class PhotoService(private val context: Context) {
             cursor.close()
         }
         return result
+    }
+
+    private fun calculateInSampleSize(options: BitmapFactory.Options, reqWidth: Int, reqHeight: Int): Int {
+        val height = options.outHeight
+        val width = options.outWidth
+        var inSampleSize = 1
+
+        if (height > reqHeight || width > reqWidth) {
+
+            val halfHeight = height / 2
+            val halfWidth = width / 2
+
+            while (halfHeight / inSampleSize >= reqHeight && halfWidth / inSampleSize >= reqWidth) {
+                inSampleSize *= 2
+            }
+        }
+
+        return inSampleSize
     }
 
     @Throws(UnsupportedEncodingException::class)

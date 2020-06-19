@@ -4,7 +4,6 @@ import android.accounts.NetworkErrorException
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -12,10 +11,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
-import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
@@ -24,12 +20,14 @@ import com.project.scratchstudio.kith_andoid.BoardPresenter
 import com.project.scratchstudio.kith_andoid.R
 import com.project.scratchstudio.kith_andoid.UserPresenter
 import com.project.scratchstudio.kith_andoid.app.BaseFragment
+import com.project.scratchstudio.kith_andoid.app.BoardFragmentType
 import com.project.scratchstudio.kith_andoid.app.Const
 import com.project.scratchstudio.kith_andoid.app.UserType
 import com.project.scratchstudio.kith_andoid.databinding.FragmentBoardInformationBinding
 import com.project.scratchstudio.kith_andoid.model.BoardModelView
 import com.project.scratchstudio.kith_andoid.model.PhotoModelView
 import com.project.scratchstudio.kith_andoid.model.UserModelView
+import com.project.scratchstudio.kith_andoid.network.model.BaseResponse
 import com.project.scratchstudio.kith_andoid.network.model.user.User
 import com.project.scratchstudio.kith_andoid.view_model.CurrentBoardViewModel
 import com.project.scratchstudio.kith_andoid.view_model.CurrentUserViewModel
@@ -45,11 +43,11 @@ class BoardInfoFragment : BaseFragment() {
     private lateinit var userPresenter: UserPresenter
     private lateinit var boardPresenter: BoardPresenter
     private lateinit var userType: UserType
+    private lateinit var viewPagerAdapter: ImageViewPageAdapter
 
-    private var dotscount: Int = 0
-    private var dots = ArrayList<ImageView>()
-
-    private var lastDotIndex = 0
+//    private var dotscount: Int = 0
+//    private var dots = ArrayList<ImageView>()
+//    private var lastDotIndex = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setHasOptionsMenu(true)
@@ -58,29 +56,54 @@ class BoardInfoFragment : BaseFragment() {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.menu_board_info, menu)
+        if (userType == UserType.MAIN_USER)
+            inflater.inflate(R.menu.menu_board_info, menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.menu_board_info_edit_board -> {
-                activity!!.findNavController(R.id.nav_host_fragment_home)
-                        .navigate(BoardInfoFragmentDirections.actionBoardInfoFragmentToNewEditBoardFragment(userType))
-                return true
+        if (userType == UserType.MAIN_USER)
+            return when (item.itemId) {
+                R.id.menu_board_info_edit_board -> {
+                    activity!!.findNavController(R.id.nav_host_fragment_home)
+                            .navigate(BoardInfoFragmentDirections.actionBoardInfoFragmentToNewEditBoardFragment(userType))
+                    return true
+                }
+                R.id.menu_board_info_action_archive_board -> {
+                    boardPresenter.archiveBoard(object : BoardPresenter.BoardCallback {
+                        override fun onSuccess(baseResponse: BaseResponse) {
+                            Toast.makeText(requireContext(), "Доска архивирована", Toast.LENGTH_SHORT).show()
+                            activity!!.findNavController(R.id.nav_host_fragment_home).popBackStack()
+                        }
+
+                        override fun onError(networkError: NetworkErrorException) {
+                            Toast.makeText(requireContext(), "Ошибка отправки запроса", Toast.LENGTH_SHORT).show()
+                        }
+                    }, currentBoardViewModel.getCurrentBoard().value!!)
+                    return true
+                }
+                R.id.menu_board_info_action_delete_board -> {
+                    boardPresenter.deleteBoard(object : BoardPresenter.BoardCallback {
+                        override fun onSuccess(baseResponse: BaseResponse) {
+                            Toast.makeText(requireContext(), "Доска удалена", Toast.LENGTH_SHORT).show()
+                            activity!!.findNavController(R.id.nav_host_fragment_home).popBackStack()
+                        }
+
+                        override fun onError(networkError: NetworkErrorException) {
+                            Toast.makeText(requireContext(), "Ошибка отправки запроса", Toast.LENGTH_SHORT).show()
+                        }
+                    }, currentBoardViewModel.getCurrentBoard().value!!)
+                    return true
+                }
+                else -> super.onOptionsItemSelected(item)
             }
-            else -> super.onOptionsItemSelected(item)
-        }
+        else
+            return super.onOptionsItemSelected(item)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentBoardInformationBinding.inflate(inflater, container, false)
         userType = BoardInfoFragmentArgs.fromBundle(arguments!!).userType
         return binding.root
-    }
-
-    override fun onResume() {
-        super.onResume()
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -97,7 +120,13 @@ class BoardInfoFragment : BaseFragment() {
     }
 
     private fun setViewPageAdapter() {
-        val viewPagerAdapter = ImageViewPageAdapter(requireContext())
+        viewPagerAdapter = ImageViewPageAdapter(requireContext(), BoardFragmentType.BOARD_INFO, null,
+                object : ImageViewPageAdapter.OnItemClickListener {
+                    override fun onItemClick(item: PhotoModelView) {
+                        requireActivity().findNavController(R.id.nav_host_fragment_home).navigate(BoardInfoFragmentDirections
+                                .actionBoardInfoFragmentToBoardFullScreenImageFragment(item))
+                    }
+                })
         viewPagerAdapter.imagePathList.addAll(
                 ArrayList(currentBoardViewModel.getCurrentBoard().value!!.boardPhotoUrls.map {
                     val photo = PhotoModelView()
@@ -106,19 +135,19 @@ class BoardInfoFragment : BaseFragment() {
                 }))
         binding.boardInfoBoardPhoto.adapter = viewPagerAdapter
 
-        dotscount = viewPagerAdapter.count
+//        dotscount = viewPagerAdapter.count
 
-        for (i in 0 until dotscount) {
-            val dot = ImageView(requireContext())
-            dot.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_not_active_circle_10dp))
-            val params = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-            params.setMargins(8, 0, 8, 0)
-            dots.add(dot)
-            binding.boardInfoDotsSlider.addView(dot, params)
-        }
-
-        if (!dots.isNullOrEmpty())
-            dots[0].setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_active_circle_10dp))
+//        for (i in 0 until dotscount) {
+//            val dot = ImageView(requireContext())
+//            dot.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_not_active_circle_10dp))
+//            val params = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+//            params.setMargins(8, 0, 8, 0)
+//            dots.add(dot)
+//            binding.boardInfoDotsSlider.addView(dot, params)
+//        }
+//
+//        if (!dots.isNullOrEmpty())
+//            dots[0].setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_active_circle_10dp))
 
         binding.boardInfoBoardPhoto.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
@@ -126,9 +155,8 @@ class BoardInfoFragment : BaseFragment() {
             }
 
             override fun onPageSelected(position: Int) {
-                dots.map { it.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_not_active_circle_10dp)) }
-                dots[position].setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_active_circle_10dp))
-                Log.i("DOTS", "position = $position")
+//                dots.map { it.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_not_active_circle_10dp)) }
+//                dots[position].setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_active_circle_10dp))
             }
 
             override fun onPageScrollStateChanged(state: Int) {
@@ -164,13 +192,18 @@ class BoardInfoFragment : BaseFragment() {
 //            holder.boardPhoto.scaleType = ImageView.ScaleType.CENTER_CROP
         }
 
-//        if (info!!.url != null && info!!.url != "null" && info!!.url != "") {
-//            Picasso.with(activity).load(info!!.url!!.replace("@[0-9]*".toRegex(), ""))
-//                    .error(R.drawable.newspaper)
-//                    .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
-//                    .into(photo)
-//            photo!!.scaleType = ImageView.ScaleType.CENTER_CROP
-//        }
+        viewPagerAdapter.imagePathList.clear()
+        viewPagerAdapter.imagePathList.addAll(
+                ArrayList(currentBoardViewModel.getCurrentBoard().value!!.boardPhotoUrls.map {
+                    val photo = PhotoModelView()
+                    photo.photoInthernetPath = it.src
+                    photo
+                }))
+        viewPagerAdapter.imagePathList.addAll(
+                currentBoardViewModel.getCurrentBoard().value!!.newPhotos.map {
+                    it
+                })
+        viewPagerAdapter.notifyDataSetChanged()
     }
 
     private fun onClickProfile(view: View) {

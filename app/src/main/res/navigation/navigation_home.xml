@@ -13,12 +13,6 @@
             android:id="@+id/action_homeFragment_to_profileFragment"
             app:destination="@id/profileFragment" />
         <action
-            android:id="@+id/action_homeFragment_to_boardsFragment"
-            app:destination="@id/boardsFragment"
-            app:launchSingleTop="true"
-            app:popUpTo="@+id/homeFragment"
-            app:popUpToInclusive="true" />
-        <action
             android:id="@+id/action_homeFragment_to_shareCodeFragment"
             app:destination="@id/shareCodeFragment" />
     </fragment>
@@ -37,12 +31,6 @@
         android:id="@+id/boardsFragment"
         android:name="com.project.scratchstudio.kith_andoid.ui.home_package.board_list.BoardsFragment"
         android:label="@string/board_list_title" >
-        <action
-            android:id="@+id/action_boardsFragment_to_homeFragment"
-            app:destination="@id/homeFragment"
-            app:launchSingleTop="true"
-            app:popUpTo="@+id/boardsFragment"
-            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_boardsFragment_to_boardInfoFragment"
             app:destination="@id/boardInfoFragment" />
@@ -66,6 +54,9 @@
         <argument
             android:name="userType"
             app:argType="com.project.scratchstudio.kith_andoid.app.UserType" />
+        <action
+            android:id="@+id/action_boardInfoFragment_to_boardFullScreenImageFragment"
+            app:destination="@id/boardFullScreenImageFragment" />
     </fragment>
     <fragment
         android:id="@+id/newEditBoardFragment"
@@ -74,6 +65,9 @@
         <argument
             android:name="userType"
             app:argType="com.project.scratchstudio.kith_andoid.app.UserType" />
+        <action
+            android:id="@+id/action_newEditBoardFragment_to_boardFullScreenImageFragment"
+            app:destination="@id/boardFullScreenImageFragment" />
     </fragment>
     <fragment
         android:id="@+id/shareCodeFragment"
@@ -103,6 +97,18 @@
     <fragment
         android:id="@+id/commentListFragment"
         android:name="com.project.scratchstudio.kith_andoid.ui.home_package.board_info_comments.BoardInfoCommentsFragment"
-        android:label="@string/board_info_comment_list_title" />
+        android:label="@string/board_info_comment_list_title" >
+        <action
+            android:id="@+id/action_commentListFragment_to_boardFullScreenImageFragment"
+            app:destination="@id/boardFullScreenImageFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/boardFullScreenImageFragment"
+        android:name="com.project.scratchstudio.kith_andoid.ui.home_package.board_full_screen_image.BoardFullScreenImageFragment"
+        android:label="" >
+        <argument
+            android:name="photo"
+            app:argType="com.project.scratchstudio.kith_andoid.model.PhotoModelView" />
+    </fragment>
 
 </navigation>

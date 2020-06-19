@@ -40,14 +40,14 @@ interface BoardApi {
     fun unsubscribeAnnouncement(@Query("board_id") boardId: String): Single<BaseResponse>
 
     @DELETE("api/board")
-    fun deleteBoard(@Query("board_id") boardId: String): Single<BaseResponse>
+    fun deleteBoard(@Query("board_id") boardId: Int): Single<BaseResponse>
 
     @FormUrlEncoded
     @PUT("api/boards/archive/add")
-    fun archiveAddBoard(@Field("board_id") boardId: String): Single<BaseResponse>
+    fun archiveAddBoard(@Field("board_id") boardId: Int): Single<BaseResponse>
 
     @DELETE("api/boards/archive/delete")
-    fun archiveDeleteBoard(@Query("board_id") boardId: String): Single<BaseResponse>
+    fun archiveDeleteBoard(@Query("board_id") boardId: Int): Single<BaseResponse>
 
     @GET("api/boards/enabled")
     fun getBoards(@Query("size") size: Int, @Query("page") page: Int): Single<BoardsResponse>
@@ -64,8 +64,12 @@ interface BoardApi {
 
     @Multipart
     @PUT("api/board")
-    fun createBoard(@PartMap stringFields: Map<String, RequestBody>
-                    , @Part surveyImage: Array<MultipartBody.Part>?): Single<BaseResponse>
+    fun createBoard(@Part("board_title") title: String,
+                    @Part("board_description") description: String?, @Part("board_enabled") enabled: Int,
+                    @Part("board_price") cost: Int?, @Part("country_id") countryId: Int?,
+                    @Part("region") regionId: Int?, @Part("city_id") cityId: Int?,
+                    @Part("category") category: Int?,
+                    @Part surveyImage: Array<MultipartBody.Part?>?): Single<BaseResponse>
 //    fun createBoard(@Field("board_title") title: String, @Field("board_description") description: String,
 //                    @Field("board_enabled") enabled: Int, @Field("board_price") cost: Int,
 //                    @Field("country") country: Int?, @Field("region") region: Int?, @Field("city") city: Int?,

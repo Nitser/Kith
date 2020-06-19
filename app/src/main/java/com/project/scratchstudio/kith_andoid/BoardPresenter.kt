@@ -77,66 +77,50 @@ class BoardPresenter(private val context: Context) {
 
     fun createBoard(callback: BoardCallback, board: BoardModelView) {
 
-//        disposable.add(
-//                boardApi.createBoard(board.title, board.description, enabled, board.cost, board.country?.id
-//                        , board.region?.id, board.city?.id, board.category?.id)
-//                        .subscribeOn(Schedulers.io())
-//                        .observeOn(AndroidSchedulers.mainThread())
-//                        .subscribeWith(object : DisposableSingleObserver<BaseResponse>() {
-//                            override fun onSuccess(response: BaseResponse) {
-//                                if (response.status) {
-//                                    callback.onSuccess(response)
-//                                }
-//                            }
-//
-//                            override fun onError(e: Throwable) {
-//                                callback.onError(NetworkErrorException(e))
-//                            }
-//                        })
-//        )
+        val photoParts = arrayOfNulls<MultipartBody.Part>(board.newPhotos.size)
+
+        for (index in 0 until board.newPhotos.size) {
+            val surveyBody = RequestBody.create(MediaType.parse("image/*"), board.newPhotos[index].phoneStorageFile)
+            photoParts[index] = MultipartBody.Part.createFormData("board_photo[]", board.newPhotos[index].phoneStorageFile.name, surveyBody)
+        }
+
+        disposable.add(
+                boardApi.createBoard(board.title, board.description, (if (board.enabled) {
+                    1
+                } else {
+                    0
+                })
+                        , board.cost, board.country?.id, board.region?.id, board.city?.id, board.category?.id
+                        , photoParts)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(object : DisposableSingleObserver<BaseResponse>() {
+                            override fun onSuccess(response: BaseResponse) {
+                                callback.onSuccess(response)
+                            }
+
+                            override fun onError(e: Throwable) {
+                                callback.onError(NetworkErrorException(e))
+                            }
+                        })
+        )
     }
-
-    val MULTIPART_FORM_DATA = "multipart/form-data"
-
-    fun createRequestBody(stringField: String): RequestBody {
-        return RequestBody.create(
-                MediaType.parse(MULTIPART_FORM_DATA), stringField)
-    }
-
-//    fun createRequestBody(intField: Int): RequestBody {
-//        return RequestBody.create(
-//                MediaType.parse(MULTIPART_FORM_DATA), intField)
-//    }
 
     fun editBoard(callback: BoardCallback, board: BoardModelView) {
-//        val requestBody = HashMap<String, RequestBody>()
-//        requestBody["board_title"] = createRequestBody(board.title)
-//        requestBody["board_description"] = createRequestBody(board.description)
-//        requestBody["board_id"] = createRequestBody(board.id.toString())
-//        requestBody["board_enabled"] = createRequestBody(if (board.enabled) {
-//            "1"
-//        } else {
-//            "0"
-//        })
-//        requestBody["board_price"] = createRequestBody(board.cost.toString())
-//        if (board.country != null)
-//            requestBody["country_id"] = createRequestBody(board.country?.id.toString())
-//        if (board.region != null)
-//            requestBody["region"] = createRequestBody(board.region?.id.toString())
-//        if (board.city != null)
-//            requestBody["city_id"] = createRequestBody(board.city?.id.toString())
-//        if (board.category != null)
-//            requestBody["category"] = createRequestBody(board.category?.id.toString())
 
         val photoParts = arrayOfNulls<MultipartBody.Part>(board.newPhotos.size)
 
         for (index in 0 until board.newPhotos.size) {
-            val surveyBody = RequestBody.create(MediaType.parse("image/*"), board.newPhotos[index])
-            photoParts[index] = MultipartBody.Part.createFormData("board_photo[]", board.newPhotos[index].name, surveyBody)
+            val surveyBody = RequestBody.create(MediaType.parse("image/*"), board.newPhotos[index].phoneStorageFile)
+            photoParts[index] = MultipartBody.Part.createFormData("board_photo[]", board.newPhotos[index].phoneStorageFile.name, surveyBody)
         }
 
         disposable.add(
-                boardApi.editBoard(board.id, board.title, board.description, (if(board.enabled) {1} else {0})
+                boardApi.editBoard(board.id, board.title, board.description, (if (board.enabled) {
+                    1
+                } else {
+                    0
+                })
                         , board.cost, board.country?.id, board.region?.id, board.city?.id, board.category?.id
                         , photoParts)
                         .subscribeOn(Schedulers.io())
@@ -232,6 +216,40 @@ class BoardPresenter(private val context: Context) {
     fun sendComment(callback: BoardCallback, boardId: Int, message: String) {
         disposable.add(
                 boardApi.sendComment(boardId, message)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(object : DisposableSingleObserver<BaseResponse>() {
+                            override fun onSuccess(response: BaseResponse) {
+                                callback.onSuccess(response)
+                            }
+
+                            override fun onError(e: Throwable) {
+                                callback.onError(NetworkErrorException(e))
+                            }
+                        })
+        )
+    }
+
+    fun deleteBoard(callback: BoardCallback, board: BoardModelView) {
+        disposable.add(
+                boardApi.deleteBoard(board.id)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(object : DisposableSingleObserver<BaseResponse>() {
+                            override fun onSuccess(response: BaseResponse) {
+                                callback.onSuccess(response)
+                            }
+
+                            override fun onError(e: Throwable) {
+                                callback.onError(NetworkErrorException(e))
+                            }
+                        })
+        )
+    }
+
+    fun archiveBoard(callback: BoardCallback, board: BoardModelView) {
+        disposable.add(
+                boardApi.archiveAddBoard(board.id)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeWith(object : DisposableSingleObserver<BaseResponse>() {
