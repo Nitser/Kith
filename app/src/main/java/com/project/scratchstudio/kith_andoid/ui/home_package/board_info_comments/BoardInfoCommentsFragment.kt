@@ -21,11 +21,13 @@ import com.project.scratchstudio.kith_andoid.app.Const
 import com.project.scratchstudio.kith_andoid.databinding.FragmentBoardInformationCommentsBinding
 import com.project.scratchstudio.kith_andoid.model.BoardModelView
 import com.project.scratchstudio.kith_andoid.model.PhotoModelView
+import com.project.scratchstudio.kith_andoid.model.UserModelView
 import com.project.scratchstudio.kith_andoid.network.model.BaseResponse
 import com.project.scratchstudio.kith_andoid.network.model.comment.Comment
 import com.project.scratchstudio.kith_andoid.ui.home_package.board_info.ImageViewPageAdapter
 import com.project.scratchstudio.kith_andoid.ui.home_package.board_info_comments.list.CommentAdapter
 import com.project.scratchstudio.kith_andoid.view_model.CurrentBoardViewModel
+import com.project.scratchstudio.kith_andoid.view_model.CurrentUserViewModel
 import com.squareup.picasso.MemoryPolicy
 import com.squareup.picasso.Picasso
 
@@ -37,6 +39,7 @@ class BoardInfoCommentsFragment : BaseFragment() {
     private var commentList = ArrayList<Comment>()
     private lateinit var binding: FragmentBoardInformationCommentsBinding
     private val currentBoardViewModel: CurrentBoardViewModel by activityViewModels()
+    private val currentUserViewModel: CurrentUserViewModel by activityViewModels()
     private lateinit var board: BoardModelView
     private lateinit var viewPagerAdapter: ImageViewPageAdapter
 
@@ -159,7 +162,14 @@ class BoardInfoCommentsFragment : BaseFragment() {
     }
 
     private fun setAdapter() {
-        adapter = CommentAdapter(activity!!)
+        adapter = CommentAdapter(requireActivity(), object : CommentAdapter.OnItemClickListener {
+            override fun onItemClick(item: Comment) {
+                val userModel = userPresenter.userParser(item.user, UserModelView())
+//                currentUserViewModel.setCurrentUser(userPresenter.userParser(item.user, userModel))
+                activity!!.findNavController(R.id.nav_host_fragment_home).navigate(BoardInfoCommentsFragmentDirections
+                        .actionCommentListFragmentToProfileFragment(userModel))
+            }
+        })
         adapter!!.setCommentList(commentList)
         binding.boardInfoCommentCommentsList.adapter = adapter
     }

@@ -5,15 +5,13 @@
 
     <item
         android:id="@+id/menu_profile_exit"
-        app:showAsAction="ifRoom"
-        android:title="@string/profile_menu_exit">
-    </item>
+        android:title="@string/profile_menu_exit"
+        app:showAsAction="ifRoom" />
 
-<!--    <item-->
-<!--        android:id="@+id/menu_profile_edit"-->
-<!--        android:icon="@drawable/ic_edit"-->
-<!--        app:showAsAction="ifRoom"-->
-<!--        android:title="@string/profile_menu_edit">-->
-<!--    </item>-->
+    <item
+        android:id="@+id/menu_profile_edit"
+        android:icon="@drawable/ic_edit"
+        android:title="@string/profile_menu_edit"
+        app:showAsAction="ifRoom" />
 
 </menu>

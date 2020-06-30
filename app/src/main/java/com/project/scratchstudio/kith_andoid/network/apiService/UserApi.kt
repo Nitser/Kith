@@ -5,10 +5,14 @@ import com.project.scratchstudio.kith_andoid.network.model.referral.ReferralResp
 import com.project.scratchstudio.kith_andoid.network.model.user.User
 import com.project.scratchstudio.kith_andoid.network.model.user.UserListResponse
 import io.reactivex.Single
+import okhttp3.MultipartBody
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
+import retrofit2.http.Multipart
 import retrofit2.http.POST
+import retrofit2.http.PUT
+import retrofit2.http.Part
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -32,18 +36,20 @@ interface UserApi {
     @FormUrlEncoded
     @POST("api/users/referral_users")
     fun getInvitedUsers(@Field("user_id") id: Int, @Field("page") page: String,
-                        @Field("size") size: String): Single<Array<User>>
+                        @Field("size") size: String): Single<UserListResponse>
 
     @FormUrlEncoded
-    @POST("api/users/edit")
-    fun editUser(@Field("user_id") id: Int, @Field("user_firstname") firstName: String, @Field("user_lastname") lastName: String,
-                 @Field("user_middlename") middleName: String, @Field("user_phone") phone: String, @Field("user_email") email: String,
-                 @Field("user_position") position: String, @Field("user_description") description: String,
-                 @Field("user_photo") photo: String): Single<BaseResponse>
+    @PUT("api/users/{id}")
+    fun editUser(@Path("id") userId: Int, @Field("firstname") firstName: String, @Field("lastname") lastName: String,
+                 @Field("middlename") middleName: String, @Field("phone") phone: String, @Field("email") email: String,
+                 @Field("position") position: String, @Field("description") description: String): Single<BaseResponse>
+
+    @Multipart
+    @PUT("api/users/{id}")
+    fun editUserPhoto(@Path("id") userId: Int, @Part surveyImage: MultipartBody.Part?): Single<BaseResponse>
 
     @FormUrlEncoded
-    @POST("api/users/edit/password")
-    fun changePassword(@Field("user_id") id: Int, @Field("user_new_password") newPassword: String,
-                       @Field("user_old_password") oldPassword: String): Single<BaseResponse>
+    @PUT("api/users/{id}")
+    fun changeUserPassword(@Path("id") userId: Int, @Field("password") password: String): Single<BaseResponse>
 
 }

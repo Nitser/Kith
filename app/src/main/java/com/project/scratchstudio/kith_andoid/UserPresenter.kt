@@ -2,7 +2,7 @@ package com.project.scratchstudio.kith_andoid
 
 import android.accounts.NetworkErrorException
 import android.content.Context
-import android.graphics.Bitmap
+import com.project.scratchstudio.kith_andoid.model.PhotoModelView
 import com.project.scratchstudio.kith_andoid.model.UserModelView
 import com.project.scratchstudio.kith_andoid.network.ApiClient
 import com.project.scratchstudio.kith_andoid.network.apiService.UserApi
@@ -10,12 +10,13 @@ import com.project.scratchstudio.kith_andoid.network.model.BaseResponse
 import com.project.scratchstudio.kith_andoid.network.model.referral.ReferralResponse
 import com.project.scratchstudio.kith_andoid.network.model.user.User
 import com.project.scratchstudio.kith_andoid.network.model.user.UserListResponse
-import com.project.scratchstudio.kith_andoid.service.PhotoService
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableSingleObserver
 import io.reactivex.schedulers.Schedulers
-import java.io.UnsupportedEncodingException
+import okhttp3.MediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 
 class UserPresenter(private val context: Context) {
 
@@ -46,9 +47,9 @@ class UserPresenter(private val context: Context) {
         return userModel
     }
 
-    fun changePassword(callback: BaseCallback, userId: Int, oldPassword: String, newPassword: String) {
+    fun changePassword(callback: BaseCallback, userId: Int, newPassword: String) {
         disposable.add(
-                userApi.changePassword(userId, newPassword, oldPassword)
+                userApi.changeUserPassword(userId, newPassword)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeWith(object : DisposableSingleObserver<BaseResponse>() {
@@ -80,18 +81,42 @@ class UserPresenter(private val context: Context) {
         )
     }
 
-    fun editUser(callback: BaseCallback, newUser: UserModelView, newPhoto: Bitmap?) {
-        var res = ""
-        try {
-            val photoService = PhotoService(context)
-            res = photoService.base64Photo(newPhoto)
-        } catch (e: UnsupportedEncodingException) {
-            e.printStackTrace()
-        }
-
+    fun editUser(callback: BaseCallback, newUser: UserModelView, newPhoto: PhotoModelView?) {
         disposable.add(
                 userApi.editUser(newUser.id, newUser.firstName, newUser.lastName, newUser.middleName, newUser.phone, newUser.email, newUser.position,
-                        newUser.description, res)
+                        newUser.description)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(object : DisposableSingleObserver<BaseResponse>() {
+                            override fun onSuccess(response: BaseResponse) {
+                                if (newPhoto != null) {
+                                    editUserPhoto(object : BaseCallback {
+                                        override fun onSuccess(baseResponse: BaseResponse) {
+                                            callback.onSuccess(response)
+                                        }
+
+                                        override fun onError(networkError: NetworkErrorException) {
+                                            callback.onError(NetworkErrorException(networkError))
+                                        }
+                                    }, newUser.id, newPhoto)
+                                } else {
+                                    callback.onSuccess(response)
+                                }
+                            }
+
+                            override fun onError(e: Throwable) {
+                                callback.onError(NetworkErrorException(e))
+                            }
+                        })
+        )
+    }
+
+    fun editUserPhoto(callback: BaseCallback, userId: Int, newPhoto: PhotoModelView?) {
+        val surveyBody = RequestBody.create(MediaType.parse("image/*"), newPhoto!!.phoneStorageFile)
+        val result = MultipartBody.Part.createFormData("photo", newPhoto.phoneStorageFile.name, surveyBody)
+
+        disposable.add(
+                userApi.editUserPhoto(userId, result)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeWith(object : DisposableSingleObserver<BaseResponse>() {
@@ -111,8 +136,8 @@ class UserPresenter(private val context: Context) {
                 userApi.getInvitedUsers(userId, "0", "50")
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribeWith(object : DisposableSingleObserver<Array<User>>() {
-                            override fun onSuccess(response: Array<User>) {
+                        .subscribeWith(object : DisposableSingleObserver<UserListResponse>() {
+                            override fun onSuccess(response: UserListResponse) {
                                 callback.onSuccess(response)
                             }
 
@@ -140,9 +165,9 @@ class UserPresenter(private val context: Context) {
         )
     }
 
-    fun searchUsers(callback: GetSearchUserListCallback, filterString: String) {
+    fun searchUsers(callback: GetUserListCallback, filterString: String) {
         disposable.add(
-                userApi.searchUsers(filterString, "0", "50")
+                userApi.searchUsers(filterString, "1", "50")
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeWith(object : DisposableSingleObserver<UserListResponse>() {
@@ -169,14 +194,8 @@ class UserPresenter(private val context: Context) {
         fun onError(networkError: NetworkErrorException)
     }
 
-    interface GetSearchUserListCallback {
-        fun onSuccess(userResponse: UserListResponse)
-
-        fun onError(networkError: NetworkErrorException)
-    }
-
     interface GetUserListCallback {
-        fun onSuccess(userResponse: Array<User>)
+        fun onSuccess(userResponse: UserListResponse)
 
         fun onError(networkError: NetworkErrorException)
     }

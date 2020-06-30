@@ -2,64 +2,64 @@
 
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:background="@color/colorAccent">
 
     <TextView
         android:id="@+id/comment_item_owner_name"
         style="@style/HomeBoardInfoCommentOwnerNameText"
-        app:layout_constraintStart_toEndOf="@id/comment_item_owner_photo"
-        app:layout_constraintTop_toTopOf="parent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_marginTop="16dp"
-        android:text="Ксения Ницер" />
+        android:text="Ксения Ницер"
+        app:layout_constraintStart_toEndOf="@id/comment_item_owner_photo"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/comment_item_text"
         style="@style/HomeBoardInfoCommentText"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/comment_item_owner_photo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
-        android:text="dfghjkl;';lkjhgfdfghj;;'lkjhgfdcvbhjnkmllkjhgccvbn;;vcbnm,;lkjhnmkjhbgcvbnjkl,kjh" />
+        android:text="dfghjkl;';lkjhgfdfghj;;'lkjhgfdcvbhjnkmllkjhgccvbn;;vcbnm,;lkjhnmkjhbgcvbnjkl,kjh"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/comment_item_owner_photo" />
 
     <TextView
         android:id="@+id/comment_item_create_date"
         style="@style/HomeBoardInfoCommentDateText"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/comment_item_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
-        android:text="23 июня 2020" />
-
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/comment_item_owner_photo"
-        app:civ_circle_background_color="@color/colorAccent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="MissingConstraints"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:elevation="10dp"
-        android:padding="10dp"
-        android:src="@mipmap/empty_photo"
-        android:translationZ="1dp" />
+        android:text="23 июня 2020"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/comment_item_text" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="10dp"
         android:layout_marginTop="10dp"
-        app:layout_constraintTop_toBottomOf="@+id/comment_item_create_date"
-        android:background="@drawable/shadow_black"/>
+        android:background="@drawable/shadow_black"
+        app:layout_constraintTop_toBottomOf="@+id/comment_item_create_date" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/comment_item_owner_photo"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:elevation="10dp"
+        android:padding="10dp"
+        android:src="@mipmap/empty_photo"
+        android:translationZ="1dp"
+        app:civ_circle_background_color="@color/colorAccent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

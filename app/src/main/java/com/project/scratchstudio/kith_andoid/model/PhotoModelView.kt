@@ -8,6 +8,7 @@ import java.io.Serializable
 @Keep
 class PhotoModelView : Serializable {
 
+    var id = -1
     var photoInthernetPath = ""
     var photoPhoneStoragePath = ""
     lateinit var phoneStorageFile: File

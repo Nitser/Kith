@@ -50,4 +50,6 @@ class BoardModelView : Serializable {
     var category: Category? = null
 
     var chatCount: Int = 0
+
+    var isPaid: Boolean = false
 }

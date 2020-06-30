@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
+<selector
+    xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_checked="true">
-        <set xmlns:android="http://schemas.android.com/apk/res/android">
+        <set
+            xmlns:android="http://schemas.android.com/apk/res/android">
             <objectAnimator
                 android:duration="150"
                 android:propertyName="scaleX"
@@ -21,8 +23,8 @@
             <objectAnimator
                 android:duration="150"
                 android:propertyName="scaleX"
-                android:valueTo="1.0"
                 android:startOffset="150"
+                android:valueTo="1.0"
                 android:valueType="floatType" />
             <objectAnimator
                 android:duration="150"
@@ -60,8 +62,8 @@
             <objectAnimator
                 android:duration="150"
                 android:propertyName="scaleX"
-                android:valueTo="1.0"
                 android:startOffset="150"
+                android:valueTo="1.0"
                 android:valueType="floatType" />
             <objectAnimator
                 android:duration="150"

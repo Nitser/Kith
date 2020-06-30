@@ -9,17 +9,10 @@ import de.hdodenhof.circleimageview.CircleImageView
 
 class CommentHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-    var ownerName: TextView
-    var date: TextView
-    var comment: TextView
-    var photo: CircleImageView
-
-    init {
-        ownerName = itemView.findViewById(R.id.comment_item_owner_name)
-        date = itemView.findViewById(R.id.comment_item_create_date)
-        comment = itemView.findViewById(R.id.comment_item_text)
-        photo = itemView.findViewById(R.id.comment_item_owner_photo)
-    }
+    var ownerName: TextView = itemView.findViewById(R.id.comment_item_owner_name)
+    var date: TextView = itemView.findViewById(R.id.comment_item_create_date)
+    var comment: TextView = itemView.findViewById(R.id.comment_item_text)
+    var photo: CircleImageView = itemView.findViewById(R.id.comment_item_owner_photo)
 
     fun bind(item: Comment, listener: CommentAdapter.OnItemClickListener) {
         itemView.setOnClickListener { listener.onItemClick(item) }

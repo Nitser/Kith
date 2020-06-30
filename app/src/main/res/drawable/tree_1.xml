@@ -1,33 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<vector xmlns:android="http://schemas.android.com/apk/res/android" xmlns:aapt="http://schemas.android.com/aapt"
-    android:viewportWidth="109.81"
-    android:viewportHeight="163"
+<vector
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="109.81dp"
-    android:height="163dp">
-    <path
-        android:pathData="M72.81 16.5A16.5 16.5 0 0 1 39.81 16.5A16.5 16.5 0 0 1 72.81 16.5Z"
-        android:fillColor="@color/colorAccent" />
-    <path
-        android:pathData="M109.81 62.5A17.5 17.5 0 0 1 74.81 62.5A17.5 17.5 0 0 1 109.81 62.5Z"
-        android:fillColor="@color/colorAccent" />
-    <path
-        android:pathData="M96.81 137A15 15 0 0 1 66.81 137A15 15 0 0 1 96.81 137Z"
-        android:fillColor="@color/colorAccent" />
+    android:height="163dp"
+    android:viewportWidth="109.81"
+    android:viewportHeight="163">
     <group
         android:rotation="1.96"
         android:translateX="2.15"
         android:translateY="-1.77">
         <path
-            android:pathData="M48.85 14.98H56.42V108.9H48.85V14.98Z"
-            android:fillColor="@color/colorAccent" />
+            android:fillColor="@color/colorAccent"
+            android:pathData="M48.85 14.98H56.42V108.9H48.85V14.98Z" />
     </group>
     <group
         android:rotation="41.87"
         android:translateX="87.59"
         android:translateY="-0.41">
         <path
-            android:pathData="M39.76 52.96H48.9V175.61H39.76V52.96Z"
-            android:fillColor="@color/colorAccent" />
+            android:fillColor="@color/colorAccent"
+            android:pathData="M39.76 52.96H48.9V175.61H39.76V52.96Z" />
     </group>
     <group
         android:rotation="-85.4"
@@ -36,7 +28,16 @@
         android:translateX="193.45"
         android:translateY="87.4">
         <path
-            android:pathData="M53.03 103.14H59.77V162.76H53.03V103.14Z"
-            android:fillColor="@color/colorAccent" />
+            android:fillColor="@color/colorAccent"
+            android:pathData="M53.03 103.14H59.77V162.76H53.03V103.14Z" />
     </group>
+    <path
+        android:fillColor="@color/colorAccent"
+        android:pathData="M72.81 16.5A16.5 16.5 0 0 1 39.81 16.5A16.5 16.5 0 0 1 72.81 16.5Z" />
+    <path
+        android:fillColor="@color/colorAccent"
+        android:pathData="M109.81 62.5A17.5 17.5 0 0 1 74.81 62.5A17.5 17.5 0 0 1 109.81 62.5Z" />
+    <path
+        android:fillColor="@color/colorAccent"
+        android:pathData="M96.81 137A15 15 0 0 1 66.81 137A15 15 0 0 1 96.81 137Z" />
 </vector>

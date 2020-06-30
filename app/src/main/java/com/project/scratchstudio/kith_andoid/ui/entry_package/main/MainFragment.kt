@@ -9,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.Navigation
 import com.project.scratchstudio.kith_andoid.R
 import com.project.scratchstudio.kith_andoid.app.BaseFragment
-import com.project.scratchstudio.kith_andoid.app.Permissions
 
 class MainFragment : BaseFragment() {
 

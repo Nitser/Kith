@@ -5,7 +5,8 @@ import androidx.annotation.Keep
 import java.io.File
 import java.io.Serializable
 
-@Keep class UserModelView : Serializable {
+@Keep
+class UserModelView : Serializable {
     var id: Int = 0
 
     var token = ""
@@ -31,7 +32,7 @@ import java.io.Serializable
 
     var photo: String? = ""
     var photoPath = ""
-    var photoFile : File? = null
+    var photoFile: File? = null
 
     var photoBitmap: Bitmap? = null
 

@@ -3,47 +3,37 @@ package com.project.scratchstudio.kith_andoid.ui.home_package.user_edit_profile
 import android.accounts.NetworkErrorException
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.os.SystemClock
-import android.text.Editable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
+import androidx.navigation.findNavController
 import com.project.scratchstudio.kith_andoid.R
 import com.project.scratchstudio.kith_andoid.UserPresenter
-import com.project.scratchstudio.kith_andoid.activities.HomeActivity
 import com.project.scratchstudio.kith_andoid.app.BaseFragment
+import com.project.scratchstudio.kith_andoid.app.Const
 import com.project.scratchstudio.kith_andoid.databinding.FragmentProfileEditBinding
+import com.project.scratchstudio.kith_andoid.model.PhotoModelView
 import com.project.scratchstudio.kith_andoid.model.UserModelView
 import com.project.scratchstudio.kith_andoid.network.model.BaseResponse
-import com.project.scratchstudio.kith_andoid.network.model.user.User
-import com.project.scratchstudio.kith_andoid.service.PhotoService
-import com.project.scratchstudio.kith_andoid.service.PicassoCircleTransformation
+import com.project.scratchstudio.kith_andoid.utils.PhotoService
+import com.project.scratchstudio.kith_andoid.utils.PicassoCircleTransformation
 import com.project.scratchstudio.kith_andoid.view_model.MainUserViewModel
 import com.squareup.picasso.MemoryPolicy
 import com.squareup.picasso.Picasso
-import java.io.FileNotFoundException
 import java.io.InputStream
-import java.util.ArrayList
-import java.util.Objects
 
 class EditProfileFragment : BaseFragment() {
-    private var isChanged = false
-    private var currentBitmap: Bitmap? = null
-    private val fields = ArrayList<EditText>()
-    private var userPresenter: UserPresenter? = null
+
+    private lateinit var userPresenter: UserPresenter
     private lateinit var binding: FragmentProfileEditBinding
     private val mainUserViewModel: MainUserViewModel by activityViewModels()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        setHasOptionsMenu(true)
-        super.onCreate(savedInstanceState)
-    }
+    private var newPhoto: PhotoModelView? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentProfileEditBinding.inflate(inflater, container, false)
@@ -51,62 +41,87 @@ class EditProfileFragment : BaseFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        userPresenter = UserPresenter(context!!)
+        userPresenter = UserPresenter(requireContext())
         init()
+        mainUserViewModel.getMainUser().observe(viewLifecycleOwner, Observer<UserModelView> {
+            binding.profileEditPassword.text = String(CharArray(it.password.length)).replace("\u0000", "*")
+        })
     }
 
     private fun init() {
-        fields.add(binding.firstName)
-        fields.add(binding.lastName)
-        fields.add(binding.middleName)
-        fields.add(binding.position)
-        fields.add(binding.email)
-        fields.add(binding.phone)
-        fields.add(binding.description)
+        binding.profileEditButtonAddPhoto.setOnClickListener { chooseImageButton() }
+        binding.profileEditButtonChangePassword.setOnClickListener {
+            requireActivity().findNavController(R.id.nav_host_fragment_home)
+                    .navigate(EditProfileFragmentDirections.actionEditProfileFragmentToChangePasswordFragment())
+        }
+        binding.profileEditButtonSave.setOnClickListener { onClickRefreshButton() }
 
         with(mainUserViewModel.getMainUser().value!!) {
             if (photo != null)
-                Picasso.with(context!!).load(photo!!.replace("@[0-9]*".toRegex(), ""))
+                Picasso.with(context!!).load(Const.BASE_URL + photo)
                         .placeholder(R.mipmap.person)
                         .error(R.mipmap.person)
                         .transform(PicassoCircleTransformation())
                         .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
-                        .into(binding.portfolio)
+                        .into(binding.profileEditUserPhoto)
 
-            binding.firstName.setText(firstName)
-            binding.lastName.setText(lastName)
-            if (middleName != "" && middleName.toLowerCase() != "null") {
-                binding.middleName.setText(middleName)
-            }
-            binding.password.text = position
-            if (email != "" && email.toLowerCase() != "null") {
-                binding.email.setText(email)
-            }
-            binding.phone.setText(phone)
-            if (description != "" && description.toLowerCase() != "null") {
-                binding.description.setText(description)
-            }
-            binding.password.text = String(CharArray(password!!.length)).replace("\u0000", "*")
-            binding.position.setText(position)
+            binding.profileEditFieldFirstname.setText(firstName)
+            binding.profileEditFieldLastname.setText(lastName)
+            binding.profileEditFieldMiddlename.setText(middleName)
+            binding.profileEditFieldPosition.setText(position)
+            binding.profileEditFieldEmail.setText(email)
+            binding.profileEditFieldPhone.setText(phone)
+            binding.profileEditFieldDescription.setText(description)
+            binding.profileEditPassword.text = String(CharArray(password.length)).replace("\u0000", "*")
         }
     }
 
-    private fun makeRefreshUser(): UserModelView {
-        val user = mainUserViewModel.getMainUser().value!!
-        try {
+    private fun getUserNewInformation(): UserModelView? {
+        if (binding.profileEditFieldFirstname.text.toString().isEmpty()
+                || binding.profileEditFieldLastname.text.toString().isEmpty()
+                || binding.profileEditFieldEmail.text.toString().isEmpty()
+                || binding.profileEditFieldPhone.text.toString().isEmpty()) {
+            Toast.makeText(requireContext(), "Не все поля заполнены", Toast.LENGTH_SHORT).show()
+            return null
+        } else {
+            val user = mainUserViewModel.getMainUser().value!!
             with(user) {
-                firstName = Objects.requireNonNull<Editable>(fields[0].text).toString()
-                lastName = Objects.requireNonNull<Editable>(fields[1].text).toString()
-                middleName = Objects.requireNonNull<Editable>(fields[2].text).toString().replace("^null$".toRegex(), "")
-                position = Objects.requireNonNull<Editable>(fields[3].text).toString()
-                email = Objects.requireNonNull<Editable>(fields[4].text).toString().replace("^null$".toRegex(), "")
-                phone = Objects.requireNonNull<Editable>(fields[5].text).toString()
-                description = Objects.requireNonNull<Editable>(fields[6].text).toString().replace("^null$".toRegex(), "")
+                firstName = binding.profileEditFieldFirstname.text.toString()
+                lastName = binding.profileEditFieldLastname.text.toString()
+                middleName = binding.profileEditFieldMiddlename.text.toString()
+                position = binding.profileEditFieldPosition.text.toString()
+                email = binding.profileEditFieldEmail.text.toString()
+                phone = binding.profileEditFieldPhone.text.toString()
+                description = binding.profileEditFieldDescription.text.toString()
                 mainUserViewModel.setMainUser(user)
+                if (newPhoto != null) {
+                    photoBitmap = newPhoto!!.photoBitmap
+                    photoFile = newPhoto!!.phoneStorageFile
+                }
             }
-        } catch (ignored: NullPointerException) {
+            return user
         }
-        return user
+    }
+
+    private fun chooseImageButton() {
+        val intent = Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        startActivityForResult(intent, 0)
+    }
+
+    private fun onClickRefreshButton() {
+        val refreshUser = getUserNewInformation()
+        if (refreshUser != null) {
+            userPresenter.editUser(object : UserPresenter.BaseCallback {
+                override fun onSuccess(baseResponse: BaseResponse) {
+                    mainUserViewModel.setMainUser(refreshUser)
+                    requireActivity().findNavController(R.id.nav_host_fragment_home).popBackStack()
+                }
+
+                override fun onError(networkError: NetworkErrorException) {
+                    Toast.makeText(context, "Ошибка отправки запроса", Toast.LENGTH_SHORT).show()
+                }
+            }, refreshUser, newPhoto)
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
@@ -114,57 +129,20 @@ class EditProfileFragment : BaseFragment() {
         if (requestCode == 0 && resultCode == Activity.RESULT_OK && intent != null && intent.data != null) {
             val imageUri = intent.data
             val imageStream: InputStream?
-            val photoService = PhotoService(context!!)
-            try {
-                imageStream = activity!!.contentResolver.openInputStream(imageUri!!)
-                currentBitmap = BitmapFactory.decodeStream(imageStream)
-                if (currentBitmap != null) {
-                    currentBitmap = photoService.changePhoto(currentBitmap!!, imageUri)
-                    currentBitmap = photoService.changePhoto(currentBitmap!!, imageUri)
-                    currentBitmap = photoService.compressPhoto(currentBitmap!!)
-                    binding.portfolio.setImageBitmap(currentBitmap)
-                }
-            } catch (e: FileNotFoundException) {
-                e.printStackTrace()
+            val photoService = PhotoService(requireContext())
+            imageStream = requireActivity().contentResolver.openInputStream(imageUri!!)
+            var bitmap = BitmapFactory.decodeStream(imageStream)
+
+            newPhoto = photoService.fullPreparingPhoto(bitmap, imageUri)
+            if (bitmap != null) {
+                bitmap = photoService.changePhoto(bitmap, imageUri)
+                bitmap = photoService.changePhoto(bitmap, imageUri)
+                bitmap = photoService.compressPhoto(bitmap)
+                binding.profileEditUserPhoto.setImageBitmap(bitmap)
+                newPhoto!!.photoBitmap = bitmap
             }
-            binding.buttonPhoto.isEnabled = true
-        } else if (requestCode == 0) {
-            binding.buttonPhoto.isEnabled = true
-        } else if (requestCode == 3 && intent != null) {
-            binding.password.text = String(CharArray(mainUserViewModel.getMainUser().value!!.password.length)).replace("\u0000", "*")
         }
     }
 
-    fun chooseImageButton(view: View) {
-        view.isEnabled = false
-        val intent = Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-        startActivityForResult(intent, 0)
-    }
 
-    fun onClickRefreshButton(view: View) {
-        view.isEnabled = false
-        val refreshUser = makeRefreshUser()
-        userPresenter!!.editUser(object : UserPresenter.BaseCallback {
-            override fun onSuccess(baseResponse: BaseResponse) {
-                if (baseResponse.status) {
-                    isChanged = true
-                } else {
-                    Toast.makeText(context, "Ошибка отправки запроса", Toast.LENGTH_SHORT).show()
-                    view.isEnabled = true
-                }
-            }
-
-            override fun onError(networkError: NetworkErrorException) {
-                Toast.makeText(context, "Ошибка отправки запроса", Toast.LENGTH_SHORT).show()
-                view.isEnabled = true
-            }
-        }, refreshUser, currentBitmap)
-    }
-
-    companion object {
-
-        fun newInstance(): EditProfileFragment {
-            return EditProfileFragment()
-        }
-    }
 }

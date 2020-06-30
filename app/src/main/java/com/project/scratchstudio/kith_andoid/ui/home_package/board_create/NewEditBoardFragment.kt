@@ -21,7 +21,6 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager.widget.ViewPager
 import com.project.scratchstudio.kith_andoid.BoardPresenter
@@ -34,12 +33,10 @@ import com.project.scratchstudio.kith_andoid.databinding.FragmentBoardCreateBind
 import com.project.scratchstudio.kith_andoid.model.BoardModelView
 import com.project.scratchstudio.kith_andoid.model.PhotoModelView
 import com.project.scratchstudio.kith_andoid.network.model.BaseResponse
-import com.project.scratchstudio.kith_andoid.network.model.board.Image
 import com.project.scratchstudio.kith_andoid.network.model.category.Category
 import com.project.scratchstudio.kith_andoid.network.model.category.CategoryResponse
-import com.project.scratchstudio.kith_andoid.service.PhotoService
+import com.project.scratchstudio.kith_andoid.utils.PhotoService
 import com.project.scratchstudio.kith_andoid.ui.home_package.board_info.ImageViewPageAdapter
-import com.project.scratchstudio.kith_andoid.ui.home_package.board_info_comments.BoardInfoCommentsFragmentDirections
 import com.project.scratchstudio.kith_andoid.view_model.CurrentBoardViewModel
 import java.io.InputStream
 
@@ -108,6 +105,7 @@ class NewEditBoardFragment : BaseFragment() {
             viewPagerAdapter.imagePathList.clear()
             viewPagerAdapter.imagePathList.addAll(currentBoardViewModel.getCurrentBoard().value!!.boardPhotoUrls.map {
                 val photo = PhotoModelView()
+                photo.id = it.id
                 photo.photoInthernetPath = it.src
                 photo
             })
@@ -125,10 +123,25 @@ class NewEditBoardFragment : BaseFragment() {
         viewPagerAdapter = ImageViewPageAdapter(requireContext(), BoardFragmentType.BOARD_EDIT
                 , object : ImageViewPageAdapter.OnItemClickListener {
             override fun onItemClick(item: PhotoModelView) {
-                viewPagerAdapter.imagePathList.remove(item)
-                viewPagerAdapter.notifyDataSetChanged()
-                currentBoardViewModel.getNewPhoto().value!!.remove(item)
-                deletedUri.add(item.photoInthernetPath)
+                if (item.id != -1) {
+                    boardPresenter!!.deletePhoto(object : BoardPresenter.BoardCallback {
+                        override fun onSuccess(baseResponse: BaseResponse) {
+                            viewPagerAdapter.imagePathList.remove(item)
+                            viewPagerAdapter.notifyDataSetChanged()
+                            currentBoardViewModel.getNewPhoto().value!!.remove(item)
+                            deletedUri.add(item.photoInthernetPath)
+                        }
+
+                        override fun onError(networkError: NetworkErrorException) {
+                            Toast.makeText(requireContext(), "Ошибка отправки запроса", Toast.LENGTH_SHORT).show()
+                        }
+                    }, item.id)
+                } else {
+                    viewPagerAdapter.imagePathList.remove(item)
+                    viewPagerAdapter.notifyDataSetChanged()
+                    currentBoardViewModel.getNewPhoto().value!!.remove(item)
+                    deletedUri.add(item.photoInthernetPath)
+                }
             }
         }, null)
         binding.boardCreateBoardPhoto.adapter = viewPagerAdapter

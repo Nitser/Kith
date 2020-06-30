@@ -1,4 +1,4 @@
-package com.project.scratchstudio.kith_andoid.service
+package com.project.scratchstudio.kith_andoid.utils
 
 import android.content.Context
 import android.content.res.Resources

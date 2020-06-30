@@ -1,15 +1,14 @@
 package com.project.scratchstudio.kith_andoid.holders
 
 import android.graphics.Color
-import androidx.cardview.widget.CardView
-import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import android.widget.ImageView
-
+import androidx.cardview.widget.CardView
+import androidx.recyclerview.widget.RecyclerView
+import com.project.scratchstudio.kith_andoid.R
 import com.project.scratchstudio.kith_andoid.adapters.MessageDialogAdapter
 import com.project.scratchstudio.kith_andoid.custom_views.to_trash.CustomFontTextView
 import com.project.scratchstudio.kith_andoid.model.AnnouncementInfo
-import com.project.scratchstudio.kith_andoid.R
 
 class MessageDialogHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 

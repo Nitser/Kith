@@ -7,8 +7,8 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.project.scratchstudio.kith_andoid.R
 import com.project.scratchstudio.kith_andoid.app.Const
-import com.project.scratchstudio.kith_andoid.service.internal_storage.InternalStorageService
-import com.project.scratchstudio.kith_andoid.service.internal_storage.get_internal_data.GetUserIdAndToken
+import com.project.scratchstudio.kith_andoid.utils.internal_storage.InternalStorageService
+import com.project.scratchstudio.kith_andoid.utils.internal_storage.get_internal_data.GetUserIdAndToken
 
 class EntryActivity : BaseActivity() {
 

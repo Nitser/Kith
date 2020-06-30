@@ -25,27 +25,30 @@ class SingUpPresenter(context: Context) {
         entryApi = ApiClient.getClient(context).create(EntryApi::class.java)
     }
 
+    private fun makeRequest(field: String): RequestBody {
+        return RequestBody.create(MediaType.parse("text/plain"), field)
+    }
+
     fun singUp(callback: GetUserCallback, user: UserModelView) {
-//        val photoParts = arrayOfNulls<MultipartBody.Part>(board.newPhotos.size)
+
         if (user.photoFile != null) {
             val surveyBody = RequestBody.create(MediaType.parse("image/*"), user.photoFile!!)
             res = MultipartBody.Part.createFormData("photo", user.photoFile!!.name, surveyBody)
         }
-
         disposable.add(
                 entryApi.singUp(
-                        user.firstName
-                        , user.lastName
-                        , user.phone
-                        , user.login
-                        , user.password
-                        , user.invitedUserId.toString()
-                        , user.email
-                        , if (user.middleName == "") null else user.middleName
-                        , if (user.position == "") null else user.position
-                        , if (user.countryId == -1) null else user.countryId.toString()
-                        , if (user.regionId == -1) null else user.regionId.toString()
-                        , if (user.cityId == -1) null else user.cityId.toString()
+                        makeRequest(user.firstName)
+                        , makeRequest(user.lastName)
+                        , makeRequest(user.phone)
+                        , makeRequest(user.login)
+                        , makeRequest(user.password)
+                        , makeRequest(user.invitedUserId.toString())
+                        , makeRequest(user.email)
+                        , if (user.middleName == "") null else makeRequest(user.middleName)
+                        , if (user.position == "") null else makeRequest(user.position)
+                        , if (user.countryId == -1) null else makeRequest(user.countryId.toString())
+                        , if (user.regionId == -1) null else makeRequest(user.regionId.toString())
+                        , if (user.cityId == -1) null else makeRequest(user.cityId.toString())
                         , if (this::res.isInitialized) res else null
                 )
                         .subscribeOn(Schedulers.io())

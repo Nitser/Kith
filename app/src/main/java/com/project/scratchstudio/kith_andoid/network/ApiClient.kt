@@ -1,18 +1,13 @@
 package com.project.scratchstudio.kith_andoid.network
 
 import android.content.Context
-import android.util.Log
-
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
-import com.project.scratchstudio.kith_andoid.activities.HomeActivity
 import com.project.scratchstudio.kith_andoid.app.Const
-
-import java.util.concurrent.TimeUnit
-
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 
 object ApiClient {
     private var retrofit: Retrofit? = null
@@ -52,7 +47,7 @@ object ApiClient {
             val requestBuilder = original.newBuilder()
                     .addHeader("Accept", "application/json")
                     .addHeader("Content-Type", "application/json")
-            if(Const.isEntry)
+            if (Const.isEntry)
                 requestBuilder.addHeader("Authorization", "${Const.TOKEN_TYPE} ${Const.token}")
             val request = requestBuilder.build()
             chain.proceed(request)

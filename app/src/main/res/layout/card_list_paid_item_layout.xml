@@ -1,0 +1,135 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/field_paid_item"
+    android:layout_margin="20dp"
+    android:padding="10dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/board_card_owner_photo"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:elevation="5dp"
+            android:padding="6dp"
+            android:src="@drawable/circle_image_view_photo"
+            android:translationZ="1dp"
+            app:civ_circle_background_color="@color/colorAccent"
+            android:layout_gravity="center_vertical" />
+
+        <TextView
+            android:id="@+id/board_card_owner_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ксения Ницер"
+            style="@style/HomeBoardCardOwnerNameText"
+            android:layout_gravity="center_vertical" />
+
+    </LinearLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-5dp">
+
+        <CheckBox
+            android:id="@+id/board_card_favorite"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:button="@drawable/cb_heart"
+            android:stateListAnimator="@animator/anim_heart"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <TextView
+            android:id="@+id/board_card_title"
+            style="@style/HomeBoardCardTitleText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="Заголовок объявленияvbnm,./,mnbvcxcvbnm,./;.,mknjhbvgfcxcfgvhjkl;"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/board_card_favorite"
+            app:layout_constraintHorizontal_bias="0.025"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ImageView
+        android:id="@+id/board_card_board_photo"
+        android:layout_width="300dp"
+        android:layout_height="150dp"
+        android:scaleType="center"
+        android:layout_gravity="center"
+        android:background="@color/colorEmptyPhoto" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp">
+
+        <TextView
+            android:id="@+id/board_card_create_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/HomeBoardCardDateText"
+            android:text="23 июня 2020"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <TextView
+            android:id="@+id/board_card_price"
+            style="@style/HomeBoardCardPriceText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2 000 руб."
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorGrey" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp">
+
+        <ImageView
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/ic_chat"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_marginEnd="4dp" />
+
+        <TextView
+            android:layout_gravity="center_vertical"
+            android:id="@+id/board_card_chat_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/HomeBoardCardDateText"
+            android:text="22" />
+
+    </LinearLayout>
+
+</LinearLayout>

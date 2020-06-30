@@ -1,4 +1,4 @@
-package com.project.scratchstudio.kith_andoid.service
+package com.project.scratchstudio.kith_andoid.utils
 
 import android.annotation.SuppressLint
 import android.annotation.TargetApi
@@ -90,7 +90,7 @@ object ImageFilePath {
      * @return The value of the _data column, which is typically a file path.
      */
     private fun getDataColumn(context: Context, uri: Uri?,
-                      selection: String?, selectionArgs: Array<String>?): String {
+                              selection: String?, selectionArgs: Array<String>?): String {
 
         var cursor: Cursor? = null
         val column = "_data"

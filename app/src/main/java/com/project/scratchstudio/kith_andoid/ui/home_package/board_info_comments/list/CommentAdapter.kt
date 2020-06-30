@@ -7,12 +7,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.project.scratchstudio.kith_andoid.BoardPresenter
 import com.project.scratchstudio.kith_andoid.R
 import com.project.scratchstudio.kith_andoid.network.model.comment.Comment
-import com.project.scratchstudio.kith_andoid.service.PicassoCircleTransformation
+import com.project.scratchstudio.kith_andoid.utils.PicassoCircleTransformation
 import com.squareup.picasso.MemoryPolicy
 import com.squareup.picasso.Picasso
 import java.util.ArrayList
 
-class CommentAdapter(private val activity: Activity) : RecyclerView.Adapter<CommentHolder>() {
+class CommentAdapter(private val activity: Activity, private val listener: OnItemClickListener) : RecyclerView.Adapter<CommentHolder>() {
 
     private var commentList: ArrayList<Comment> = ArrayList()
     private var boardPresenter = BoardPresenter(activity)
@@ -42,6 +42,7 @@ class CommentAdapter(private val activity: Activity) : RecyclerView.Adapter<Comm
                     .error(R.mipmap.empty_photo)
                     .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
                     .into(holder.photo)
+        holder.bind(comment, listener)
     }
 
     override fun getItemCount(): Int {

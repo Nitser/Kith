@@ -1,4 +1,12 @@
 <resources>
+    <plurals name="people">
+        <item quantity="zero">%1$d человек</item>
+        <item quantity="one">%1$d человека</item>
+        <item quantity="two">%1d человека</item>
+        <item quantity="few">%1$d человека</item>
+        <item quantity="many">%1$d человек</item>а
+        <item quantity="other">%1$d человека</item>
+    </plurals>
     <string name="app_name">Знакомые</string>
     <string name="kith">Знакомые</string>
     <string name="our">Нас</string>
@@ -26,32 +34,21 @@
     <string name="label_messages">Сообщения</string>
     <string name="label_new_password">Новый пароль</string>
     <string name="edit">Редактировать</string>
+
     <string name="forgot_password">Забыли пароль?</string>
 
     <string name="signature">&#169; Знакомые 2020</string>
 
-    <plurals name="people">
-        <item quantity="zero">%1$d человек</item>
-        <item quantity="one">%1$d человека</item>
-        <item quantity="two">%1d человека</item>
-        <item quantity="few">%1$d человека</item>
-        <item quantity="many">%1$d человек</item>а
-        <item quantity="other">%1$d человека</item>
-    </plurals>
-
-    <string-array name="category">
-        <item>Категория</item>
-    </string-array>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="button_cancel">Отмена</string>
     <string name="button_back">Назад</string>
     <string name="label_edit">Редактирование</string>
     <string name="button_ready">Готово</string>
     <string name="favorite">Избранное</string>
-
     <string name="board_info_owner">Владелец: %1$s</string>
+
     <string name="create_date">Создано: %1$s</string>
     <string name="organizer_phone">Телефон: %1$s</string>
     <string name="search">Поиск</string>
@@ -65,9 +62,9 @@
     <string name="load_photo">Загрузить фото</string>
     <string name="cost">Стоимость</string>
     <string name="title">Заголовок</string>
-
-<!--Password recovery-->
     <string name="password_recovery">Восстановление пароля</string>
+
+    <!--Password recovery-->
     <string name="password_recovery_enter_login_or_email">Введите ваш логин или email</string>
     <string name="password_recovery_enter_login_or_email_hint">Логин или email</string>
     <string name="password_recovery_enter_confirmation_code">Введите полученный код</string>
@@ -78,11 +75,11 @@
     <string name="password_recovery_confirm_new_password_hint">Пароль повторно</string>
     <string name="password_recovery_next">Далее</string>
     <string name="password_recovery_change">Изменить</string>
-
-<!--Registration-->
     <string name="registration_phone_confirmation">Подтверждение телефона</string>
 
+    <!--Registration-->
     <string name="registration_ref_code_hint">Реферальный код знакомого</string>
+
     <string name="registration_firstName">Имя*</string>
     <string name="registration_lastName">Фамилия*</string>
     <string name="registration_middleName">Отчество</string>
@@ -97,48 +94,51 @@
     <string name="registration_region">Регион</string>
     <string name="registration_city">Город</string>
     <string name="registration_phone">Телефон*</string>
-
-<!--Home-->
     <string name="home_title">Знакомые</string>
+
+    <!--Home-->
     <string name="home_menu_share">Поделиться</string>
     <string name="home_menu_search">Поиск</string>
-
-<!--Share Code-->
     <string name="share_code_title">Реферальный код</string>
-    <string name="share_code_menu_share">Поделиться</string>
 
-<!--Profile-->
+    <!--Share Code-->
+    <string name="share_code_menu_share">Поделиться</string>
     <string name="profile_title">Профиль</string>
+
+    <!--Profile-->
     <string name="profile_menu_exit">Выход</string>
     <string name="profile_menu_edit">Редактирование</string>
-
-<!--Edit Profile-->
     <string name="edit_profile_title">Редактирование профиля</string>
-<!--    <string name="profile_menu_exit">Выход</string>-->
-<!--    <string name="profile_menu_edit">Редактирование</string>-->
 
-<!--Change Password-->
+    <!--Edit Profile-->
     <string name="change_password_title">Изменение пароля</string>
-<!--    <string name="profile_menu_exit">Выход</string>-->
-<!--    <string name="profile_menu_edit">Редактирование</string>-->
+    <!--    <string name="profile_menu_exit">Выход</string>-->
+    <!--    <string name="profile_menu_edit">Редактирование</string>-->
 
-<!--Board List-->
+    <!--Change Password-->
     <string name="board_list_title">Объявления</string>
+    <!--    <string name="profile_menu_exit">Выход</string>-->
+    <!--    <string name="profile_menu_edit">Редактирование</string>-->
+
+    <!--Board List-->
     <string name="board_list_menu_create_board">Создать объявление</string>
     <string name="board_list_date">%1$s руб.</string>
-
-<!--Board Info-->
     <string name="board_info_title">Объявление</string>
+
+    <!--Board Info-->
     <string name="board_info_menu_edit_board">Редактировать объявление</string>
     <string name="board_info_menu_options">Опции</string>
     <string name="board_info_menu_action_delete_board">Удалить</string>
     <string name="board_info_menu_action_archive_board">Архивировать</string>
     <string name="board_info_date">%1$s руб.</string>
-
-<!--Create Board-->
     <string name="board_create_title">Создание объявления</string>
-    <string name="board_create_menu_done">Готово</string>
 
-<!--Board Info List-->
+    <!--Create Board-->
+    <string name="board_create_menu_done">Готово</string>
     <string name="board_info_comment_list_title">Комментарии</string>
+
+    <!--Board Info List-->
+    <string-array name="category">
+        <item>Категория</item>
+    </string-array>
 </resources>

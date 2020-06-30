@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<vector xmlns:android="http://schemas.android.com/apk/res/android" xmlns:aapt="http://schemas.android.com/aapt"
-    android:viewportWidth="13.789"
-    android:viewportHeight="24.75"
+<vector
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="13.789dp"
-    android:height="24.75dp">
+    android:height="24.75dp"
+    android:viewportWidth="13.789"
+    android:viewportHeight="24.75">
     <group
         android:translateX="-35.086"
         android:translateY="-25.586">
@@ -15,8 +16,8 @@
                 android:translateY="19.5">
                 <path
                     android:pathData="M0 10.961L10.961 0"
-                    android:strokeColor="#FFFFFF"
                     android:strokeWidth="2"
+                    android:strokeColor="#FFFFFF"
                     android:strokeLineCap="round" />
             </group>
             <group
@@ -24,8 +25,8 @@
                 android:translateY="30.461">
                 <path
                     android:pathData="M0 0L10.961 10.961"
-                    android:strokeColor="#FFFFFF"
                     android:strokeWidth="2"
+                    android:strokeColor="#FFFFFF"
                     android:strokeLineCap="round" />
             </group>
         </group>

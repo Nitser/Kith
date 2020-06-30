@@ -209,10 +209,10 @@ class BoardInfoFragment : BaseFragment() {
     private fun onClickProfile(view: View) {
         userPresenter.getUser(object : UserPresenter.GetUserCallback {
             override fun onSuccess(userResponse: User) {
-                val userModel = UserModelView()
-                currentUserViewModel.setCurrentUser(userPresenter.userParser(userResponse, userModel))
+                val userModel = userPresenter.userParser(userResponse, UserModelView())
+//                currentUserViewModel.setCurrentUser(userPresenter.userParser(userResponse, userModel))
                 activity!!.findNavController(R.id.nav_host_fragment_home).navigate(BoardInfoFragmentDirections
-                        .actionBoardInfoFragmentToProfileFragment(userType))
+                        .actionBoardInfoFragmentToProfileFragment(userModel))
             }
 
             override fun onError(networkError: NetworkErrorException) {

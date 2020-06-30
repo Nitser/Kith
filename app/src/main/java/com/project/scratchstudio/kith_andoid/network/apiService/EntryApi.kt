@@ -7,6 +7,7 @@ import com.project.scratchstudio.kith_andoid.network.model.region.RegionsRespons
 import com.project.scratchstudio.kith_andoid.network.model.user.UserSingIn
 import io.reactivex.Single
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
@@ -25,13 +26,13 @@ interface EntryApi {
 
     @Multipart
     @POST("api/signup")
-    fun singUp(@Part("user_firstname") firstName: String, @Part("user_lastname") lastName: String,
-               @Part("user_phone") phone: String, @Part("user_login") login: String,
-               @Part("user_password") password: String, @Part("invitation_user_id") invitationUserId: String,
-               @Part("user_email") email: String,
-               @Part("user_middlename") middleName: String?, @Part("user_position") position: String?,
-               @Part("country_id") countryId: String?, @Part("region_id") regionId: String?,
-               @Part("city_id") cityId: String?, @Part surveyImage: MultipartBody.Part?
+    fun singUp(@Part("user_firstname") firstName: RequestBody, @Part("user_lastname") lastName: RequestBody,
+               @Part("user_phone") phone: RequestBody, @Part("user_login") login: RequestBody,
+               @Part("user_password") password: RequestBody, @Part("invitation_user_id") invitationUserId: RequestBody,
+               @Part("user_email") email: RequestBody,
+               @Part("user_middlename") middleName: RequestBody?, @Part("user_position") position: RequestBody?,
+               @Part("country_id") countryId: RequestBody?, @Part("region_id") regionId: RequestBody?,
+               @Part("city_id") cityId: RequestBody?, @Part surveyImage: MultipartBody.Part?
     ): Single<NewBaseResponse>
 
     @POST("api/users/confirm")

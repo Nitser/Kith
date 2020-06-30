@@ -15,6 +15,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.project.scratchstudio.kith_andoid.BoardPresenter
 import com.project.scratchstudio.kith_andoid.R
 import com.project.scratchstudio.kith_andoid.activities.HomeActivity
@@ -27,6 +28,8 @@ import com.project.scratchstudio.kith_andoid.network.model.board.BoardsResponse
 import com.project.scratchstudio.kith_andoid.ui.home_package.board_list.bottom_sheet.BottomSheetFragment
 import com.project.scratchstudio.kith_andoid.ui.home_package.board_list.list.BoardAdapter
 import com.project.scratchstudio.kith_andoid.ui.home_package.board_list.list.BoardHolder
+import com.project.scratchstudio.kith_andoid.ui.home_package.board_list.paid_list.PaidBoardAdapter
+import com.project.scratchstudio.kith_andoid.ui.home_package.board_list.paid_list.PaidBoardHolder
 import com.project.scratchstudio.kith_andoid.view_model.BoardListViewModel
 import com.project.scratchstudio.kith_andoid.view_model.CurrentBoardViewModel
 import com.project.scratchstudio.kith_andoid.view_model.MainUserViewModel
@@ -38,6 +41,7 @@ import io.reactivex.schedulers.Schedulers
 class BoardsFragment : BaseFragment() {
 
     private lateinit var adapter: BoardAdapter
+    private lateinit var paidAdapter: PaidBoardAdapter
     private lateinit var boardPresenter: BoardPresenter
     private val mainUserViewModel: MainUserViewModel by activityViewModels()
     private val boardListViewModel: BoardListViewModel by activityViewModels()
@@ -103,11 +107,18 @@ class BoardsFragment : BaseFragment() {
         })
         val llm = GridLayoutManager(context, 2)
         binding.boardListBoards.layoutManager = llm
+        val llmPaid = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        binding.boardListPaidBoards.layoutManager = llmPaid
         setAdapter()
         boardListViewModel.getBoardList().observe(viewLifecycleOwner, Observer<ArrayList<BoardModelView>> { item ->
             adapter.annList.clear()
-            adapter.annList.addAll(item)
+            paidAdapter.annList.clear()
+            val paidItem = ArrayList(item.filter { it.isPaid })
+            val notPaidItem = ArrayList(item.filter { !it.isPaid })
+            adapter.annList.addAll(notPaidItem)
+            paidAdapter.annList.addAll(paidItem)
             adapter.notifyDataSetChanged()
+            paidAdapter.notifyDataSetChanged()
         })
         searchViewModel.getSearchOptions().observe(viewLifecycleOwner, Observer<SearchOptions> {
             filterList(binding.boardListSearchField.text.toString())
@@ -121,11 +132,23 @@ class BoardsFragment : BaseFragment() {
     }
 
     private fun setAdapter() {
-        adapter = BoardAdapter(activity!!, object : BoardAdapter.OnItemClickListener {
+        adapter = BoardAdapter(requireActivity(), object : BoardAdapter.OnItemClickListener {
             override fun onItemClick(item: BoardModelView, id: Int, boardHolder: BoardHolder) {
                 val model: CurrentBoardViewModel by activityViewModels()
                 model.setCurrentBoard(item)
-                activity!!.findNavController(R.id.nav_host_fragment_home)
+                requireActivity().findNavController(R.id.nav_host_fragment_home)
+                        .navigate(BoardsFragmentDirections.actionBoardsFragmentToBoardInfoFragment(
+                                if (mainUserViewModel.getMainUser().value!!.id == item.organizerId)
+                                    UserType.MAIN_USER
+                                else UserType.ANOTHER_USER
+                        ))
+            }
+        }, boardPresenter)
+        paidAdapter = PaidBoardAdapter(requireActivity(), object : PaidBoardAdapter.OnItemClickListener {
+            override fun onItemClick(item: BoardModelView, id: Int, boardHolder: PaidBoardHolder) {
+                val model: CurrentBoardViewModel by activityViewModels()
+                model.setCurrentBoard(item)
+                requireActivity().findNavController(R.id.nav_host_fragment_home)
                         .navigate(BoardsFragmentDirections.actionBoardsFragmentToBoardInfoFragment(
                                 if (mainUserViewModel.getMainUser().value!!.id == item.organizerId)
                                     UserType.MAIN_USER
@@ -134,6 +157,7 @@ class BoardsFragment : BaseFragment() {
             }
         }, boardPresenter)
         binding.boardListBoards.adapter = adapter
+        binding.boardListPaidBoards.adapter = paidAdapter
     }
 
     private fun filterList(message: String) {

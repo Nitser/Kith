@@ -1,4 +1,4 @@
-package com.project.scratchstudio.kith_andoid.service
+package com.project.scratchstudio.kith_andoid.utils
 
 import android.graphics.Bitmap
 import android.graphics.BitmapShader

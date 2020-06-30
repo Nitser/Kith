@@ -6,6 +6,14 @@
     android:id="@+id/navigation"
     app:startDestination="@id/splashFragment">
 
+    <activity
+        android:id="@+id/homeActivity"
+        android:name="com.project.scratchstudio.kith_andoid.activities.HomeActivity"
+        tools:layout="@layout/activity_home">
+        <argument
+            android:name="user"
+            app:argType="com.project.scratchstudio.kith_andoid.model.UserModelView" />
+    </activity>
     <fragment
         android:id="@+id/splashFragment"
         android:name="com.project.scratchstudio.kith_andoid.ui.entry_package.splash.SplashFragment">
@@ -147,12 +155,4 @@
             android:name="webLink"
             app:argType="string" />
     </fragment>
-    <activity
-        android:id="@+id/homeActivity"
-        android:name="com.project.scratchstudio.kith_andoid.activities.HomeActivity"
-        tools:layout="@layout/activity_home" >
-        <argument
-            android:name="user"
-            app:argType="com.project.scratchstudio.kith_andoid.model.UserModelView" />
-    </activity>
 </navigation>

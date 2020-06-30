@@ -19,8 +19,9 @@ import com.project.scratchstudio.kith_andoid.R
 import com.project.scratchstudio.kith_andoid.app.BaseFragment
 import com.project.scratchstudio.kith_andoid.custom_views.EditTextBehavior
 import com.project.scratchstudio.kith_andoid.databinding.FragmentSingUpFirstBinding
+import com.project.scratchstudio.kith_andoid.model.PhotoModelView
 import com.project.scratchstudio.kith_andoid.model.UserModelView
-import com.project.scratchstudio.kith_andoid.service.PhotoService
+import com.project.scratchstudio.kith_andoid.utils.PhotoService
 import de.hdodenhof.circleimageview.CircleImageView
 import java.io.File
 import java.io.FileNotFoundException
@@ -29,7 +30,7 @@ import java.io.InputStream
 class SingUpFragmentFirst : BaseFragment() {
 
     private lateinit var binding: FragmentSingUpFirstBinding
-    private var currentBitmap: Bitmap? = null
+    private var currentPhoto: PhotoModelView? = null
     lateinit var editTextBehavior: EditTextBehavior
     private lateinit var user: UserModelView
     private val READ_EXTERNAL_STORAGE_REQUEST_CODE = 101
@@ -67,15 +68,18 @@ class SingUpFragmentFirst : BaseFragment() {
             lastName = binding.lastName.text.toString()
             middleName = binding.middleName.text.toString()
             position = binding.organisation.text.toString()
-            photoBitmap = currentBitmap
+            if(currentPhoto != null) {
+                photoBitmap = currentPhoto!!.photoBitmap
+                photoFile = currentPhoto!!.phoneStorageFile
+            }
         }
         return user
     }
 
     override fun onResume() {
         super.onResume()
-        if (currentBitmap != null) {
-            binding.photo.findViewById<CircleImageView>(R.id.custom_circle_image_view_photo).setImageBitmap(currentBitmap)
+        if (currentPhoto != null && currentPhoto!!.photoBitmap != null) {
+            binding.photo.findViewById<CircleImageView>(R.id.custom_circle_image_view_photo).setImageBitmap(currentPhoto!!.photoBitmap)
         }
     }
 
@@ -116,11 +120,12 @@ class SingUpFragmentFirst : BaseFragment() {
             val photoService = PhotoService(context!!)
             try {
                 imageStream = activity?.contentResolver?.openInputStream(imageUri)
-                currentBitmap = BitmapFactory.decodeStream(imageStream)
-                if (currentBitmap != null) {
-                    currentBitmap = photoService.changePhoto(currentBitmap!!, imageUri)
-                    currentBitmap = photoService.compressPhoto(currentBitmap!!)
-                    binding.photo.findViewById<CircleImageView>(R.id.custom_circle_image_view_photo).setImageBitmap(currentBitmap)
+                var bitmap = BitmapFactory.decodeStream(imageStream)
+                if (bitmap != null) {
+                    bitmap = photoService.changePhoto(bitmap, imageUri)
+                    bitmap = photoService.compressPhoto(bitmap)
+                    binding.photo.findViewById<CircleImageView>(R.id.custom_circle_image_view_photo).setImageBitmap(bitmap)
+                    currentPhoto = photoService.fullPreparingPhoto(bitmap, imageUri)
                 }
             } catch (e: FileNotFoundException) {
                 e.printStackTrace()

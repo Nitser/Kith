@@ -18,9 +18,9 @@ import com.project.scratchstudio.kith_andoid.network.ApiClient
 import com.project.scratchstudio.kith_andoid.network.apiService.BoardApi
 import com.project.scratchstudio.kith_andoid.network.apiService.UserApi
 import com.project.scratchstudio.kith_andoid.network.model.user.User
-import com.project.scratchstudio.kith_andoid.service.internal_storage.InternalStorageService
-import com.project.scratchstudio.kith_andoid.service.internal_storage.set_internal_data.ClearUserIdAndToken
-import com.project.scratchstudio.kith_andoid.service.internal_storage.set_internal_data.SetUserIdAndToken
+import com.project.scratchstudio.kith_andoid.utils.internal_storage.InternalStorageService
+import com.project.scratchstudio.kith_andoid.utils.internal_storage.set_internal_data.ClearUserIdAndToken
+import com.project.scratchstudio.kith_andoid.utils.internal_storage.set_internal_data.SetUserIdAndToken
 import com.project.scratchstudio.kith_andoid.view_model.MainUserViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -49,14 +49,16 @@ class HomeActivity : BaseActivity() {
         }
 
         fun exit(activity: Activity) {
-            val internalStorageService = InternalStorageService(activity, null)
-            internalStorageService.setISetInternalData(ClearUserIdAndToken())
-            internalStorageService.execute()
-            Const.isEntry = false
-            internalStorageService.setUserData(-1, "", "")
-            val intent = Intent(activity, EntryActivity::class.java)
-            activity.startActivity(intent)
-            activity.finish()
+            val clearUser = InternalStorageService(activity, object : InternalStorageService.PostExecuteCallback {
+                override fun doAfter() {
+                    Const.isEntry = false
+                    val intent = Intent(activity, EntryActivity::class.java)
+                    activity.startActivity(intent)
+                    activity.finish()
+                }
+            })
+            clearUser.setISetInternalData(ClearUserIdAndToken())
+            clearUser.execute()
         }
     }
 

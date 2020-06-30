@@ -14,15 +14,9 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.content.ContextCompat.getSystemService
 import com.project.scratchstudio.kith_andoid.R
-import com.project.scratchstudio.kith_andoid.activities.HomeActivity
 import com.project.scratchstudio.kith_andoid.app.BaseFragment
-import com.project.scratchstudio.kith_andoid.network.model.referral.ReferralResponse
 import com.project.scratchstudio.kith_andoid.ui.entry_package.splash.SplashFragment
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.observers.DisposableSingleObserver
-import io.reactivex.schedulers.Schedulers
 
 class ShareCodeFragment : BaseFragment() {
 

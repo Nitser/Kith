@@ -225,7 +225,7 @@ class SingUpFragmentThird : BaseFragment() {
         if (binding.region.isViewSelected()) {
             binding.city.visibility = View.VISIBLE
         }
-        if(binding.region.getItems()[binding.region.text.toString().toLowerCase(Locale.ROOT)] != null) {
+        if (binding.region.getItems()[binding.region.text.toString().toLowerCase(Locale.ROOT)] != null) {
             binding.city.visibility = View.VISIBLE
         }
     }

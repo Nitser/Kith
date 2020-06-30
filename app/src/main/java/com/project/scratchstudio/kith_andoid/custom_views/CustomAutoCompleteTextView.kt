@@ -4,9 +4,10 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.widget.AutoCompleteTextView
+import androidx.appcompat.widget.AppCompatAutoCompleteTextView
 import java.util.Locale
 
-class CustomAutoCompleteTextView(internal val context: Context, attrs: AttributeSet) : AutoCompleteTextView(context, attrs) {
+class CustomAutoCompleteTextView(internal val context: Context, attrs: AttributeSet) : AppCompatAutoCompleteTextView(context, attrs) {
 
     private var isSelect: Boolean = false
     private var editTextBehavior: EditTextBehavior = EditTextBehavior(context)
@@ -54,7 +55,7 @@ class CustomAutoCompleteTextView(internal val context: Context, attrs: Attribute
     }
 
     fun setSelectedIfItemsContainText(text: String) {
-        if(isItemsContainText(text))
+        if (isItemsContainText(text))
             selectedField()
     }
 
@@ -80,7 +81,7 @@ class CustomAutoCompleteTextView(internal val context: Context, attrs: Attribute
         isSelect = true
     }
 
-    fun isViewSelected() : Boolean {
+    fun isViewSelected(): Boolean {
         return isSelect
     }
 

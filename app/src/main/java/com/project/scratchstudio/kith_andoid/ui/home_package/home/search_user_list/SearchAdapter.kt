@@ -1,4 +1,4 @@
-package com.project.scratchstudio.kith_andoid.ui.home_package.home
+package com.project.scratchstudio.kith_andoid.ui.home_package.home.search_user_list
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -7,8 +7,9 @@ import android.widget.Filterable
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.project.scratchstudio.kith_andoid.R
+import com.project.scratchstudio.kith_andoid.app.Const
 import com.project.scratchstudio.kith_andoid.model.UserModelView
-import com.project.scratchstudio.kith_andoid.service.PicassoCircleTransformation
+import com.project.scratchstudio.kith_andoid.utils.PicassoCircleTransformation
 import com.squareup.picasso.MemoryPolicy
 import com.squareup.picasso.Picasso
 import java.util.ArrayList
@@ -35,12 +36,12 @@ class SearchAdapter(private val activity: FragmentActivity, private val searchLi
         searchHolder.nName.text = name
         searchHolder.nPosition.text = searchInfo.position
         if (searchInfo.photo != "") {
-//            Picasso.with(activity).load(searchInfo.photo.replace("@[0-9]*".toRegex(), ""))
-//                    .placeholder(R.mipmap.person)
-//                    .error(R.mipmap.person)
-//                    .transform(PicassoCircleTransformation())
-//                    .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
-//                    .into(searchHolder.nPhoto)
+            Picasso.with(activity).load(Const.BASE_URL + searchInfo.photo)
+                    .placeholder(R.mipmap.person)
+                    .error(R.mipmap.person)
+                    .transform(PicassoCircleTransformation())
+                    .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
+                    .into(searchHolder.nPhoto)
         }
 
         searchHolder.bind(searchInfo, listener)

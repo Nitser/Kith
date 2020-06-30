@@ -399,6 +399,11 @@
                                 <LayoutPositions />
                               </value>
                             </entry>
+                            <entry key="action_commentListFragment_to_profileFragment">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
                           </map>
                         </option>
                       </LayoutPositions>

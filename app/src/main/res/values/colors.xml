@@ -13,6 +13,7 @@
     <color name="colorActive">#08A7FC</color>
     <color name="colorBlack">#000000</color>
     <color name="colorEmptyPhoto">#98B9DA</color>
+    <color name="colorPaidItem">#00FF00</color>
 
 
     <color name="colorHomeTextCommon">#03151C</color>

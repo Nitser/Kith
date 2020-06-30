@@ -71,6 +71,9 @@ class Board : BaseResponse(), Serializable {
     @SerializedName("comments")
     var chatCount: Int = 0
 
+    @SerializedName("board_highlight")
+    var isPaid: Boolean = false
+
 
 //    @SerializedName("board_date_end")
 //    lateinit var endDate: String

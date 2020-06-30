@@ -19,18 +19,18 @@
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.project.scratchstudio.kith_andoid.ui.home_package.user_profile.ProfileFragment"
-        android:label="@string/profile_title" >
+        android:label="@string/profile_title">
         <action
             android:id="@+id/action_profileFragment_to_editProfileFragment"
             app:destination="@id/editProfileFragment" />
         <argument
-            android:name="userType"
-            app:argType="com.project.scratchstudio.kith_andoid.app.UserType" />
+            android:name="user"
+            app:argType="com.project.scratchstudio.kith_andoid.model.UserModelView" />
     </fragment>
     <fragment
         android:id="@+id/boardsFragment"
         android:name="com.project.scratchstudio.kith_andoid.ui.home_package.board_list.BoardsFragment"
-        android:label="@string/board_list_title" >
+        android:label="@string/board_list_title">
         <action
             android:id="@+id/action_boardsFragment_to_boardInfoFragment"
             app:destination="@id/boardInfoFragment" />
@@ -51,17 +51,17 @@
         <action
             android:id="@+id/action_boardInfoFragment_to_profileFragment"
             app:destination="@id/profileFragment" />
-        <argument
-            android:name="userType"
-            app:argType="com.project.scratchstudio.kith_andoid.app.UserType" />
         <action
             android:id="@+id/action_boardInfoFragment_to_boardFullScreenImageFragment"
             app:destination="@id/boardFullScreenImageFragment" />
+        <argument
+            android:name="userType"
+            app:argType="com.project.scratchstudio.kith_andoid.app.UserType" />
     </fragment>
     <fragment
         android:id="@+id/newEditBoardFragment"
         android:name="com.project.scratchstudio.kith_andoid.ui.home_package.board_create.NewEditBoardFragment"
-        android:label="@string/board_create_title" >
+        android:label="@string/board_create_title">
         <argument
             android:name="userType"
             app:argType="com.project.scratchstudio.kith_andoid.app.UserType" />
@@ -69,7 +69,7 @@
     <fragment
         android:id="@+id/shareCodeFragment"
         android:name="com.project.scratchstudio.kith_andoid.ui.home_package.share_code.ShareCodeFragment"
-        android:label="@string/share_code_title" >
+        android:label="@string/share_code_title">
         <argument
             android:name="referral_code"
             app:argType="string" />
@@ -77,7 +77,7 @@
     <fragment
         android:id="@+id/editProfileFragment"
         android:name="com.project.scratchstudio.kith_andoid.ui.home_package.user_edit_profile.EditProfileFragment"
-        android:label="@string/edit_profile_title" >
+        android:label="@string/edit_profile_title">
         <action
             android:id="@+id/action_editProfileFragment_to_changePasswordFragment"
             app:destination="@id/changePasswordFragment" />
@@ -85,7 +85,7 @@
     <fragment
         android:id="@+id/changePasswordFragment"
         android:name="com.project.scratchstudio.kith_andoid.ui.home_package.user_change_password.ChangePasswordFragment"
-        android:label="@string/change_password_title" >
+        android:label="@string/change_password_title">
         <action
             android:id="@+id/action_changePasswordFragment_to_editProfileFragment"
             app:destination="@id/editProfileFragment"
@@ -94,15 +94,18 @@
     <fragment
         android:id="@+id/commentListFragment"
         android:name="com.project.scratchstudio.kith_andoid.ui.home_package.board_info_comments.BoardInfoCommentsFragment"
-        android:label="@string/board_info_comment_list_title" >
+        android:label="@string/board_info_comment_list_title">
         <action
             android:id="@+id/action_commentListFragment_to_boardFullScreenImageFragment"
             app:destination="@id/boardFullScreenImageFragment" />
+        <action
+            android:id="@+id/action_commentListFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
     </fragment>
     <fragment
         android:id="@+id/boardFullScreenImageFragment"
         android:name="com.project.scratchstudio.kith_andoid.ui.home_package.board_full_screen_image.BoardFullScreenImageFragment"
-        android:label="" >
+        android:label="">
         <argument
             android:name="photo"
             app:argType="com.project.scratchstudio.kith_andoid.model.PhotoModelView" />

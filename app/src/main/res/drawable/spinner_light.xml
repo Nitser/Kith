@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layer-list android:opacity="transparent" xmlns:android="http://schemas.android.com/apk/res/android">
+<layer-list
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:opacity="transparent">
 
     <item>
         <shape>
@@ -8,5 +10,8 @@
         </shape>
     </item>
 
-    <item android:drawable="@drawable/ic_arrow_drop_down" android:gravity="right" android:start="140dp"/>
+    <item
+        android:drawable="@drawable/ic_arrow_drop_down"
+        android:gravity="right"
+        android:start="140dp" />
 </layer-list>

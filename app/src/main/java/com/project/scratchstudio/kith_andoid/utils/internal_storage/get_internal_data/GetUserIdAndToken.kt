@@ -1,7 +1,7 @@
-package com.project.scratchstudio.kith_andoid.service.internal_storage.get_internal_data
+package com.project.scratchstudio.kith_andoid.utils.internal_storage.get_internal_data
 
 import android.content.SharedPreferences
-import com.project.scratchstudio.kith_andoid.service.internal_storage.InternalStorageService
+import com.project.scratchstudio.kith_andoid.utils.internal_storage.InternalStorageService
 
 class GetUserIdAndToken : IGetInternalData {
 

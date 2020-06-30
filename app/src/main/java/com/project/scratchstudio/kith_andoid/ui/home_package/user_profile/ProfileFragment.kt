@@ -4,7 +4,6 @@ import android.accounts.NetworkErrorException
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -13,19 +12,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import com.project.scratchstudio.kith_andoid.R
 import com.project.scratchstudio.kith_andoid.UserPresenter
 import com.project.scratchstudio.kith_andoid.activities.HomeActivity
 import com.project.scratchstudio.kith_andoid.app.BaseFragment
 import com.project.scratchstudio.kith_andoid.app.Const
-import com.project.scratchstudio.kith_andoid.app.UserType
 import com.project.scratchstudio.kith_andoid.databinding.FragmentProfileBinding
 import com.project.scratchstudio.kith_andoid.model.UserModelView
 import com.project.scratchstudio.kith_andoid.network.model.user.User
-import com.project.scratchstudio.kith_andoid.service.PicassoCircleTransformation
-import com.project.scratchstudio.kith_andoid.ui.home_package.user_edit_profile.EditProfileFragment
-import com.project.scratchstudio.kith_andoid.view_model.CurrentUserViewModel
+import com.project.scratchstudio.kith_andoid.utils.PicassoCircleTransformation
 import com.project.scratchstudio.kith_andoid.view_model.MainUserViewModel
 import com.squareup.picasso.MemoryPolicy
 import com.squareup.picasso.Picasso
@@ -37,10 +34,8 @@ class ProfileFragment : BaseFragment() {
     private var binding: FragmentProfileBinding? = null
     private var userPresenter: UserPresenter? = null
 
-    private val currentUserViewModel: CurrentUserViewModel by activityViewModels()
     private val mainUserViewModel: MainUserViewModel by activityViewModels()
     private lateinit var user: UserModelView
-    private lateinit var userType: UserType
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setHasOptionsMenu(true)
@@ -49,7 +44,7 @@ class ProfileFragment : BaseFragment() {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        if (userType == UserType.MAIN_USER)
+        if (user.id == mainUserViewModel.getMainUser().value!!.id)
             inflater.inflate(R.menu.menu_profile, menu)
     }
 
@@ -59,36 +54,35 @@ class ProfileFragment : BaseFragment() {
                 HomeActivity.exit(requireActivity())
                 return true
             }
-//            R.id.menu_profile_edit -> {
-//                activity!!.findNavController(R.id.nav_host_fragment_home)
-//                        .navigate(ProfileFragmentDirections.actionProfileFragmentToEditProfileFragment())
-//                return true
-//            }
+            R.id.menu_profile_edit -> {
+                requireActivity().findNavController(R.id.nav_host_fragment_home)
+                        .navigate(ProfileFragmentDirections.actionProfileFragmentToEditProfileFragment())
+                return true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentProfileBinding.inflate(inflater, container, false)
-        userType = ProfileFragmentArgs.fromBundle(arguments!!).userType
+        user = ProfileFragmentArgs.fromBundle(arguments!!).user
         return binding!!.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         userPresenter = UserPresenter(context!!)
-        user = if (userType == UserType.MAIN_USER) {
-            mainUserViewModel.getMainUser().value!!
-        } else {
-            currentUserViewModel.getCurrentUser().value!!
-        }
         fullField()
         initButtonListener()
+        mainUserViewModel.getMainUser().observe(viewLifecycleOwner, Observer<UserModelView> {
+            fullField()
+        })
     }
 
     private fun fullField() {
-
-        if (user.photo != null && user.photo != "") {
-            Picasso.with(context).load(user.photo!!.replace("@[0-9]*".toRegex(), ""))
+        if (user.photoBitmap != null) {
+            binding!!.photo.setImageBitmap(user.photoBitmap)
+        } else if (user.photo != null && user.photo != "") {
+            Picasso.with(context).load(Const.BASE_URL + user.photo)
                     .placeholder(R.mipmap.person)
                     .error(R.mipmap.person)
                     .transform(PicassoCircleTransformation())
@@ -129,9 +123,6 @@ class ProfileFragment : BaseFragment() {
                     override fun onSuccess(userResponse: User) {
                         if (userResponse.photo != "") {
                             user.photo = userResponse.photo
-                            Log.i("Profile", userResponse.photo)
-                        } else {
-                            Log.i("Profile", "null photo")
                         }
                         refreshUser(userResponse)
                         Toast.makeText(context, "Данные обновлены", Toast.LENGTH_SHORT).show()
@@ -182,17 +173,6 @@ class ProfileFragment : BaseFragment() {
         binding!!.phone.setOnClickListener { this.onClickCallPhone(it) }
     }
 
-    private fun onClickBack(view: View) {
-        (activity as HomeActivity).backFragment()
-    }
-
-    private fun onClickEditButton(view: View) {
-        view.isEnabled = false
-        val intent = Intent(activity, EditProfileFragment::class.java)
-        startActivityForResult(intent, 1)
-        view.isEnabled = true
-    }
-
     private fun onClickCallPhone(view: View) {
         val intent = Intent(Intent.ACTION_DIAL)
         intent.data = Uri.parse("tel:" + user.phone)
@@ -219,19 +199,6 @@ class ProfileFragment : BaseFragment() {
         sendIntent.putExtra(Intent.EXTRA_TEXT, share)
         sendIntent.type = "text/plain"
         startActivityForResult(sendIntent, 0)
-    }
-
-    override fun onBackPressed(): Boolean {
-        return (activity as HomeActivity).backFragment()
-    }
-
-    companion object {
-
-        fun newInstance(bundle: Bundle): ProfileFragment {
-            val fragment = ProfileFragment()
-            fragment.arguments = bundle
-            return fragment
-        }
     }
 
 }

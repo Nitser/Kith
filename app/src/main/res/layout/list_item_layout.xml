@@ -1,15 +1,8 @@
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:customAttrs="http://schemas.android.com/apk/res-auto"
-    xmlns:card_view="http://schemas.android.com/tools"
-    android:id="@+id/card_view"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    card_view:cardBackgroundColor = "@color/colorPrimary"
-    card_view:cardElevation="0dp"
-    android:layout_margin="5dp">
-
     <LinearLayout
-        android:layout_margin="5dp"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:customAttrs="http://schemas.android.com/apk/res-auto"
+        android:background="@color/colorPrimary"
+        android:padding="5dp"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -47,5 +40,3 @@
                 customAttrs:customFont="intro_regular"/>
         </LinearLayout>
     </LinearLayout>
-
-</androidx.cardview.widget.CardView>

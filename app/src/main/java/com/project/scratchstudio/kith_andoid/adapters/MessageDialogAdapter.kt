@@ -1,19 +1,17 @@
 package com.project.scratchstudio.kith_andoid.adapters
 
 import android.app.Activity
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Filter
 import android.widget.Filterable
-
+import androidx.recyclerview.widget.RecyclerView
+import com.project.scratchstudio.kith_andoid.R
 import com.project.scratchstudio.kith_andoid.holders.MessageDialogHolder
 import com.project.scratchstudio.kith_andoid.model.AnnouncementInfo
-import com.project.scratchstudio.kith_andoid.R
-import com.project.scratchstudio.kith_andoid.service.PicassoCircleTransformation
+import com.project.scratchstudio.kith_andoid.utils.PicassoCircleTransformation
 import com.squareup.picasso.MemoryPolicy
 import com.squareup.picasso.Picasso
-
 import java.util.ArrayList
 
 class MessageDialogAdapter(private val activity: Activity, private val annList: List<AnnouncementInfo>, private val listener: OnItemClickListener) : RecyclerView.Adapter<MessageDialogHolder>(), Filterable {

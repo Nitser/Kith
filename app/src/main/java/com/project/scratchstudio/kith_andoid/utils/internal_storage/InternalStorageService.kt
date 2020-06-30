@@ -1,4 +1,4 @@
-package com.project.scratchstudio.kith_andoid.service.internal_storage
+package com.project.scratchstudio.kith_andoid.utils.internal_storage
 
 import android.app.Activity
 import android.content.SharedPreferences
@@ -6,8 +6,8 @@ import android.os.AsyncTask
 import android.preference.PreferenceManager
 import com.project.scratchstudio.kith_andoid.model.Cache
 import com.project.scratchstudio.kith_andoid.model.UserModelView
-import com.project.scratchstudio.kith_andoid.service.internal_storage.get_internal_data.IGetInternalData
-import com.project.scratchstudio.kith_andoid.service.internal_storage.set_internal_data.ISetInternalData
+import com.project.scratchstudio.kith_andoid.utils.internal_storage.get_internal_data.IGetInternalData
+import com.project.scratchstudio.kith_andoid.utils.internal_storage.set_internal_data.ISetInternalData
 
 class InternalStorageService(private val context: Activity, private val callback: PostExecuteCallback?) : AsyncTask<String, Void, Int>() {
 

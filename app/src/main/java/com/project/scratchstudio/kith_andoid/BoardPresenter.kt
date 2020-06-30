@@ -71,18 +71,19 @@ class BoardPresenter(private val context: Context) {
             city = boardDB.city
             category = boardDB.category
             chatCount = boardDB.chatCount
+            isPaid = boardDB.isPaid
         }
         return board
     }
 
     fun createBoard(callback: BoardCallback, board: BoardModelView) {
 
-        val photoParts = arrayOfNulls<MultipartBody.Part>(board.newPhotos.size)
-
-        for (index in 0 until board.newPhotos.size) {
-            val surveyBody = RequestBody.create(MediaType.parse("image/*"), board.newPhotos[index].phoneStorageFile)
-            photoParts[index] = MultipartBody.Part.createFormData("board_photo[]", board.newPhotos[index].phoneStorageFile.name, surveyBody)
-        }
+//        val photoParts = arrayOfNulls<MultipartBody.Part>(board.newPhotos.size)
+//
+//        for (index in 0 until board.newPhotos.size) {
+//            val surveyBody = RequestBody.create(MediaType.parse("image/*"), board.newPhotos[index].phoneStorageFile)
+//            photoParts[index] = MultipartBody.Part.createFormData("board_photo[]", board.newPhotos[index].phoneStorageFile.name, surveyBody)
+//        }
 
         disposable.add(
                 boardApi.createBoard(board.title, board.description, (if (board.enabled) {
@@ -90,8 +91,7 @@ class BoardPresenter(private val context: Context) {
                 } else {
                     0
                 })
-                        , board.cost, board.country?.id, board.region?.id, board.city?.id, board.category?.id
-                        , photoParts)
+                        , board.cost, board.country?.id, board.region?.id, board.city?.id, board.category?.id)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeWith(object : DisposableSingleObserver<BaseResponse>() {
@@ -121,8 +121,40 @@ class BoardPresenter(private val context: Context) {
                 } else {
                     0
                 })
-                        , board.cost, board.country?.id, board.region?.id, board.city?.id, board.category?.id
-                        , photoParts)
+                        , board.cost, board.country?.id, board.region?.id, board.city?.id, board.category?.id)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(object : DisposableSingleObserver<BaseResponse>() {
+                            override fun onSuccess(response: BaseResponse) {
+                                if (board.newPhotos.size > 0) {
+                                    disposable.add(boardApi.addPhotoToBoard(board.id, photoParts)
+                                            .subscribeOn(Schedulers.io())
+                                            .observeOn(AndroidSchedulers.mainThread())
+                                            .subscribeWith(object : DisposableSingleObserver<BaseResponse>() {
+                                                override fun onSuccess(response: BaseResponse) {
+                                                    callback.onSuccess(response)
+                                                }
+
+                                                override fun onError(e: Throwable) {
+                                                    callback.onError(NetworkErrorException(e))
+                                                }
+                                            })
+                                    )
+                                } else {
+                                    callback.onSuccess(response)
+                                }
+                            }
+
+                            override fun onError(e: Throwable) {
+                                callback.onError(NetworkErrorException(e))
+                            }
+                        })
+        )
+    }
+
+    fun deletePhoto(callback: BoardCallback, photoId: Int) {
+        disposable.add(
+                boardApi.deletePhotoFromBoard(photoId)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeWith(object : DisposableSingleObserver<BaseResponse>() {

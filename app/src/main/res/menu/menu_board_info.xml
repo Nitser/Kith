@@ -6,7 +6,7 @@
         android:id="@+id/menu_board_info_edit_board"
         android:icon="@drawable/ic_edit"
         android:title="@string/board_list_menu_create_board"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/menu_board_info_options"

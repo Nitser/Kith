@@ -1,12 +1,9 @@
 package com.project.scratchstudio.kith_andoid.ui.home_package.board_list.list
 
 import android.app.Activity
-import android.provider.Settings.Global.getString
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.Filter
-import android.widget.Filterable
+import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.project.scratchstudio.kith_andoid.BoardPresenter
 import com.project.scratchstudio.kith_andoid.R
@@ -45,14 +42,18 @@ class BoardAdapter(private val activity: Activity, private val listener: OnItemC
                     .error(R.mipmap.empty_photo)
                     .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
                     .into(holder.ownerPhoto)
-//            holder.boardPhoto.scaleType = ImageView.ScaleType.CENTER_CROP
+            holder.boardPhoto.scaleType = ImageView.ScaleType.CENTER_INSIDE
         }
 
         if (board.boardPhotoUrls.isNotEmpty()) {
             Picasso.with(activity).load(Const.BASE_URL + board.boardPhotoUrls[0].src)
+                    .placeholder(R.color.colorEmptyPhoto)
+                    .error(R.color.colorEmptyPhoto)
                     .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
                     .into(holder.boardPhoto)
-//            holder.boardPhoto.scaleType = ImageView.ScaleType.CENTER_CROP
+            holder.boardPhoto.scaleType = ImageView.ScaleType.CENTER_INSIDE
+        } else {
+            holder.boardPhoto.setImageResource(R.color.colorEmptyPhoto)
         }
 
         if (board.subscriptionOnBoard)
